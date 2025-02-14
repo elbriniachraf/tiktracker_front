@@ -1,0 +1,125 @@
+<div class="login-page" >
+    <div class="centered-container"></div>
+
+    <div style="display: flex;gap: 4%;width: 100%;    padding: 5% 9% 0% 9%;align-items: stretch;">
+        <div style="flex: 4;display: flex;flex-direction: column;justify-content: space-around;height: 100%;">
+           <div>
+            <img src="logo.png" alt="" srcset="" style="width: 90px;">
+            <h3 style="color: white;">Facilitez la gestion avec notre application de facturation.</h3>
+           </div>
+            <!-- Features Section -->
+            <div class="features-section" style="margin-top: 30px;">
+                <div class="feature-item" style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <fa-icon [icon]="['fas', 'chart-line']" style="color: green; font-size: 24px; margin-right: 15px;"></fa-icon>
+                    <div>
+                        <h4 style="color: white; margin: 0;">Collaboration Sécurisée</h4>
+                        <p style="color: #8996A9; margin: 5px 0;">Partagez vos tableaux de bord en toute sécurité avec votre équipe et vos clients</p>
+                    </div>
+                </div>
+                <div class="feature-item" style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <fa-icon [icon]="['fas', 'file-invoice-dollar']" style="color: green; font-size: 24px; margin-right: 15px;"></fa-icon>
+                    <div>
+                        <h4 style="color: white; margin: 0;">Améliorez la Visibilité</h4>
+                        <p style="color: #8996A9; margin: 5px 0;">Obtenez des insights en temps réel sur vos performances et l'interaction avec vos clients.</p>
+                    </div>
+                </div>
+                <div class="feature-item" style="display: flex; align-items: flex-start; margin-bottom: 20px;">
+                    <fa-icon [icon]="['fas', 'users-cog']" style="color: green; font-size: 24px; margin-right: 15px;"></fa-icon>
+                    <div>
+                        <h4 style="color: white; margin: 0;">Simplifiez la Conformité</h4>
+                        <p style="color: #8996A9; margin: 5px 0;">Respectez aisément les normes légales françaises et européennes.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        
+        <form class="login-form" style="flex: 4;max-width: 100%;" (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+            <button class="btn-google" type="button">
+                <fa-icon [icon]="['fab', 'google']"></fa-icon>&nbsp; Google
+            </button>
+            <div style=" display: flex; gap: 5px; align-items: center;height: 30px;">
+                <div style="flex: 7; height: 2px; background-color: grey;"></div>
+                <h4 style="flex: 1; color: grey;">Ou</h4>
+                <div style="flex: 7; height: 2px; background-color: grey;"></div>
+            </div>
+            <div class="form-group">
+                <label for="company-name">Nom de l'entreprise</label>
+                <div class="input-wrapper">
+                    <span class="icon">
+                        <fa-icon [icon]="['fas', 'building']" class="input-icon"></fa-icon>
+                    </span>
+                    <input id="company-name" formControlName="companyName" type="text" placeholder="Entrez le nom de l'entreprise" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <div class="input-wrapper">
+                    <span class="icon">
+                        <fa-icon [icon]="['fas', 'envelope']" class="input-icon"></fa-icon>
+                    </span>
+                    <input id="email" formControlName="email" type="email" placeholder="Entrez votre email" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="password">Mot de passe</label>
+                <div class="input-wrapper">
+                    <span class="icon">
+                        <fa-icon [icon]="['fas', 'lock']" class="input-icon"></fa-icon>
+                    </span>
+                    <input id="password" formControlName="password" type="password" placeholder="Entrez votre mot de passe" />
+                </div>
+            </div>
+
+            <!-- Pays Select -->
+            <div class="form-group">
+                <label for="country">Pays</label>
+                <div class="input-wrapper">
+                    <select id="country" formControlName="country" style="width: 100%;
+                    padding: 8px;
+                    border-radius: 5px;
+                    border: 1px solid #ccc;
+                    background: #0e0f1152;
+                    color: white;">
+                        <option value="France">France</option>
+                        <option value="Espagne">Espagne</option>
+                        <option value="Maroc">Maroc</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Forme Juridique et TVA -->
+            <div class="form-row" style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="legal-form">Forme Juridique</label>
+                    <div class="input-wrapper">
+                        <select id="legal-form" formControlName="legalForm" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc; background: #0e0f1152;
+                    color: white;">
+                            <option value="SARL">SARL</option>
+                            <option value="SAS">SAS</option>
+                            <option value="Auto-entrepreneur">Auto-entrepreneur</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="tva">TVA</label>
+                    <div class="input-wrapper">
+                        <input id="tva" formControlName="tva" type="text" placeholder="Entrez le n° de TVA" style="width: 100%; padding: 8px; border-radius: 5px; border: 1px solid #ccc;" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="options">
+                <div class="forgot-password">
+                    <a href="#" class="forgot-password-link">Mot de passe oublié ?</a>
+                </div>
+            </div>
+
+            <button class="btn-login" type="submit">Se connecter</button>
+
+            <div class="signup-link">
+                Pas de compte ? <a href="#" class="signup">Sign Up</a>
+            </div>
+        </form>
+    </div>
+</div>

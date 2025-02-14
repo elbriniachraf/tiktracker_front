@@ -1,0 +1,231 @@
+<div class="container">
+    <!-- Tabbar -->
+    <div class="tabbar">
+      <button class="tab" [class.active]="selectedTab === 'create'" (click)="selectedTab = 'create'">
+        <fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Créer un Devis
+      </button>
+      <button class="tab" [class.active]="selectedTab === 'list'" (click)="selectedTab = 'list'">
+        <fa-icon [icon]="['fas', 'list']"></fa-icon> Liste des Devis
+      </button>
+      <button class="tab" [class.active]="selectedTab === 'factures'" (click)="selectedTab = 'factures'">
+        <fa-icon [icon]="['fas', 'file-alt']"></fa-icon> Factures
+      </button>
+      <button class="tab" [class.active]="selectedTab === 'avoirs'" (click)="selectedTab = 'avoirs'">
+        <fa-icon [icon]="['fas', 'receipt']"></fa-icon> Avoirs
+      </button>
+      <button class="tab" [class.active]="selectedTab === 'relances'" (click)="selectedTab = 'relances'">
+        <fa-icon [icon]="['fas', 'bell']"></fa-icon> Relances
+      </button>
+    </div>
+    
+  
+    <!-- Contenu en fonction de l'onglet sélectionné -->
+    <div *ngIf="selectedTab === 'create'">
+      <h2><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Créer un Devis</h2>
+
+      <div style="display: flex;gap:20px">
+
+        <form [formGroup]="devisForm" (ngSubmit)="enregistrerDevis()" class="devis-form">
+            <div class="form-group autocomplete">
+              <label for="client"><fa-icon [icon]="['fas', 'user']"></fa-icon> Client :</label>
+              <input type="text" id="client" formControlName="client" [(ngModel)]="clientInput"
+                     (keyup)="rechercherClients()" placeholder="Rechercher un client...">
+              <ul *ngIf="clientsFiltres.length > 0" class="autocomplete-list">
+                <li *ngFor="let client of clientsFiltres" (click)="selectionnerClient(client)">
+                  {{ client.nom }}
+                </li>
+              </ul>
+            </div>
+      
+            <div class="form-group">
+              <label for="date"><fa-icon [icon]="['fas', 'calendar-alt']"></fa-icon> Date :</label>
+              <input type="date" id="date" formControlName="date">
+            </div>
+      
+            <div formArrayName="produits" class="produits-container">
+              <h3><fa-icon [icon]="['fas', 'box']"></fa-icon> Produits</h3>
+              <br><br>
+            
+              <div *ngFor="let produit of produits.controls; let i = index" [formGroupName]="i" class="produit-item">
+                
+                <!-- Champ Recherche Produit -->
+                <div class="input-icon">
+                  <fa-icon [icon]="['fas', 'search']" class="icon"></fa-icon>
+                  <input type="text" id="produit-{{ i }}" formControlName="produitInput" (keyup)="filterProduits(i)" placeholder="Rechercher un produit..." />
+                </div>
+                <ul *ngIf="filteredProduits[i]?.length > 0" class="autocomplete-list">
+                  <li *ngFor="let produit of filteredProduits[i]" (click)="selectProduit(produit, i)">
+                    {{ produit.label }}
+                  </li>
+                </ul>
+            
+                <!-- Champ Prix -->
+                <div class="input-icon">
+                  <fa-icon [icon]="['fas', 'dollar-sign']" class="icon"></fa-icon>
+                  <input type="text" placeholder="Prix" formControlName="prix" readonly>
+                </div>
+            
+                <!-- Champ Quantité -->
+                <div class="input-icon">
+                  <fa-icon [icon]="['fas', 'hashtag']" class="icon"></fa-icon>
+                  <input type="text" placeholder="Quantité" formControlName="quantite">
+                </div>
+            
+                <!-- Bouton Supprimer -->
+                <button type="button" class="btn delete" (click)="supprimerProduit(i)">
+                  <fa-icon [icon]="['fas', 'trash-alt']"></fa-icon>
+                </button>
+              </div>
+            </div>
+            
+            <button type="button" class="btn add" (click)="ajouterProduit()" style="width: 52%;">
+              <fa-icon [icon]="['fas', 'plus']"></fa-icon> Ajouter Produit
+            </button>
+           
+          </form>
+    <div style="width:48%">
+
+    
+
+          <div class="button-container">
+            <!-- Bouton pour imprimer -->
+            <button  class="btn-action save" (click)="enregistrerDevis()">
+              <fa-icon [icon]="['fas', 'save']"></fa-icon> Enregistrer Devis
+            </button>
+            <button class="btn-action print" (click)="imprimerDevis()">
+              <fa-icon [icon]="faPrint"></fa-icon> Imprimer le devis
+            </button>
+          
+            <!-- Bouton pour envoyer par email -->
+            <button class="btn-action email" (click)="envoyerParEmail()">
+              <fa-icon [icon]="faEnvelope"></fa-icon> Envoyer par email
+            </button>
+          </div>
+          
+               <!-- Zone réactive du devis -->
+ <!-- Zone réactive du devis -->
+<div class="pdf-preview-container" id="devis-container">
+    <div class="pdf-header">
+      <!-- Logo à gauche -->
+      <div class="logo">
+        <img src="logo.png" alt="Logo Entreprise">
+      </div>
+  
+      <!-- Titre centré -->
+      <div class="title">
+        <h2>Aperçu du Devis</h2>
+      </div>
+  
+      <!-- Adresse à droite -->
+      <div class="address">
+        <p>Adresse de l'entreprise</p>
+        <p>123 Rue Exemple, Ville, Code Postal</p>
+      </div>
+    </div>
+  
+    <div class="pdf-content">
+      <!-- Description du devis -->
+      <div class="description">
+        <p><strong>Client :</strong> {{ clientInput }}</p>
+        <p><strong>Date :</strong> {{ devisForm.get('date')?.value }}</p>
+        <p><strong>Description :</strong> Ce devis concerne les produits et services suivants :</p>
+      </div>
+  
+      <!-- Informations client -->
+      <div class="client-info">
+        <h4>Informations Client</h4>
+        <p><strong>Nom :</strong> {{ clientInput }}</p>
+        <p><strong>Email :</strong> elbriniachrafgmail.com</p>
+        <p><strong>Téléphone :</strong>0610868038</p>
+      </div>
+  
+      <!-- Informations produits -->
+      <div class="products-info">
+        <h4>Produits</h4>
+        <table class="products-table">
+          <thead>
+            <tr>
+              <th>Produit</th>
+              <th>Quantité</th>
+              <th>Prix Unitaire</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let produit of produits.controls">
+              <td>{{ produit.get('produitInput')?.value }}</td>
+              <td>{{ produit.get('quantite')?.value }}</td>
+              <td>{{ produit.get('prix')?.value | currency }}</td>
+              <td>{{ produit.get('quantite')?.value * produit.get('prix')?.value | currency }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <p><strong>Total TTC :</strong> {{ calculerTotalTTC() | currency }}</p>
+      </div>
+    </div>
+  
+    <!-- Zone de signature -->
+    <div class="signature">
+      <p><strong>Signature :</strong></p>
+      <div class="signature-box">
+        <p>________________________</p>
+        <p>Signature du client</p>
+      </div>
+    </div>
+  </div>
+  
+    </div>
+
+
+      </div>
+      
+
+
+    </div>
+  
+    <div *ngIf="selectedTab === 'list'">
+      <h2><fa-icon [icon]="['fas', 'list']"></fa-icon> Liste des Devis</h2>
+      
+      <table class="devis-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Total TTC</th>
+            <th>Statut</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let devis of devis">
+            <td>{{ devis._id }}</td>
+            <td>{{ devis.client }}</td>
+            <td>{{ devis.date }}</td>
+            <td>{{ devis.totalTTC | currency }}</td>
+            <td class="statut" [class.brouillon]="devis.statut === 'Brouillon'" 
+                [class.facture]="devis.statut === 'Facturé'" 
+                [class.annule]="devis.statut === 'Annulé'">
+              {{ devis.statut }}
+            </td>
+            <td class="actions">
+              <button class="btn convert" (click)="convertirEnFacture(devis)">
+                <fa-icon [icon]="['fas', 'file-invoice-dollar']"></fa-icon> Facturer
+              </button>
+              <button class="btn email" (click)="envoyerParMail(devis)">
+                <fa-icon [icon]="['fas', 'envelope']"></fa-icon> Envoyer
+              </button>
+              <button class="btn cancel" (click)="annulerDevis(devis)">
+                <fa-icon [icon]="['fas', 'times-circle']"></fa-icon> Annuler
+              </button>
+              <button class="btn view" (click)="voirDetails(devis)">
+                <fa-icon [icon]="['fas', 'eye']"></fa-icon> Voir
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+  </div>
+  

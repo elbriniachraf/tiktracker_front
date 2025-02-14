@@ -1,0 +1,169 @@
+<div class="product-list-container immersive-design">
+    <!-- Barre d'outils -->
+    <div class="toolbar">
+      <input
+        type="text"
+        class="search-input"
+        placeholder="Rechercher un service..."
+        [(ngModel)]="searchQuery"
+        (input)="onSearch(searchQuery)"
+      />
+      <button class="btn btn-add"  (click)="ajouterService()">
+        <fa-icon [icon]="'plus'"></fa-icon> Ajouter un service
+      </button>
+    </div>
+  
+    <!-- Tableau -->
+    <ngx-datatable
+    class="material"
+    [rows]="services"
+    [columnMode]="'force'"
+    [headerHeight]="60"
+    [footerHeight]="60"
+    [rowHeight]="'auto'"
+    [limit]="pageSize"
+    [scrollbarH]="true"
+    [sorts]="sorts"
+    (sort)="onSort($event)"
+    [loadingIndicator]="loading"
+    style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+  
+    <!-- Numéro de ligne -->
+    <ngx-datatable-column name="#" [sortable]="false">
+      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
+        <strong>{{ rowIndex + 1 }}</strong>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Actions -->
+    <ngx-datatable-column name="Actions">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div class="dropdown">
+          <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            Actions
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <li>
+              <a class="dropdown-item" (click)="viewService(row.id)">
+                <fa-icon [icon]="'eye'"></fa-icon> Voir
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="editService(row.id)">
+                <fa-icon [icon]="'edit'"></fa-icon> Modifier
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="deleteService(row.id)">
+                <fa-icon [icon]="'trash'"></fa-icon> Supprimer
+              </a>
+            </li>
+          </ul>
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Nom du service -->
+    <ngx-datatable-column name="Nom" prop="name" [sortable]="true">
+      <ng-template let-value="value">
+        <strong>{{ value }}</strong>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Description -->
+    <ngx-datatable-column name="Description">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <a href="javascript:void(0)" (click)="showDescription(row)" class="description-link">Voir Description</a>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Catégorie -->
+    <ngx-datatable-column name="Catégorie" prop="category.name" [sortable]="true">
+    </ngx-datatable-column>
+  
+    <!-- Prix -->
+    <ngx-datatable-column name="Prix" prop="price" [sortable]="true">
+      <ng-template let-value="value">
+        <div class="price">{{ value | currency:'EUR' }} MAD</div>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Statut -->
+    <ngx-datatable-column name="Statut" prop="status" [sortable]="true">
+      <ng-template let-value="value">
+        <span [class]="value === 'actif' ? 'badge bg-success' : 'badge bg-danger'">{{ value === 'actif' ? 'Actif' : 'Inactif' }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Durée -->
+    <ngx-datatable-column name="Durée" prop="duration" [sortable]="true">
+      <ng-template let-value="value">
+        <div>{{ value }} minutes</div>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Fournisseur -->
+    <ngx-datatable-column name="Fournisseur" prop="service_provider" [sortable]="true">
+    </ngx-datatable-column>
+  
+    <!-- Note -->
+    <ngx-datatable-column name="Note" prop="rating" [sortable]="true">
+      <ng-template let-value="value">
+        <div class="rating">
+          <fa-icon [icon]="'star'"></fa-icon> {{ value }} / 5
+        </div>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Date de début -->
+    <ngx-datatable-column name="Début" prop="start_date" [sortable]="true">
+      <ng-template let-value="value">
+        <div>{{ value | date:'short' }}</div>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Date de fin -->
+    <ngx-datatable-column name="Fin" prop="end_date" [sortable]="true">
+      <ng-template let-value="value">
+        <div>{{ value | date:'short' }}</div>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Image -->
+    <ngx-datatable-column name="Image">
+      <ng-template ngx-datatable-cell-template let-row="row">
+        <img [src]="row.image_url" alt="Image du service" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"/>
+      </ng-template>
+    </ngx-datatable-column>
+  
+    <!-- Mis en avant -->
+    <ngx-datatable-column name="Mis en avant" prop="is_featured" [sortable]="true">
+      <ng-template let-value="value">
+        <span [class]="value ? 'badge bg-warning' : 'badge bg-secondary'">{{ value ? 'Oui' : 'Non' }}</span>
+      </ng-template>
+    </ngx-datatable-column>
+  
+  </ngx-datatable>
+  
+  
+  
+      <!-- Drawer pour afficher la description -->
+      <div class="drawer" [class.open]="isDrawerOpen">
+        <div class="drawer-header">
+          <h3>Description</h3>
+          <button (click)="closeDrawer()" class="close-btn">&times;</button>
+        </div>
+        <div class="drawer-content" [innerHTML]="selectedDescription"></div>
+      </div>
+    <!-- Pagination -->
+    <div class="pagination">
+      <button  >
+        <fa-icon [icon]="'chevron-left'"></fa-icon>
+      </button>
+      <span>Page  sur </span>
+      <button>
+        <fa-icon [icon]="'chevron-right'"></fa-icon>
+      </button>
+    </div>
+  </div>
+  

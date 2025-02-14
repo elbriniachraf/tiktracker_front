@@ -1,0 +1,69 @@
+<div class="dashboard-container">
+    <!-- Titre principal -->
+    <h1 class="dashboard-title">Tableau de Bord</h1>
+  
+    <!-- Statistiques Widgets -->
+    <div class="stats-widgets">
+      <div class="stat-item">
+        <i class="fas fa-file-invoice-dollar stat-icon"></i>
+        <h3>120</h3>
+        <p>Factures Créées</p>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-user-check stat-icon"></i>
+        <h3>50</h3>
+        <p>Clients Actifs</p>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-dollar-sign stat-icon"></i>
+        <h3>15,000 €</h3>
+        <p>Revenus Mensuels</p>
+      </div>
+      <div class="stat-item">
+        <i class="fas fa-calendar-check stat-icon"></i>
+        <h3>8</h3>
+        <p>Rendez-vous Aujourd'hui</p>
+      </div>
+    </div>
+  
+    <!-- Grille des cartes -->
+    <div class="dashboard-grid">
+      <!-- Carte Clients -->
+      <div class="dashboard-card" (click)="navigateTo('clients')">
+        <i class="fas fa-user-friends card-icon"></i>
+        <h3>Clients</h3>
+        <p>Gérez vos clients et leurs informations.</p>
+      </div>
+      <!-- Autres cartes similaires -->
+      <div class="dashboard-card" (click)="navigateTo('agenda')">
+        <i class="fas fa-calendar-alt card-icon"></i>
+        <h3>Agenda</h3>
+        <p>Planifiez vos rendez-vous et tâches.</p>
+      </div>
+      <div class="dashboard-card" (click)="navigateTo('clients')">
+        <i class="fas fa-user-friends card-icon"></i>
+        <h3>Mon cloud</h3>
+        <p>Gérez vos fichiers ici.</p>
+      </div>
+    </div>
+  
+    <!-- Graphiques et activités récentes -->
+    <div class="dashboard-extras">
+      <!-- Graphique -->
+      <div class="chart-container">
+        <h3>Statistiques des Revenus</h3>
+        <canvas id="revenueChart"></canvas>
+      </div>
+  
+      <!-- Activités récentes -->
+      <div class="recent-activities">
+        <h3>Activités Récentes</h3>
+        <ul>
+          <li><i class="fas fa-user-plus"></i> Nouveau client ajouté : <strong>John Doe</strong></li>
+          <li><i class="fas fa-file-invoice"></i> Facture n°1234 payée.</li>
+          <li><i class="fas fa-calendar-plus"></i> Rendez-vous planifié avec <strong>ABC Corp</strong>.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  

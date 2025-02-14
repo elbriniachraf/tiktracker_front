@@ -1,0 +1,73 @@
+<div class="calendar-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <h3>Événements du mois</h3>
+      <ul>
+        <li *ngFor="let event of monthlyEvents" class="event-item">
+          <span class="event-title">{{ event.title }}</span>
+          <span class="event-date">{{ event.start }}</span>
+        </li>
+      </ul>
+  
+      <div class="next-event">
+        <h4>Prochain événement</h4>
+        <div *ngIf="nextEvent">
+          <p><strong>{{ nextEvent.title }}</strong></p>
+          <p>{{ nextEvent.start }}</p>
+        </div>
+        <div *ngIf="!nextEvent">Aucun événement prochainement.</div>
+      </div>
+  
+      <div class="legend">
+        <h4>Légende</h4>
+        <ul>
+          <li><span class="legend-box category-1"></span> Travail</li>
+          <li><span class="legend-box category-2"></span> Personnel</li>
+          <li><span class="legend-box category-3"></span> Autres</li>
+        </ul>
+      </div>
+    </div>
+  
+    <!-- FullCalendar -->
+    <div class="calendar">
+      <full-calendar [options]="calendarOptions" (dateClick)="handleDateClick($event)"></full-calendar>
+    </div>
+
+
+  <!-- Drawer -->
+  <div class="drawer" [class.open]="drawerOpen">
+    <div class="drawer-header">
+      <h3>Ajouter un événement</h3>
+      <button class="close-button" (click)="closeDrawer()">×</button>
+    </div>
+    <form (ngSubmit)="addEvent()">
+      <div class="form-group">
+        <label for="title">Titre</label>
+        <input type="text" id="title" [(ngModel)]="newEvent.title" name="title" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="startDate">Date de début</label>
+        <input type="date" id="startDate" [(ngModel)]="newEvent.startDate" name="startDate" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="endDate">Date de fin</label>
+        <input type="date" id="endDate" [(ngModel)]="newEvent.endDate" name="endDate" required />
+      </div>
+  
+      <div class="form-group">
+        <label for="category">Catégorie</label>
+        <select id="category" [(ngModel)]="newEvent.category" name="category" required>
+          <option value="Travail" [ngClass]="'circle green'">Travail</option>
+          <option value="Personel" [ngClass]="'circle red'">Personnel</option>
+          <option value="Autres" [ngClass]="'circle yellow'">Autres</option>
+        </select>
+      </div>
+  
+      <button type="submit" class="submit-button">Ajouter</button>
+    </form>
+  </div>
+  
+  </div>
+  

@@ -1,0 +1,262 @@
+<div class="container">
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Gestion</h2>
+    </div>
+    <ul class="sidebar-menu">
+      <li 
+        *ngFor="let item of menuItems" 
+        (click)="selectMenu(item)" 
+        [ngClass]="{'active': selectedMenu === item.action}">
+        <fa-icon [icon]="item.icon" class="menu-icon"></fa-icon>
+        <span>{{ item.label }}</span>
+      </li>
+    </ul>
+  </div>
+  
+  <div class="main-content">
+    <div  class="content-section" >
+      <div class="add-product-container" *ngIf="selectedMenu === 'addProduct'" style="position: relative;">
+        <h3>Ajouter un Produit</h3>
+      
+        <!-- Formulaire pour ajouter un produit -->
+        <form (ngSubmit)="onSubmit()" [formGroup]="productForm" class="styled-form">
+          <!-- Nom du produit -->
+         <div style="display: flex;gap: 20px;">
+          <div class="form-group">
+            <label for="productName">
+              <fa-icon [icon]="'tag'"></fa-icon> Nom du Produit
+            </label>
+            <input
+              id="productName"
+              formControlName="label"
+              type="text"
+              placeholder="label du produit"
+            />
+            <div *ngIf="productForm.controls['label'].invalid && productForm.controls['label'].touched" class="error-message">
+              Le nom du produit est requis.
+            </div>
+          </div>
+        
+          <div class="form-group">
+            <label for="productName">
+              <fa-icon [icon]="'tag'"></fa-icon> Reference du Produit
+            </label>
+            <input
+              id="referenceName"
+              formControlName="reference"
+              type="text"
+              placeholder="Reference du produit"
+            />
+            <div *ngIf="productForm.controls['reference'].invalid && productForm.controls['reference'].touched" class="error-message">
+              Le nom du produit est requis.
+            </div>
+          </div>
+        
+
+         </div>
+          <!-- Description -->
+          <div class="form-group">
+            <label for="productDescription">
+              <fa-icon [icon]="'align-left'"></fa-icon> Description
+            </label>
+            <angular-editor
+              style="height: 200px;"
+              [placeholder]="'Rédigez une description...'"
+              formControlName="description">
+            </angular-editor>
+            <div *ngIf="productForm.controls['description'].invalid && productForm.controls['description'].touched" class="error-message">
+              La description est requise.
+            </div>
+          </div>
+        
+       <div style="display: flex;gap: 20px;">
+           <!-- Prix -->
+        
+
+             <!-- Prix -->
+             <div class="form-group">
+              <label for="productPrice">
+                <fa-icon [icon]="'dollar-sign'"></fa-icon> Prix
+              </label>
+              <input
+                id="productPrice"
+                formControlName="price"
+                type="number"
+                placeholder="Prix du produit"
+              />
+              <div *ngIf="productForm.controls['price'].invalid && productForm.controls['price'].touched" class="error-message">
+                Le prix est requis.
+              </div>
+            </div>
+
+
+            <div class="form-group">
+              <label for="productPrice">
+                <fa-icon [icon]="'dollar-sign'"></fa-icon> selling_price
+              </label>
+              <input
+                id="selling_price"
+                formControlName="selling_price"
+                type="number"
+                placeholder="Prix du produit"
+              />
+              <div *ngIf="productForm.controls['selling_price'].invalid && productForm.controls['selling_price'].touched" class="error-message">
+                Le selling_price est requis.
+              </div>
+            </div>
+  
+
+       </div>
+        
+          <!-- Catégorie -->
+          <div class="form-group">
+            <label for="productCategory">
+              <fa-icon [icon]="'list'"></fa-icon> Catégorie
+            </label>
+            <select id="productCategory" formControlName="category">
+              <option value="">Sélectionner une catégorie</option>
+              <option *ngFor="let category of categories" [value]="category.name">{{ category.name }}</option>
+            </select>
+          </div>
+        
+          <!-- Poids -->
+          <div class="form-group">
+            <label for="productWeight">
+              <fa-icon [icon]="'weight-hanging'"></fa-icon> Poids
+            </label>
+            <input
+              id="productWeight"
+              formControlName="weight"
+              type="number"
+              placeholder="Poids en kg"
+            />
+          </div>
+        
+          <!-- Dimensions -->
+          <div class="form-group">
+            <label for="productDimensions">
+              <fa-icon [icon]="'ruler-combined'"></fa-icon> Dimensions
+            </label>
+            <div class="dimensions" style="display: flex; gap: 10px;">
+              <input
+                id="productLength"
+                formControlName="length"
+                type="number"
+                placeholder="Longueur"
+              />
+              <input
+                id="productWidth"
+                formControlName="width"
+                type="number"
+                placeholder="Largeur"
+              />
+              <input
+                id="productHeight"
+                formControlName="height"
+                type="number"
+                placeholder="Hauteur"
+              />
+            </div>
+          </div>
+        
+          <!-- URL publique -->
+          <div class="form-group">
+            <label for="productUrl">
+              <fa-icon [icon]="'link'"></fa-icon> URL Publique
+            </label>
+            <input
+              id="productUrl"
+              formControlName="publicUrl"
+              type="url"
+              placeholder="URL publique du produit"
+            />
+          </div>
+        
+          <!-- Actions -->
+          <div class="form-actions">
+            <button type="submit" class="btn btn-submit">
+              <fa-icon [icon]="'check'"></fa-icon> Ajouter Produit
+            </button>
+            <button type="reset" (click)="productForm.reset()" class="btn btn-reset">
+              <fa-icon [icon]="'undo'"></fa-icon> Réinitialiser
+            </button>
+          </div>
+        </form>
+        
+      
+        <!-- Ajouter une catégorie -->
+        <button (click)="toggleDrawer()" class="btn btn-add-category">
+          <fa-icon [icon]="'plus'"></fa-icon> Ajouter une catégorie
+        </button>
+      </div>
+      
+      <app-list-produits *ngIf="selectedMenu === 'products'"  (productAjout)="onProductAjout($event)"></app-list-produits>
+      <app-list-services *ngIf="selectedMenu === 'services'"  (productAjout)="onProductAjout($event)"></app-list-services>
+
+    </div>
+
+    <div class="drawer" [class.open]="drawerOpen">
+        <div class="drawer-content">
+          <div class="expand-button" (click)="toggleForm()">
+            <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> Ajouter une catégorie
+          </div>
+          <form  *ngIf="showForm" >
+            <div class="form-group">
+              <label for="categoryName">Nom de la catégorie</label>
+              <input 
+                id="categoryName" 
+                type="text" 
+                [(ngModel)]="newCategoryName" 
+                name="categoryName" 
+                placeholder="Nom de la catégorie" 
+                required />
+            </div>
+            
+            <div class="form-group">
+              <label for="categoryDescription">Description</label>
+              <textarea 
+                id="categoryDescription" 
+                [(ngModel)]="newCategoryDescription" 
+                name="categoryDescription" 
+                placeholder="Description de la catégorie" 
+                required></textarea>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" (click)="addCategory()" class="btn btn-submit">
+                <fa-icon [icon]="['fas', 'plus']"></fa-icon> Ajouter
+              </button>
+              <button type="button" class="btn btn-reset" (click)="resetForm()">
+                <fa-icon [icon]="['fas', 'redo']"></fa-icon> Réinitialiser
+              </button>
+            </div>
+          </form>
+
+          <div class="category-list">
+            <h4>Liste des Catégories</h4>
+            
+            <div class="category-card" *ngFor="let category of categories">
+              <div class="card-icon">
+                <fa-icon [icon]="['fas', 'folder']"></fa-icon>
+              </div>
+              <div class="card-content">
+                <h5>{{ category.name }}</h5>
+                <p>{{ category.description }}</p>
+              </div>
+              <div class="card-actions">
+                <button class="btn btn-delete" (click)="deleteCategory(category._id)">
+                  <fa-icon [icon]="['fas', 'trash']"></fa-icon> Supprimer
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <button (click)="toggleDrawer()" class="btn btn-close-drawer">
+            <fa-icon [icon]="['fas', 'times']"></fa-icon> Fermer
+          </button>
+        </div>
+      </div>
+      
+  </div>
+</div>

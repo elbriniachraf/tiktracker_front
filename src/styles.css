@@ -1,1 +1,382 @@
-/* You can add global styles to this file, and also import other style files */
+.green-cell {
+    color: green !important;
+    font-weight: bold;
+  }
+  /* You can add global styles to this file, and also import other style files */
+
+
+  .badge-light-green {
+    background-color: lightgreen;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+  
+  .badge-light-blue {
+    background-color: lightblue;
+    color: black;
+    padding: 5px 10px;
+    border-radius: 12px;
+  }
+
+  .datatable-row-even {
+    background-color: #95d5b2; /* Vert clair */
+    color: black; /* Texte blanc */
+    cursor: pointer;
+    padding:10px;
+    text-align: center;
+    vertical-align: middle;
+
+  }
+  
+
+  .ngx-datatable .datatable-header{
+    text-align: center;
+    vertical-align: middle;
+  }
+  .datatable-row-odd {
+    background-color: #ffffff; /* Blanc */
+    color: black; /* Texte noir */
+    cursor: pointer;
+    text-align: center;
+    padding:10px;
+
+    vertical-align: middle;
+
+
+
+  }
+  .context-menu {
+    position: absolute;
+    background-color: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1000;
+    width: 150px;
+  }
+  
+  .menu-item {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .menu-item i {
+    color: #555;
+    font-size: 16px;
+  }
+  
+  .menu-item:hover {
+    background-color: #f0f0f0;
+  }
+/* Drawer container */
+ngx-drawer {
+    width: 400px;
+    padding: 20px;
+    background-color: #fff;
+  }
+  
+  /* Form styles */
+  form .form-group {
+    margin-bottom: 15px;
+  }
+  
+  form .form-control {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  button.btn-primary {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  
+  button.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+  .angular-editor-textarea{
+    height: 200px !important;
+    min-height: 200px !important;
+  }
+  
+  
+  .price {
+    font-weight: bold;
+    color: #4caf50;
+  }
+  
+  .low-stock {
+    color: red;
+    font-weight: bold;
+  }
+  
+  
+
+  /* Position relative to prevent clipping by parent */
+.dropdown-container {
+  position: relative;
+  margin-top: 10px;
+}
+
+/* Override ngx-datatable's overflow hidden */
+ngx-datatable .datatable-body-row {
+  overflow: visible !important;
+}
+
+/* Style for the dropdown to ensure visibility */
+.dropdown-menu {
+  position: absolute;
+  z-index: 1050; /* Higher z-index for visibility */
+  left: 0; /* Adjust based on your design */
+  transform: translateY(10px); /* To adjust the position */
+}
+
+/* Prevent clipping if table is small */
+ngx-datatable .datatable-body-cell {
+  overflow: visible !important;
+}
+
+/* Custom styles for your dropdown */
+.dropdown-custom {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 0.5rem;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Optional animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.container{
+  max-width: 100% !important;
+}
+
+.datatable-body{
+  height: 500px  !important;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.calendar-view-options {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+button {
+  margin: 0 5px;
+}
+
+.mwl-calendar-month-view, .mwl-calendar-week-view, .mwl-calendar-day-view, .mwl-calendar-agenda-view {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mwl-calendar-header {
+  background-color: #1e90ff;
+  color: white;
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.mwl-calendar-header button {
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+
+
+/* Style général du calendrier */
+.fc {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f9f9f9; /* Couleur de fond générale */
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+}
+
+/* Header du calendrier */
+.fc-toolbar {
+  background-color: #ffffff;
+  border-bottom: 2px solid #4caf50; /* Ligne verte pour une touche moderne */
+  border-radius: 8px 8px 0 0;
+  padding: 8px;
+}
+
+.fc-toolbar-title {
+  font-size: 1.5rem;
+  color: #4caf50; /* Titre en vert */
+  font-weight: bold;
+}
+
+.fc-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  transition: all 0.3s ease-in-out;
+}
+
+.fc-button:hover {
+  background-color: #388e3c; /* Vert plus foncé au survol */
+  transform: scale(1.05); /* Léger zoom */
+}
+
+.fc-button:active {
+  background-color: #2e7d32; /* Vert encore plus foncé au clic */
+}
+
+/* Jour actif */
+.fc-day-today {
+  background-color: #e8f5e9; /* Légèrement vert */
+  border: 1px solid #4caf50;
+  border-radius: 4px;
+  font-weight: bold;
+  color: #4caf50;
+}
+
+/* Événements */
+.fc-event {
+  background-color: #4caf50; /* Fond des événements */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s;
+}
+
+.fc-event:hover {
+  transform: scale(1.05); /* Léger agrandissement au survol */
+  background-color: #388e3c; /* Vert plus foncé */
+}
+
+/* Jours */
+.fc-daygrid-day {
+  transition: all 0.2s ease-in-out;
+}
+
+.fc-daygrid-day:hover {
+  background-color: #e8f5e9; /* Fond vert clair au survol */
+  cursor: pointer;
+}
+
+/* Bordure entre les jours */
+.fc-daygrid-day-frame {
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+}
+
+/* Pop-up événement (optionnel si activé) */
+.fc-popover {
+  background-color: white;
+  border: 1px solid #4caf50;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+}
+
+/* Scroll */
+.fc-scroller {
+  scrollbar-width: thin;
+  scrollbar-color: #4caf50 #f9f9f9;
+}
+
+.fc-scroller::-webkit-scrollbar {
+  width: 8px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+  background-color: #4caf50;
+  border-radius: 8px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+  background-color: #f9f9f9;
+}
+
+
+.sidebar {
+  background-color: #2c3e50;
+  color: white;
+  width: 250px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #ecf0f1;
+  text-align: center;
+  border-bottom: 1px solid #34495e;
+  padding-bottom: 10px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar-item span {
+  flex-grow: 1;
+  font-size: 16px;
+}
+
+.sidebar-item.active,
+.sidebar-item:hover {
+  background-color: #34495e;
+}
+
+.icon {
+  font-size: 18px;
+}

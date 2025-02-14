@@ -1,0 +1,354 @@
+<div class="container mt-4">
+   <section class="content">
+    <div class="drawer" [ngClass]="{'open': isDrawerOpen}">
+      <div class="drawer-content">
+        <button class="close-btn" (click)="toggleDrawer()">
+          <fa-icon icon="times"></fa-icon>
+        </button>
+
+        <form>
+          <div style="display: flex; gap: 30px;">
+            <div class="profile-container">
+              <div class="avatar-container">
+                <!-- Affichage de l'image de profil -->
+                <img *ngIf="profileImage" [src]="profileImage" alt="Profile Image" class="avatar-img">
+                <div *ngIf="!profileImage" class="avatar-placeholder">No Image</div>
+        
+                <!-- Icône pour changer l'image -->
+                <label for="profile-upload" class="change-avatar-btn">
+                  <fa-icon icon="camera" size="lg"></fa-icon>
+                </label>
+                <input id="profile-upload" type="file" accept="image/*" (change)="onImageChange($event)" hidden>
+              </div>
+            </div>
+        
+            <div>
+              <div class="input-group three-columns">
+                <div class="input-with-icon">
+                  <fa-icon icon="id-badge"></fa-icon>
+                  <input type="text" id="identifiant" name="identifiant" placeholder="Enter Identifiant" required [value]="generatedIdentifiant" disabled>
+                </div>
+                <div class="input-with-icon">
+                  <fa-icon icon="user"></fa-icon>
+                  <input type="text" id="nom" name="nom" placeholder="Enter Nom" [(ngModel)]="nom" (input)="generateIdentifiant()" required>
+                </div>
+                <div class="input-with-icon">
+                  <fa-icon icon="user"></fa-icon>
+                  <input type="text" id="prenom" name="prenom" placeholder="Enter Prénom" [(ngModel)]="prenom" (input)="generateIdentifiant()" required>
+                </div>
+              </div>
+              <div class="input-group two-columns">
+                <div class="input-with-icon">
+                  <fa-icon icon="envelope"></fa-icon>
+                  <input type="email" id="email" name="email" placeholder="Enter Email" [(ngModel)]="email" required>
+                </div>
+                <div class="input-with-icon">
+                  <fa-icon icon="phone"></fa-icon>
+                  <input type="text" id="telephone" name="telephone" placeholder="Enter Phone" [(ngModel)]="telephone" required>
+                </div>
+              </div>
+            </div>
+          </div>
+        
+          <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+              <!-- Champ Adresse avec Autocomplétion -->
+              <div class="input-group">
+                <div class="input-with-icon" style="width: 100%;">
+                  <fa-icon icon="map-marker-alt"></fa-icon>
+                  <input type="text" id="adresse" [(ngModel)]="adresse" placeholder="Enter Adresse" required>
+                </div>
+              </div>
+        
+              <!-- Code Postal et Ville -->
+              <div class="input-group two-columns">
+                <div class="input-with-icon">
+                  <fa-icon icon="mail-bulk"></fa-icon>
+                  <input type="text" id="code_postal" [(ngModel)]="codePostal" placeholder="Enter Code Postal" required>
+                </div>
+                <div class="input-with-icon">
+                  <fa-icon icon="city"></fa-icon>
+                  <input type="text" id="ville" [(ngModel)]="ville" placeholder="Enter Ville" required>
+                </div>
+              </div>
+            </div>
+        
+            <div style="flex: 1;">
+              <google-map height="100%" [options]="options"></google-map>
+            </div>
+          </div>
+        
+          <div class="input-group three-columns">
+            <div class="input-with-icon">
+              <fa-icon icon="globe"></fa-icon>
+              <input type="text" id="pays" name="pays" placeholder="Enter Pays" [(ngModel)]="pays" required>
+            </div>
+            <div class="input-with-icon">
+              <fa-icon icon="id-card"></fa-icon>
+              <input type="text" id="num_siret" name="num_siret" placeholder="Enter Numéro SIRET" [(ngModel)]="numSiret" required>
+            </div>
+            <div class="input-with-icon">
+              <fa-icon icon="id-badge"></fa-icon>
+              <input type="text" id="num_siren" name="num_siren" placeholder="Enter Numéro SIREN" [(ngModel)]="numSiren" required>
+            </div>
+          </div>
+          <div class="input-group three-columns">
+            <div class="input-with-icon">
+              <fa-icon icon="credit-card"></fa-icon>
+              <input type="text" id="iban" name="iban" placeholder="Enter IBAN" [(ngModel)]="iban" required>
+            </div>
+          </div>
+        
+          <button type="button" (click)="addClient()">
+            <fa-icon icon="save"></fa-icon> Add Client
+          </button>
+        </form>
+        
+      </div>
+    </div>
+    
+    
+    
+    <div class="row mb-3">
+        <div class="col-md-6">
+          <!-- Tabbar -->
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" id="tab-dashboard" (click)="navigateTo('main/gestion/clients')" style="cursor: pointer;">
+                <fa-icon [icon]="faUsers"></fa-icon> Clients {{totalRecords }}
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="tab-reports" (click)="navigateTo('main/gestion/fournisseurs')" style="cursor: pointer;">
+                <fa-icon [icon]="faTruck"></fa-icon> Fournisseurs
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="tab-reports" (click)="navigateTo('main/gestion/prospects')" style="cursor: pointer;">
+                <fa-icon [icon]="faUserPlus"></fa-icon> Prospects
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" id="tab-reports" (click)="navigateTo('main/gestion/contacts')" style="cursor: pointer;">
+                <fa-icon [icon]="faAddressBook"></fa-icon> Contacts
+              </a>
+            </li>
+          </ul>
+          
+        </div>
+      
+        <div class="col-md-2 d-flex justify-content-end align-items-center row gap-2">
+          <div class="search-container">
+            <!-- Zone de recherche -->
+            <div class="search-input-wrapper">
+              <i class="fas fa-search search-icon"></i>
+              <input 
+                type="text" 
+                class="search-input-3d" 
+                placeholder="Rechercher..." 
+                [(ngModel)]="query" 
+                (keydown.enter)="loadClients()"
+              />
+            </div>
+          
+            <!-- Bouton Ajouter -->
+            <button class="btn-add-3d" (click)="toggleDrawer()">
+              <i class="fas fa-plus btn-icon"></i>
+              Ajouter
+            </button>
+          </div>
+          
+        </div>
+        
+      </div>
+
+      <div class="filter-container row mb-3">
+        <!-- Dropdown: Type -->
+        <div class="col-md-4 filter-dropdown">
+          <label for="typeFilter" class="filter-label">
+            <fa-icon [icon]="faUsers" class="filter-icon"></fa-icon> Type
+          </label>
+          <select class="filter-select" id="typeFilter" [(ngModel)]="typeFilter" (change)="loadClients()">
+            <option value="">Tous les types</option>
+            <option value="particulier">Particulier</option>
+            <option value="entreprise">Entreprise</option>
+          </select>
+        </div>
+      
+        <!-- Dropdown: Statut -->
+        <div class="col-md-4 filter-dropdown">
+          <label for="statusFilter" class="filter-label">
+            <fa-icon [icon]="faTasks" class="filter-icon"></fa-icon> Statut
+          </label>
+          <select class="filter-select" id="statusFilter">
+            <option value="">Tous les statuts</option>
+            <option value="status1">Statut 1</option>
+            <option value="status2">Statut 2</option>
+            <option value="status3">Statut 3</option>
+          </select>
+        </div>
+      
+        <!-- Dropdown: Date -->
+        <div class="col-md-4 filter-dropdown">
+          <label for="dateFilter" class="filter-label">
+            <fa-icon [icon]="faCalendarAlt" class="filter-icon"></fa-icon> Date
+          </label>
+          <select class="filter-select" id="dateFilter">
+            <option value="">Toutes les dates</option>
+            <option value="date1">Date 1</option>
+            <option value="date2">Date 2</option>
+            <option value="date3">Date 3</option>
+          </select>
+        </div>
+      
+        <!-- Sort Button -->
+        <div class="col-12 sort-container mt-3">
+          <button class="btn-sort">
+            Trier <fa-icon [icon]="faSort"></fa-icon>
+          </button>
+        </div>
+      </div>
+      
+
+      <div *ngIf="loading" class="loader-container">
+        <div class="loader-content">
+          <fa-icon [icon]="['fas', 'spinner']" class="loader-icon" ></fa-icon>
+          <div class="loader-text">
+            <h3 class="loader-title">Chargement en cours...</h3>
+            <p class="loader-description">Nous récupérons les données des clients, veuillez patienter.</p>
+          </div>
+        </div>
+      </div>
+      <ngx-datatable *ngIf="!loading"
+      class="material"
+      [rows]="rows"
+      [columnMode]="'force'"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      [rowHeight]="'auto'"
+      [limit]="pageSize"
+      [scrollbarH]="true" 
+      (tableContextmenu)="onTableContextMenu($event)"
+      style="width: 100%; overflow: auto;"
+    >
+
+      <!-- Identifiant -->
+      <ngx-datatable-column name="Identifiant" prop="identifiant" [cellClass]="'green-cell'">
+      </ngx-datatable-column>
+    
+      <!-- Nom -->
+      <ngx-datatable-column name="Nom" prop="nom">
+      </ngx-datatable-column>
+    
+      <!-- Prénom -->
+      <ngx-datatable-column name="Prénom" prop="prenom">
+      </ngx-datatable-column>
+    
+      <!-- Email -->
+      <ngx-datatable-column name="Email" [width]="300">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <a [href]="'mailto:' + row.email" class="email-link">{{ row.email }}</a>
+        </ng-template>
+      </ngx-datatable-column>
+    
+      <!-- Téléphone -->
+      <ngx-datatable-column name="Téléphone" prop="telephone"  [width]="250">
+      </ngx-datatable-column>
+    
+      <!-- Adresse -->
+      <ngx-datatable-column name="Adresse" prop="adresse"  [width]="300">
+      </ngx-datatable-column>
+    
+      <!-- Code Postal -->
+      <ngx-datatable-column name="Code Postal" prop="code_postal">
+      </ngx-datatable-column>
+    
+      <!-- Ville -->
+      <ngx-datatable-column name="Ville" prop="ville">
+      </ngx-datatable-column>
+    
+      <!-- Pays -->
+      <ngx-datatable-column name="Pays" prop="pays">
+      </ngx-datatable-column>
+    
+      <!-- Numéro SIRET -->
+      <ngx-datatable-column name="Numéro SIRET" prop="num_siret">
+      </ngx-datatable-column>
+    
+      <!-- Code APE -->
+      <ngx-datatable-column name="Code APE" prop="code_ape">
+      </ngx-datatable-column>
+    
+      <!-- IBAN -->
+      <ngx-datatable-column name="IBAN" prop="iban">
+      </ngx-datatable-column>
+    
+      <!-- BIC -->
+      <ngx-datatable-column name="BIC" prop="bic">
+      </ngx-datatable-column>
+    
+      <!-- Type -->
+      <ngx-datatable-column name="Type">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          <span
+            class="badge"
+            [ngClass]="{
+              'badge-light-green': row.type === 'entreprise',
+              'badge-light-blue': row.type === 'particulier'
+            }"
+          >
+            {{ row.type }}
+          </span>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+    
+    
+
+<!-- Menu contextuel -->
+<div
+class="context-menu"
+*ngIf="showContextMenu"
+[ngStyle]="{ top: contextMenuPosition.y + 'px', left: contextMenuPosition.x + 'px' }"
+
+>
+<div class="menu-item" (click)="editRow(selectedRow)">
+  <fa-icon [icon]="'edit'"></fa-icon> Modifier
+</div>
+<div class="menu-item" (click)="deleteRow()">
+  <fa-icon [icon]="'trash'"></fa-icon> Supprimer
+</div>
+
+</div>
+<!-- Pagination -->
+<div class="pagination">
+  <button
+    (click)="changePage(currentPage - 1)"
+    [disabled]="currentPage === 1"
+    class="btn"
+  >
+    Précédent
+  </button>
+
+  <button
+    *ngFor="let page of pages"
+    [class.active]="page === currentPage"
+    (click)="changePage(page)"
+    class="btn"
+  >
+    {{ page }}
+  </button>
+
+  <button
+    (click)="changePage(currentPage + 1)"
+    [disabled]="currentPage === totalRecords / pageSize"
+    class="btn"
+  >
+    Suivant
+  </button>
+</div>
+   </section>
+      
+  
+  </div>
+  

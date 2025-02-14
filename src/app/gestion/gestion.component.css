@@ -1,0 +1,735 @@
+
+.container {
+        margin: 0 auto;
+        padding: 20px;
+    background-color: #F5F8F5;
+
+    }
+    .content{
+        background-color: white;
+        padding: 20px;
+    }
+.row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Tabbar Styles */
+  .nav-tabs {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .nav-item {
+    margin-right: 20px;
+  }
+  
+  .nav-link {
+    font-size: 16px;
+    color: black; /* Color for all inactive tabs */
+    text-decoration: none;
+    padding: 10px 15px;
+    display: inline-block;
+    border-bottom: 2px solid transparent; /* Default border */
+    transition: all 0.3s ease;
+  }
+  
+  .nav-link.active {
+    color: #008000; /* Active tab color */
+    border-bottom: 2px solid #008000; /* Active tab border */
+  }
+  
+  /* Search Input */
+  .search-input {
+    width: 75%;
+    padding: 10px;
+    border-radius: 4px;
+    margin-right: 15px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+  
+  .search-input:focus {
+    border-color: #008000;
+    outline: none;
+  }
+  
+  /* Add Button */
+  .btn-add {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #008000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-add i {
+    margin-right: 8px; /* Space between icon and text */
+  }
+  
+  .btn-add:hover {
+    background-color: #008000; /* Slightly darker green on hover */
+  }
+  
+  .btn-add:focus {
+    outline: none;
+  }
+
+  /* Container for Filter Bar */
+.filter-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  /* Filter Dropdown */
+  .filter-dropdown {
+    width: 30%; /* Each dropdown takes 30% of the width */
+    padding: 5px;
+  }
+  
+  .filter-select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: all 0.3s ease;
+  }
+  
+  .filter-select:focus {
+    border-color: #008000;
+    outline: none;
+  }
+  
+  /* Sort Button */
+  .sort-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  
+  .btn-sort {
+    padding: 10px 20px;
+    background-color: #008000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-sort i {
+    margin-left: 8px;
+  }
+  
+  .btn-sort:hover {
+    background-color: #45a049;
+  }
+  
+  .btn-sort:focus {
+    outline: none;
+  }
+  ngx-datatable.material {
+    margin-top: 30px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* Personnalisation du tableau (couleur des lignes, des en-têtes, etc.) */
+  ngx-datatable .datatable-header {
+    background-color: #f4f4f4;
+    color: #333;
+  }
+  
+  ngx-datatable .datatable-row:hover {
+    background-color: #f0f0f0;
+  }
+  
+  /* Pagination */
+  ngx-datatable .datatable-pager {
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  /* Ajustement des colonnes */
+  ngx-datatable .datatable-body-cell {
+    font-size: 14px;
+    padding: 10px;
+  }
+  
+  .filter-dropdown select {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  
+  .filter-dropdown {
+    margin-bottom: 15px;
+  }
+
+  /* Conteneur principal de la pagination */
+.datatable-pager .pager {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+  }
+  
+  /* Les éléments de pagination (pages, premières et dernières pages) */
+  .datatable-pager .pager li {
+    margin: 0 5px;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  /* Style des liens (pages, précédent, suivant) */
+  .ngx-datatable .datatable-footer .datatable-pager .pager li, .ngx-datatable .datatable-footer .datatable-pager .pager li a{
+    display: inline-block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #555;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  }
+  
+  /* Hover effect */
+  .datatable-pager .pager li a:hover {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  /* Bouton actif (page actuelle) */
+  .datatable-pager .pager li.active a {
+    background-color: #28a745;
+    color: white;
+    border: 1px solid #28a745;
+  }
+  
+  /* Désactiver le bouton (première/dernière page si sur la première ou dernière page) */
+  .datatable-pager .pager li.disabled a {
+    background-color: #f0f0f0;
+    color: #b0b0b0;
+    cursor: not-allowed;
+    border-color: #ddd;
+  }
+  
+  /* Icônes des boutons (précédent, suivant, première, dernière) */
+  .datatable-pager .pager li a i {
+    font-size: 16px;
+    vertical-align: middle;
+  }
+  
+  /* Style des icônes au survol */
+  .datatable-pager .pager li a:hover i {
+    color: white;
+  }
+  
+  /* Espace autour de la pagination pour un meilleur alignement */
+  .datatable-pager {
+    margin-top: 20px;
+  }
+  
+  /* Style pour le pager précédent et suivant */
+  .datatable-pager .pager li a {
+    padding: 8px 12px;
+  }
+  
+  .datatable-pager .pager li a i {
+    margin-right: 5px;
+  }
+  
+  /* Style du bouton de page actuelle */
+  .datatable-pager .pager li.active a {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  
+
+  ::ng-deep .ngx-datatable-header {
+    background-color: #008000;  /* Exemple de couleur verte */
+    color: white;  /* Couleur du texte en blanc */
+  }
+  
+  /* Personnaliser la couleur de fond de chaque cellule de l'en-tête */
+  ::ng-deep .datatable-header-cell {
+    background-color: #008000;  /* Exemple de couleur verte pour les cellules */
+    color: white;  /* Couleur du texte en blanc */
+    text-align: center;
+  }
+
+  ::ng-deep .datatable-body-cell {
+    text-align: center;
+    color: black;
+  }
+
+  ::ng-deep .datatable-body-cell {
+    text-overflow: ellipsis;  /* Ajoute des points de suspension si le texte est trop long */
+    padding: 8px; /* Ajouter un peu de padding pour un espacement confortable */
+  }
+  
+  /* Appliquer un scroll horizontal aux colonnes */
+  ::ng-deep .ngx-datatable-header-cell {
+    text-align: center;
+    padding: 8px;
+    background-color: #f1f1f1; /* Couleur de fond de l'en-tête */
+    border-right: 1px solid #ddd; /* Ajoute une bordure droite pour mieux séparer les colonnes */
+  }
+
+  .pagination {
+    display: flex;
+    gap: 10px;
+    justify-content: end;
+    margin-top: 20px;
+  }
+  
+  .pagination .btn {
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .pagination .btn.active {
+    background-color: #008000;
+    color: white;
+  }
+
+  .pagination .btn:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+
+  /* Styles globaux du drawer */
+.drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 68%; /* Drawer plus large */
+  height: 100%;
+  background-color: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+  z-index: 1000;
+  padding: 30px;
+  border-radius: 12px 0 0 12px;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+.drawer-content {
+  padding: 20px;
+}
+
+h2 {
+  font-size: 26px;
+  font-weight: 600;
+  color: #333;
+  text-align: center;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+h2 fa-icon {
+  margin-right: 10px;
+  font-size: 30px;
+  color: #28a745;
+}
+
+input[type="text"], input[type="email"] {
+  width: 100%;
+  padding: 14px 20px;
+  margin: 12px 0;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input[type="text"]:focus, input[type="email"]:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+  outline: none;
+}
+
+button[type="button"] {
+  width: 100%;
+  padding: 14px;
+  background-color: #28a745;
+  border: none;
+  color: white;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+button[type="button"]:hover {
+  background-color: #218838;
+}
+
+/* Effet de gradient pour l'arrière-plan du drawer */
+.drawer.open {
+  background: linear-gradient(145deg, #ffffff, #f4f4f4);
+}
+
+/* Grille responsive */
+.input-group {
+  margin-bottom: 25px;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon fa-icon {
+  position: absolute;
+  left: 15px;
+  font-size: 18px;
+  color: #888;
+}
+
+.input-with-icon input {
+  padding-left: 40px;
+  font-size: 16px;
+}
+
+.two-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.three-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.open-btn {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: #007bff;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  z-index: 999;
+  transition: background-color 0.3s ease;
+}
+
+.open-btn:hover {
+  background-color: #0056b3;
+}
+
+.open-btn fa-icon {
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+/* Ombre douce pour l'intérieur du drawer */
+.drawer-content {
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajout d'une transition pour les icônes */
+input[type="text"], input[type="email"] {
+  transition: border 0.3s ease-in-out;
+}
+
+input[type="text"]:focus {
+  border-color: #28a745;
+}
+
+  
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 28px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+  color: #ff4d4d; /* Couleur rouge au survol */
+}
+
+/* Container pour l'image de profil */
+.profile-container {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.avatar-container {
+  position: relative;
+  display: inline-block;
+}
+
+/* Style pour l'image de profil */
+.avatar-img {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+}
+
+/* Style pour le texte 'No Image' lorsqu'aucune image n'est chargée */
+.avatar-placeholder {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #888;
+  font-size: 14px;
+  font-weight: 600;
+  border: 3px solid #007bff;
+}
+
+/* Bouton pour changer l'image */
+.change-avatar-btn {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  background-color: #007bff;
+  border-radius: 50%;
+  padding: 8px;
+  cursor: pointer;
+  color: white;
+  transition: background-color 0.3s;
+}
+
+.change-avatar-btn:hover {
+  background-color: #0056b3;
+}
+
+/* Cacher le champ de téléchargement de fichier */
+input[type="file"] {
+  display: none;
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1); /* semi-transparent background */
+  z-index: 1000; /* Ensure the loader is on top */
+}
+
+.loader-content {
+  text-align: center;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.loader-icon {
+  font-size: 48px;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+.loader-title {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.loader-description {
+  font-size: 16px;
+  color: #777;
+}
+
+.material {
+  position: relative;
+  z-index: 1; /* Make sure the table is under the loader */
+}
+
+
+/* Container */
+.filter-container {
+  background: #f4fff5;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 4px 8px rgba(0, 128, 0, 0.2);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.filter-container:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 128, 0, 0.3);
+}
+
+/* Dropdown Label */
+.filter-label {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  color: #006f3e;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.filter-icon {
+  margin-right: 8px;
+  font-size: 18px;
+  color: #00a74a;
+}
+
+/* Dropdown */
+.filter-select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #00a74a;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #006f3e;
+  font-size: 14px;
+  font-family: 'Roboto', sans-serif;
+  transition: all 0.3s ease-in-out;
+}
+
+.filter-select:hover,
+.filter-select:focus {
+  border-color: #006f3e;
+  box-shadow: 0 0 5px rgba(0, 128, 0, 0.4);
+  outline: none;
+}
+
+/* Sort Button */
+.btn-sort {
+  background: #00a74a;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-sort i {
+  margin-left: 8px;
+}
+
+.btn-sort:hover {
+  background: #007f3a;
+  box-shadow: 0 4px 8px rgba(0, 128, 0, 0.3);
+  transform: translateY(-2px);
+}
+
+
+/* Conteneur principal */
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 15px; /* Espace entre les éléments */
+  flex-wrap: wrap;
+}
+
+/* Zone de recherche 3D */
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 5px;
+  color: #555;
+  font-size: 16px;
+  pointer-events: none;
+}
+
+.search-input-3d {
+  padding: 30px 12px 10px 40px; /* Espace pour l'icône */
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  width: 220px;
+  outline: none;
+  box-shadow: 0 4px 0 #ccc, 0 6px 10px rgba(0, 0, 0, 0.2); /* Effet 3D */
+  background: linear-gradient(145deg, #f0f0f0, #d9d9d9);
+  transition: all 0.2s ease-in-out;
+}
+
+.search-input-3d:focus {
+  box-shadow: 0 4px 0 #0078d4, 0 6px 10px rgba(0, 0, 0, 0.3);
+  background: linear-gradient(145deg, #e6e6e6, #ffffff);
+}
+
+/* Bouton Ajouter 3D */
+.btn-add-3d {
+  background: linear-gradient(145deg, #0078d4, #005ea2);
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #004080, 0 6px 10px rgba(0, 0, 0, 0.3); /* Ombre pour l'effet 3D */
+  transition: all 0.2s ease-in-out;
+}
+
+.btn-add-3d:active {
+  box-shadow: none;
+  transform: translateY(4px); /* Enfonce le bouton */
+}
+
+.btn-icon {
+  font-size: 16px;
+}

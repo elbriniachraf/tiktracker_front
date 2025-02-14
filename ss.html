@@ -1,0 +1,2743 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suivi de Colis</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+
+
+    <script type="text/javascript" src="https://maps.google.com/maps/api/js?key=AIzaSyBqbfdqv2sgUTjfEyDzTxSCXBAV4GJhC2o&libraries=places,visualization,drawing,geometry,places"></script>
+
+    <style>
+
+        #affrete-container{
+            display: none;
+        }
+
+
+.fullscreen-toggle img {
+   
+    cursor: pointer;
+}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: auto !important;
+            min-height: 100vh;
+            overflow-y: auto !important; /* Assure que le scroll est bien activé */
+            scroll-behavior: smooth; /* Animation fluide pour éviter un blocage */
+        }
+
+.container {
+    background-color: #fff;
+    padding: 15px; /* Ajusté pour ne pas être trop large */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 1000px; /* Augmenté pour s'adapter aux grands écrans */
+    text-align: center;
+    margin: 20px auto; /* Centre et ajoute un espacement équilibré */
+    display: flex;
+    flex-direction: column;
+/*    align-items: center;*/
+}
+        .status {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0056b3;
+        }
+        .date, .location, .info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+/* Conteneur du stepper */
+.steps {
+    display: flex;
+    justify-content: center; /* Centrer les étapes */
+    align-items: flex-start;
+    position: relative;
+    margin: 30px auto;
+/*    padding: 20px 0;*/
+    width: 90%;
+    max-width: 750px;
+}
+
+/* Suppression de la barre de progression */
+.steps::before {
+    display: none;
+}
+
+/* Étape */
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+    flex: 1;
+    max-width: 120px;
+    padding: 0 10px;
+}
+
+/* Icône de l’étape */
+.step-icon {
+    width: 50px;
+    height: 50px;
+    background-color: #e0e0e0;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Icône active */
+.step.active .step-icon {
+    background-color: #007bff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* Icône des étapes complétées */
+.step.completed .step-icon {
+    background-color: #28a745;
+}
+
+/* Zone d’information */
+.step-info {
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Style de la date */
+.step-date {
+    font-size: 13px;
+    color: #666;
+    font-weight: bold;
+}
+
+/* Détail de l’étape */
+.step-detail {
+    font-size: 14px;
+    color: #222;
+    font-weight: bold;
+    margin-top: 5px;
+    white-space: nowrap;
+}
+
+
+
+        /* Section Order */
+        .order-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            text-align: left;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .order-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #0056b3;
+        }
+        .order-info {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        /* Documents */
+        .documents {
+            margin-top: 15px;
+        }
+        .doc-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 6px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 8px;
+        }
+        .doc-item i {
+            font-size: 20px;
+            color: #0056b3;
+            margin-right: 10px;
+        }
+        .doc-link {
+            font-size: 14px;
+            color: #333;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .doc-link:hover {
+            color: #0056b3;
+        }
+        .header {
+            background-color: #191e3a;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+        }
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: auto; /* Ajouter overflow:auto pour gérer le contenu dépassant */
+}
+
+.container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    text-align: center;
+    height: 94vh; /* Ajouter une hauteur minimale */
+    display: flex;
+    flex-direction: column;
+/*    gap: 20px; /* Espacement entre les éléments */
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.header {
+    background-color: #191e3a;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    top: 0;
+    width: 100%; /* Garantir que l'en-tête prend toute la largeur */
+    z-index: 10;
+}
+
+/* Container pour gérer l'espacement du contenu */
+.content-wrapper {
+    overflow: auto; /* Assurer que le contenu qui dépasse ne soit pas masqué */
+    padding: 20px;
+}
+
+
+/* Ajustement de la position des icônes et du texte */
+.status, .date, .location, .info {
+/*    display: flex;*/
+    align-items: center;
+    gap: 10px;
+}
+
+.search-container {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+}
+
+        .logo {
+            width: 80px;
+            height: auto;
+        }
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            padding: 8px;
+            font-size: 14px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 250px;
+        }
+        .status-card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+/*            margin: 20px;*/
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            background-color: white;
+            position: relative;
+            max-width: 600px; /* Empêche qu'il devienne trop large */
+/*          width: 90%; /* S'adapte aux petits écrans */
+        }
+        .status-card div {
+/*            display: flex;*/
+            align-items: center;
+            gap: 10px;
+        }
+        .status {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .date {
+            color: #7f8c8d;
+        }
+        .location {
+/*              display: flex;*/
+    align-items: flex-start; /* Alignement propre */
+    gap: 12px; /* Espacement entre l'icône et le texte */
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #0056b3;
+}
+        .info {
+            color: #34495e;
+            font-size: 14px;
+        }
+        .status-card .icon {
+            font-size: 20px;
+            color: #2980b9;
+        }
+        .status-card .search-container {
+            margin-top: 10px;
+            justify-content: flex-start;
+        }
+
+.step-comment {
+    margin-top: 10px;
+    position: relative;
+}
+
+.fas.fa-comment {
+    font-size: 20px;
+    cursor: pointer;
+    color: #4CAF50;  /* Icône verte */
+    transition: color 0.3s ease;
+}
+
+.fas.fa-comment:hover {
+    color: #3e8e41; /* Effet de survol */
+}
+
+.comment-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+    display: none;
+    margin-top: 10px;
+}
+
+.comment-input:focus {
+    border-color: #4CAF50; /* Accent color for focus */
+    outline: none;
+}
+
+textarea {
+    height: 60px; /* Ajuster la hauteur de la zone de commentaire */
+}
+
+.step-icon {
+    font-size: 30px;
+    margin-right: 15px;
+    position: relative; /* Pour permettre de positionner le badge */
+}
+
+.badge {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background-color: #ff5722; /* Couleur rouge pour le badge */
+    color: white;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    font-size: 12px;
+    display: none;  /* Le badge est caché par défaut */
+    text-align: center;
+    line-height: 20px;
+    font-weight: bold;
+}
+
+.fas.fa-comment {
+    font-size: 20px;
+    cursor: pointer;
+    color: #4CAF50;  /* Icône verte */
+    transition: color 0.3s ease;
+}
+
+.fas.fa-comment:hover {
+    color: #3e8e41; /* Effet de survol */
+}
+
+.comment-input {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    resize: none;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s;
+    display: none;
+    margin-top: 10px;
+}
+
+.comment-input:focus {
+    border-color: #4CAF50; /* Accent color for focus */
+    outline: none;
+}
+
+textarea {
+    height: 120px; /* Ajuster la hauteur de la zone de commentaire */
+}
+
+/* Zone de commentaire */
+.step-comment {
+    margin-top: 10px;
+    position: relative;
+}
+
+.step-comment i {
+    font-size: 20px;
+    color: #3eb7d8 !important;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.step-comment i:hover {
+    transform: scale(1.2);
+}
+
+/* Style du textarea */
+.comment-input {
+    width: 100%;
+    height: 80px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 12px;
+    font-family: 'Arial', sans-serif;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    display: none; /* Masqué par défaut */
+    background-color: #edfbff;
+    resize: none;
+}
+
+.comment-input:focus {
+    border-color: #00796b;
+    outline: none;
+    background-color: #edfbff;
+}
+
+/* Icône supplémentaire sur le côté droit pour modifier ou fermer */
+.comment-input::after {
+    content: '✎';
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    font-size: 18px;
+    color: #00796b;
+    cursor: pointer;
+    display: none;
+}
+
+.comment-input:focus::after {
+    display: block;
+}
+
+/* Styles pour les documents associés */
+.documents-box {
+    margin-top: 20px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.documents-header {
+    display: flex;
+    align-items: center;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.documents-header i {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+.doc-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.doc-item:last-child {
+    border-bottom: none;
+}
+
+.doc-link {
+    font-size: 1em;
+    color: #007bff;
+    text-decoration: none;
+    margin-right: 20px;
+}
+
+.doc-link:hover {
+    text-decoration: underline;
+}
+
+.download-link {
+    display: inline-flex;
+    align-items: center;
+    background-color: #28a745;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 1em;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.download-link:hover {
+    background-color: #218838;
+}
+
+/* Conteneur global pour la section commentaires et date */
+.comment-date-section {
+    width: 50%;
+    max-width: 700px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin: 15px auto;
+    padding: 20px;
+/*    min-height: 195px; /* Par exemple, 400px, ajustez selon vos besoins */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+.bottom-bar {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            width: 93%;
+            background: rgb(255, 255, 255);
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px;
+            font-family: Arial, sans-serif;
+            z-index: 1000;
+        }
+
+        .info-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .info-box img {
+            width: 24px;
+            height: 24px;
+        }
+/* Style de la boîte de commentaires */
+.comment-box {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* margin: 0 auto; n'est plus nécessaire ici */
+}
+
+/* Style du label */
+.comment-box label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #0056b3;
+    text-align: center;
+}
+
+
+/* Style du textarea */
+.comment-box textarea {
+    width: 100%;
+    max-width: 480px; /* Empêche le débordement */
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    resize: none;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.3s ease;
+    text-align: left;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* Effet au focus */
+.comment-box textarea:focus {
+    border: 1px solid #007bff;
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Style de l'input de la date */
+.date-picker {
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+/* Style du label */
+.date-picker label {
+    font-weight: bold;
+    font-size: 16px;
+    margin-bottom: 8px;
+    color: #0056b3;
+    text-align: center;
+}
+
+/* Style de l'input date */
+.date-picker input[type="date"] {
+    width: 100%;
+    max-width: 480px;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: all 0.3s ease;
+    text-align: center;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    box-sizing: border-box;
+}
+
+/* Effet au focus */
+.date-picker input[type="date"]:focus {
+    border: 1px solid #007bff;
+    outline: none;
+    background-color: #fff;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Icône à droite de l'input */
+.date-picker i {
+    position: absolute;
+    top: 50%;
+    right: 12px;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 18px;
+}
+
+.download-link i {
+    margin-right: 5px;
+}
+
+.no-docs {
+    text-align: center;
+    color: #dc3545;
+    font-size: 1.2em;
+}
+
+.no-docs i {
+    margin-right: 8px;
+}
+
+.info-box {
+    background-color: #f8d7da; /* couleur de fond douce */
+    color: #721c24; /* texte rouge */
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #f5c6cb;
+    font-size: 18px;
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInOut 2s infinite; /* animation clignotante */
+}
+
+.swiper-container {
+  position: relative; /* Nécessaire pour que la pagination se positionne par rapport au conteneur */
+}
+
+.swiper-pagination {
+  position: relative; /* On positionne la pagination de manière absolue */
+  top: 20px;          /* Ajustez cette valeur pour la placer plus haut */
+  left: 0;
+  right: 0;
+  text-align: center;
+  transition: 0.3s opacity;
+  transform: translate3d(0, 0, 0);
+  z-index: 10;
+}
+
+.clignote {
+    font-weight: bold;
+    font-size: 20px;
+    color: #d9534f; /* couleur rouge pour attirer l'attention */
+    animation: blink 1.5s step-end infinite; /* animation clignotante du texte */
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+@media (max-width: 768px) {
+    .comment-date-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-right: 0;
+        padding-left: 0;
+    }
+
+    .status-cardd {
+        width: 100% !important;
+        max-width: 100% !important;
+
+        padding-right: 0;
+    }
+    .steps {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .step {
+        max-width: 90px;
+        flex: none;
+    }
+    .status-card {
+        max-width: 800px; /* Permet une meilleure lisibilité sur grand écran */
+        padding: 30px; /* Augmente légèrement le padding */
+    }
+}
+
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 20px;">
+
+
+                            <!-- Swiper for Enlèvement and Livraison -->
+                            <% if (type === 'Client') { %>
+                             <!-- Include Swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+<!-- Status Card Wrapper -->
+<div class="status-cardd" style="width: 100%; max-width: 50%; margin: 0 auto;">
+  <!-- Header with Logos -->
+  <div class="logos" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div class="logo-tls">
+      <img src="images/New_Logo_HD3.png" alt="TLS Logo" style="width: 140px;">
+    </div>
+    <div class="logo-client">
+      <img src="images/logo/<%= client.Logo %>" alt="Client Logo" style="width: 120px;">
+    </div>
+  </div>
+
+  <!-- Swiper for Enlèvement and Livraison -->
+  <% if (type === 'Client') { %>
+  <div class="swiper-container" style="margin-bottom: 20px;">
+    <div class="swiper-wrapper">
+      <!-- Enlèvement Section -->
+      <div class="swiper-slide">
+        <div class="status-card" style="display: block;">
+          <div class="info">
+            <i class="icon">&#128100;</i> Donneur d'ordre : <%= order.NomClient %>
+          </div>
+          <div class="date" style="font-size: 14px; color: #5a5a5a; font-weight: bold;">
+            <i class="icon" style="color: #5a5a5a;">&#128197;</i> 
+            Enlèvement de la commande prévue le :
+            <br><br>
+            <span style="font-size: 18px; font-weight: bold; color: #89cc62;">
+              <%= order.DateEn %>
+            </span>
+          </div>
+          <div class="location" style="margin-top: 20px;">
+            <i class="icon" style="color: #5a5a5a;">&#127968;</i>
+            <span style="font-size: 15px; color: #5a5a5a; font-weight: bold;">à l'adresse :</span>
+            <br><br>
+            <strong style="font-size: 18px; font-weight: bold; color: #89cc62;">
+              <%= order.NomEn %>
+            </strong><br>
+            <span style="font-size: 18px; font-weight: bold; color: #89cc62;">
+              <%= order.AdrEn %>
+            </span><br>
+            <span style="font-size: 18px; font-weight: bold; color: #89cc62;">
+              <%= order.CpEn %> <%= order.VilleEn %>
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Livraison Section -->
+      <div class="swiper-slide">
+        <div class="status-card" style="display: block;">
+          <div class="info">
+            <i class="icon">&#128100;</i> Donneur d'ordre : <%= order.NomClient %>
+          </div>
+          <div class="date" style="font-size: 14px; color: #5a5a5a; font-weight: bold;">
+            <i class="icon" style="color: #5a5a5a;">&#128197;</i> 
+            Livraison de la commande prévue le :
+            <br><br>
+            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+              <%= order.DateLiv %>
+            </span>
+          </div>
+          <div class="location" style="margin-top: 20px;">
+            <i class="icon" style="color: #5a5a5a;">&#127968;</i>
+            <span style="font-size: 15px; color: #5a5a5a; font-weight: bold;">à l'adresse :</span>
+            <br><br>
+            <strong style="font-size: 18px; font-weight: bold; color: #C0392B;">
+              <%= order.NomLiv %>
+            </strong><br>
+            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+              <%= order.AdrLiv %>
+            </span><br>
+            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+              <%= order.CpLiv %> <%= order.VilleLiv %>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+  </div>
+  <% } %>
+
+
+</div>
+
+<!-- Include Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    spaceBetween: 4,
+    slidesPerView: 1,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+</script>
+
+                            <% } else { %>
+                              <div class="status-cardd" style="width: 100%; max-width: 50%; margin: 0 auto;">
+                                <!-- En-tête avec les logos -->
+                                <div class="logos" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                                  <div class="logo-tls">
+                                    <img src="images/New_Logo_HD3.png" alt="TLS Logo" style="width: 140px;">
+                                  </div>
+                                  <div class="logo-client">
+                                    <img src="images/logo/<%= client.Logo %>" alt="Client Logo" style="width: 120px;">
+                                  </div>
+                                </div>
+                            
+                                <!-- Détails de la commande -->
+                                <div class="status-card" style="display: flex; flex-direction: row; justify-content: space-around; align-items: flex-start; width: auto;">
+                                  <div style="display: block;">
+                                    <div class="info">
+                                      <i class="icon">&#128100;</i> Donneur d'ordre : <%= order.NomClient %>
+                                    </div>
+                            
+                                    <!-- Date de livraison -->
+                                    <div class="date" style="font-size: 14px; color: #5a5a5a; font-weight: bold;">
+                                      <i class="icon" style="color: #5a5a5a;">&#128197;</i> 
+                                      <% if (type === 'En') { %>
+                                        Enlèvement de la commande prévue le :
+                                      <% } else if (type === 'Liv') { %>
+                                        Livraison de la commande prévue le :
+                                      <% } %>
+                                      <br><br>
+                                      <% if (type === 'En') { %>
+                                        <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                          <%= order.DateEn %>
+                                        </span>
+                                      <% } else if (type === 'Liv') { %>
+                                        <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                          <%= order.DateLiv %>
+                                        </span>
+                                      <% } %>
+                                    </div>
+                                    
+                                    <!-- Adresse client -->
+                                    <div class="location" style="margin-top: 20px;">
+                                      <div class="icon-container">
+                                        <i class="icon" style="color: #5a5a5a;">&#127968;</i>
+                                      </div>
+                                      <div class="address-text">
+                                        <span class="address-label" style="font-size: 15px; color: #5a5a5a; font-weight: bold;">à l'adresse :</span>
+                                        <br><br>
+                            
+                                        <% if (type === 'En' || type === 'Client') { %>
+                                          <% if (order.NomEn) { %>
+                                            <strong style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.NomEn %>
+                                            </strong><br>
+                                          <% } %>
+                                          <% if (order.AdrEn) { %>
+                                            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.AdrEn %>
+                                            </span><br>
+                                          <% } %>
+                                          <% if (order.CompAdrEn) { %>
+                                            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.CompAdrEn %>
+                                            </span><br>
+                                          <% } %>
+                                          <% if (order.CpEn || order.VilleEn) { %>
+                                            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.CpEn ? order.CpEn + " " : "" %><%= order.VilleEn ? order.VilleEn : "" %>
+                                            </span><br><br>
+                                          <% } %>
+                                        <% } %>
+                            
+                                        <% if (type === 'Liv' || type === 'Client') { %>
+                                          <% if (order.NomLiv) { %>
+                                            <strong style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.NomLiv %>
+                                            </strong><br>
+                                          <% } %>
+                                          <% if (order.AdrLiv) { %>
+                                            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.AdrLiv %>
+                                            </span><br>
+                                          <% } %>
+                                          <% if (order.CompAdrLiv) { %>
+                                            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.CompAdrLiv %>
+                                            </span><br>
+                                          <% } %>
+                                          <% if (order.CpLiv || order.VilleLiv) { %>
+                                            <span style="font-size: 18px; font-weight: bold; color: #C0392B;">
+                                              <%= order.CpLiv ? order.CpLiv + " " : "" %><%= order.VilleLiv ? order.VilleLiv : "" %>
+                                            </span>
+                                          <% } %>
+                                        <% } %>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            <% } %>
+                               
+                            <!-- Section des informations sur la commande -->
+             
+                </div>
+
+                
+<!-- Include Swiper JS -->
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+  var swiper = new Swiper('.swiper-container', {
+    spaceBetween: 10,
+    slidesPerView: 1,
+    pagination: {
+      el: '.swiper-pagination',
+      clickable: true,
+    },
+  });
+</script>
+
+<div class="order-documents-container">
+    <!-- Infos Order -->
+    <div class="order-box">
+        <div class="order-header">
+            <i class="fas fa-receipt"></i>
+            <span>Détails de la Commande</span>
+        </div>
+<% if (order.NumDossier) { %>
+    <div class="order-info"><strong>Numéro Dossier TLS :</strong> <%= order.NumDossier %></div>
+<% } %>
+
+<% if (order.Reference) { %>
+    <div class="order-info"><strong>Numéro de suivi :</strong> <%= order.Reference %></div>
+<% } %>
+
+<% if (order.NomLiv) { %>
+    <div class="order-info"><strong>Client livré :</strong> <%= order.NomLiv %></div>
+<% } %>
+
+<% if (order.Poids) { %>
+    <div class="order-info"><strong>Poids :</strong> <%= order.Poids %> Kg</div>
+<% } %>
+
+<% if (order.Colis) { %>
+    <div class="order-info"><strong>Colis :</strong> <%= order.Colis %></div>
+<% } %>
+
+<% if (order.Palettes) { %>
+    <div class="order-info"><strong>Palette(s) :</strong> <%= order.Palettes %></div>
+<% } %>
+
+<% if (order.MetreLin) { %>
+    <div class="order-info"><strong>Métrage :</strong> <%= order.MetreLin %> ml</div>
+<% } %>
+        
+    </div>
+
+</div>
+
+
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                   
+    let client = JSON.parse('<%- JSON.stringify(client) %>');
+              
+
+                let markers = [];
+
+initMap();
+
+
+                // Exemple de date envoyée par le backend
+                const dateString = '<%= order.DateLiv %>'; // Par exemple: "lundi 03 février 2025"
+                const typeCmd = '<%= order.typeCmd %>'; // Par exemple: "lundi 03 février 2025"
+
+         
+                if(typeCmd=="AFF"){
+                    document.getElementById('affrete-container').style.display = 'block';
+                    document.getElementById('map-container').style.display = 'none';
+                    setTimeout(() => {
+        Swal.close();
+    }, 2000);
+
+                }
+                else{
+                    document.getElementById('affrete-container').style.display = 'none';
+                    document.getElementById('map-container').style.display = 'block';
+                }
+                // Convertir la date en format lisible
+
+                // Fonction pour convertir une date en format lisible
+                function parseFrenchDate(dateString) {
+                    const months = {
+                        'janvier': '01', 'février': '02', 'mars': '03', 'avril': '04', 'mai': '05', 'juin': '06',
+                        'juillet': '07', 'août': '08', 'septembre': '09', 'octobre': '10', 'novembre': '11', 'décembre': '12'
+                    };
+        
+                    // Extrait le jour, le mois et l'année
+                    const parts = dateString.split(' '); // ['lundi', '03', 'février', '2025']
+                    const day = parts[1];  // '03'
+                    const month = months[parts[2].toLowerCase()];  // 'février' -> '02'
+                    const year = parts[3];  // '2025'
+        
+                    // Crée une date au format ISO (YYYY-MM-DD)
+                    const isoDateString = `${year}-${month}-${day}`;
+                    return new Date(isoDateString); // Retourne un objet Date valide
+                }
+        
+                const livraisonDate = parseFrenchDate(dateString); // Utilisation de la fonction
+
+                const valaa = '<%= order.Chauffeur_Liv %>'; 
+
+
+function normalizeDate(date) {
+    let d = new Date(date);
+    d.setHours(0, 0, 0, 0);
+    return d;
+}
+
+let today = normalizeDate(new Date());
+let livraisonNormalized = normalizeDate(livraisonDate);
+
+
+
+
+if (livraisonNormalized.getTime() === today.getTime() && valaa != null && valaa != '') {
+    document.getElementById('step-3').classList.add('active');
+}
+
+if (livraisonNormalized.getTime() < today.getTime() && valaa != null && valaa != '') {
+let messageElement = document.querySelector('.info-box span'); 
+    
+    document.getElementById('step-4').classList.add('active');
+    messageElement.innerHTML = "✅ Votre commande a déjà été livrée.";
+
+    setTimeout(() => {
+        Swal.close();
+    }, 2000);
+}
+
+
+
+
+                const inputDate = document.getElementById('new-date');
+        
+                // Formater la date au format 'YYYY-MM-DD'
+                const formattedDate = livraisonDate.toISOString().split('T')[0];
+
+                if(inputDate){
+                    inputDate.setAttribute('min', formattedDate);
+                inputDate.value=formattedDate
+                inputDate.setAttribute('value', formattedDate);
+        
+                }
+               
+                // Récupération de l'élément textarea
+                const commentaireField = document.getElementById('commentaire');
+                const vala = '<%= order.commentaire_client_chauffeur %>'; 
+
+                if(commentaireField){
+                    commentaireField.value = vala;
+                    commentaireField.addEventListener('blur', async function() {
+                    const commentaire = commentaireField.value; // Récupérer le texte du commentaire
+                    const orderId = '<%= order.id %>'; // ID de l'ordre à mettre à jour
+        
+                    try {
+                        const response = await fetch('/app/updateOrderField', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                orderId: orderId,
+                                field: "commentaire_client_chauffeur",
+                                value: commentaire
+                            })
+                        });
+        
+                        if (response.ok) {
+                            const data = await response.json();
+                            console.log('Commentaire mis à jour avec succès:', data);
+                        } else {
+                        }
+                    } catch (error) {
+                    }
+                });
+                }
+        
+
+
+        //         inputDate.addEventListener('change', async function() {
+        //     const newDate = inputDate.value; // Récupérer la nouvelle date
+        //     const orderId = '<%= order.id %>'; // ID de l'ordre à mettre à jour
+
+        //     try {
+        //         const response = await fetch('/app/updateOrderField', {
+        //             method: 'POST',  // Utilisation de la méthode POST
+        //             headers: {
+        //                 'Content-Type': 'application/json'
+        //             },
+        //             body: JSON.stringify({
+        //                 orderId: orderId,
+        //                 field: "DateLiv",  // Nom du champ à mettre à jour
+        //                 value: newDate
+        //             })
+        //         });
+
+        //         if (response.ok) {
+        //             const data = await response.json();
+        //             console.log('Date de livraison mise à jour avec succès:', data);
+        //         } else {
+        //         }
+        //     } catch (error) {
+        //     }
+        // });
+        //         // Lorsque l'utilisateur quitte le champ (blur), envoyer une requête PUT à Sails.js pour mettre à jour l'ordre
+      
+      
+      
+           
+            });
+        
+        
+        </script>
+        
+    
+
+        <div class="steps">
+            <!-- Step 1: Saisie de la commande -->
+            <div class="step active">
+                <div class="step-icon">
+                    <i class="fas fa-edit"></i>
+                    <div class="badge" id="badge-1" style="display: none;">!</div>
+                </div>
+                <div class="step-info">
+                    <div class="step-date"> <%= order.createdAt %></div>
+                    <div class="step-detail">Ordre saisie
+                    </div>
+                    <div class="step-comment">
+                        <!-- <i class="fas fa-comment" onclick="toggleCommentInput('comment-1', 'badge-1')"></i> -->
+                        <!-- <textarea readonly id="comment-1" class="comment-input" placeholder="Ajouter un commentaire..." style="display: none;"> <%= order.comment1 %> </textarea> -->
+                    </div>
+                </div>
+            </div>
+            
+           
+           <!-- Step 3: Enlèvement -->
+<div class="step <%= order.Chauffeur_En && order.Chauffeur_En.trim() !== '' ? 'active' : '' %>">
+    <div class="step-icon">
+        <i class="fas fa-box"></i>
+        <div class="badge" id="badge-3" style="display: none;">!</div>
+    </div>
+    <div class="step-info">
+        <div class="step-date"> <%= order.DateEn %></div>
+        <div class="step-detail">Chargement</div>
+        <div class="step-comment">
+            <!-- <i class="fas fa-comment" onclick="toggleCommentInput('comment-3', 'badge-3')"></i> -->
+            <!-- <textarea readonly id="comment-3" class="comment-input" placeholder="Ajouter un commentaire..." style="display: none;"></textarea> -->
+        </div>
+    </div>
+</div>
+
+<!-- Step 4: Callage au calendrier du tournée -->
+<div class="step <%= order.Chauffeur_Liv && order.Chauffeur_Liv.trim() !== '' ? 'active' : '' %>">
+    <div class="step-icon">
+        <i class="fas fa-calendar-check"></i>
+        <div class="badge" id="badge-4" style="display: none;">!</div>
+    </div>
+    <div class="step-info">
+        <div class="step-date"><%= order.DateLiv %></div>
+        <div class="step-detail">Planning</div>
+        <div class="step-comment">
+            <!-- <i class="fas fa-comment" onclick="toggleCommentInput('comment-4', 'badge-4')"></i> -->
+            <!-- <textarea readonly id="comment-4" class="comment-input" placeholder="Ajouter un commentaire..." style="display: none;"></textarea> -->
+        </div>
+    </div>
+</div>
+            <div class="step" id="step-3">
+                <div class="step-icon">
+                    <i class="fas fa-road"></i>
+                    <div class="badge" id="badge-5" style="display: none;">!</div>
+                </div>
+                <div class="step-info">
+                    <div class="step-date"><%= order.DateLiv %></div>
+                    <div class="step-detail">En cours</div>
+                    <div class="step-comment">
+                        <!-- <i class="fas fa-comment" onclick="toggleCommentInput('comment-5', 'badge-5')"></i> -->
+                        <!-- <textarea readonly id="comment-5" class="comment-input" placeholder="Ajouter un commentaire..." style="display: none;"></textarea> -->
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Step 6: Livré -->
+            <div class="step" id="step-4">
+                <div class="step-icon">
+                    <i class="fas fa-check"></i>
+                    <div class="badge" id="badge-6" style="display: none;">!</div>
+                </div>
+                <div class="step-info">
+                    <div class="step-date"><%= order.DateLiv %></div>
+                    <div class="step-detail">Livré</div>
+                    <div class="step-comment">
+                        <!-- <i class="fas fa-comment" onclick="toggleCommentInput('comment-6', 'badge-6')"></i> -->
+                        <!-- <textarea  readonly id="comment-6" class="comment-input" placeholder="Ajouter un commentaire..." style="display: none;"></textarea> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <% if (order.CodeAff=="") { %>
+
+            <!-- Nouvelle section pour les commentaires et changement de date -->
+            <div class="comment-date-section" style="width: 100%; padding-left: 20px; display: flex; flex-direction: column; gap: 20px;">
+        
+                <!-- Champ de commentaire -->
+                <div class="comment-box" style="position: relative;">
+                    <label for="commentaire" style="font-weight: bold;">Information à transmettre au chauffeur :</label>
+                    <textarea id="commentaire" rows="4" placeholder="Ajoutez un commentaire..." style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px; border: 1px solid #ccc; resize: none;"><%= order.commentaire_client_chauffeur %></textarea>
+                </div>
+        
+                <!-- Champ de date -->
+               <!--  <div class="date-picker" style="position: relative;">
+                <label for="new-date" style="font-weight: bold;">Changer la date de livraison :</label>
+                <input type="date" id="new-date" style="width: 100%; padding: 10px; font-size: 14px; border-radius: 8px; border: 1px solid #ccc;">
+                </div>
+
+                <script>
+                // Supposons que order.DateLiv soit fourni au format "YYYY-MM-DD" depuis votre serveur
+                let baseDate = "<%= order.DateLiv %>";  // Exemple : "2025-02-01"
+                const dateInput = document.getElementById('new-date');
+                dateInput.min = baseDate;
+                dateInput.value = baseDate;  // Optionnel : définit la date par défaut sur la date minimale
+                </script> -->
+            </div>
+        <% } %>
+   <div style="display: flex;gap: 30px;" id="map-container">
+    
+     <!-- Carte des contacts -->
+     <div class="contacts-card" style="width: 100%;text-align: center;">
+        <p>
+              <div class="delivery-info" style="font-family: Arial, sans-serif; color: #333; line-height: 1.5; max-width: 600px; margin: 0 auto;">
+  <h2 style="font-size: 24px; margin-bottom: 15px; color: #2A2A2A;">
+    Suivi de livraison en temps réel
+  </h2>
+  <p style="font-size: 16px; margin-bottom: 10px;">
+    La veille de la livraison, vous recevrez un SMS contenant un lien pour suivre en direct la progression de votre chauffeur.
+  </p>
+  <p style="font-size: 16px; margin-bottom: 10px;">
+    Cette solution vous permet d'optimiser votre organisation, éviter toute attente inutile notamment pour les livraisons programmées l'après-midi.
+  </p>
+  <p style="font-size: 16px;">
+    Avec TLS, bénéficiez d'une efficacité accrue et d'une gestion sereine de vos livraisons.
+  </p>
+</div>
+        </p>
+        <% if (new Date(order.date_liv) > new Date()) { %>
+            <div class="overlay">
+                ⏳ Une fois que la date de livraison est atteinte, vous pourrez suivre votre chauffeur en direct !
+            </div>
+        <% } %>
+
+        <h3>📞 Contact de notification</h3>
+
+        <% if (order.contacts_liv!=null && order.contacts_liv.length > 0) { %> 
+            <ul class="contact-list">
+                <% order.contacts_liv.forEach((contact) => { %>
+                    <% if (contact.nom && contact.nom.trim() !== '') { %>
+                        <li class="contact-item">
+                            <div class="contact-info">
+                                <strong><%= contact.nom %> <%= contact.prenom %></strong> <br>
+                                <span>📱 Mobile: <%= contact.mobile || 'Non renseigné' %></span>
+                                <span>📱 Tel: <%= contact.Tel || 'Non renseigné' %></span>
+                            </div>
+                        </li>
+                    <% } %>
+                <% }) %>
+            </ul>
+        <% } else { %>
+            <p>Aucun contact disponible.</p>
+        <% } %>
+
+        <button class="add-contact-btn" onclick="addNewContact()">➕ Ajouter un numéro</button>
+
+        <!-- Affichage de la carte Google -->
+    </div>
+
+    <% if (type === 'Client') { %>
+      <div class="map-container">
+        <div class="bottom-bar">
+            
+           
+          <div class="info-box">
+              <span class="">Le chauffeur doit livrer <span id="cmd-count"></span> commande(s) avant d’arriver à votre adresse.</span>
+          </div>
+
+
+<!--             <div class="info-box fullscreen-toggle" onclick="toggleFullScreen()">
+              <img src="https://img.icons8.com/ios-filled/50/000000/full-screen.png"/> 
+          </div> -->
+      </div>
+          <div class="map-box">
+              <h3>🚛 Zone d’Enlèvement</h3>
+              <div id="map-enlevement" class="map"></div>
+              
+        <div style="display: flex;gap: 20px;">
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/road.png"/>
+              <span id="distance">0 km</span>
+          </div>
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/time.png"/>
+              <span id="duration">0</span>
+          </div>
+
+      </div>
+          </div>
+          <div class="map-box">
+            <div class="bottom-bar">
+            
+           
+              <div class="info-box">
+                  <span class="">Le chauffeur doit livrer <span id="cmd-count"></span> commande(s) avant d’arriver à votre adresse.</span>
+              </div>
+  
+  
+  <!--             <div class="info-box fullscreen-toggle" onclick="toggleFullScreen()">
+                  <img src="https://img.icons8.com/ios-filled/50/000000/full-screen.png"/> 
+              </div> -->
+          </div>
+              <h3>📦 Zone de Livraison</h3>
+              <div id="map-livraison" class="map"></div>
+              
+        <div style="display: flex;gap: 20px;">
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/road.png"/>
+              <span id="distance">0 km</span>
+          </div>
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/time.png"/>
+              <span id="duration">0</span>
+          </div>
+
+      </div>
+          </div>
+      </div>
+    <% } else if (type === 'En') { %>
+      <div class="map-container">
+          <div class="map-box">
+            <div class="bottom-bar">
+            
+           
+              <div class="info-box">
+                  <span class="">Le chauffeur doit livrer <span id="cmd-count"></span> commande(s) avant d’arriver à votre adresse.</span>
+              </div>
+  
+  
+  <!--             <div class="info-box fullscreen-toggle" onclick="toggleFullScreen()">
+                  <img src="https://img.icons8.com/ios-filled/50/000000/full-screen.png"/> 
+              </div> -->
+          </div>
+              <h3>🚛 Zone d’Enlèvement</h3>
+              <div id="map-enlevement" class="map"></div>
+              
+        <div style="display: flex;gap: 20px;">
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/road.png"/>
+              <span id="distance">0 km</span>
+          </div>
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/time.png"/>
+              <span id="duration">0</span>
+          </div>
+
+      </div>
+          </div>
+      </div>
+    <% } else if (type === 'Liv') { %>
+      <div class="map-container">
+        <div class="bottom-bar">
+            
+           
+          <div class="info-box">
+              <span class="">Le chauffeur doit livrer <span id="cmd-count"></span> commande(s) avant d’arriver à votre adresse.</span>
+          </div>
+
+
+<!--             <div class="info-box fullscreen-toggle" onclick="toggleFullScreen()">
+              <img src="https://img.icons8.com/ios-filled/50/000000/full-screen.png"/> 
+          </div> -->
+      </div>
+          <div class="map-box">
+              <h3>📦 Zone de Livraison</h3>
+              <div id="map-livraison" class="map"></div>
+              
+        <div style="display: flex;gap: 20px;">
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/road.png"/>
+              <span id="distance">0 km</span>
+          </div>
+          <div class="info-box">
+              <img src="https://img.icons8.com/ios-filled/50/000000/time.png"/>
+              <span id="duration">0</span>
+          </div>
+
+      </div>
+          </div>
+      </div>
+    <% } %>
+    
+  
+    
+    <script>
+        function toggleFullScreen() {
+    let mapElement = document.getElementById("map");
+
+    if (!document.fullscreenElement) {
+        if (mapElement.requestFullscreen) {
+            mapElement.requestFullscreen();
+        } else if (mapElement.mozRequestFullScreen) { // Firefox
+            mapElement.mozRequestFullScreen();
+        } else if (mapElement.webkitRequestFullscreen) { // Chrome, Safari, Opera
+            mapElement.webkitRequestFullscreen();
+        } else if (mapElement.msRequestFullscreen) { // IE/Edge
+            mapElement.msRequestFullscreen();
+        }
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
+function updateBottomBar(distance, duration, numCmds) {
+            document.getElementById("distance").textContent = distance + " km";
+            document.getElementById("duration").textContent = duration + " min";
+        }
+    
+        let cmds = JSON.parse('<%- JSON.stringify(cmds) %>');
+        let tour = JSON.parse('<%- JSON.stringify(tour) %>');
+
+        // Function to parse the LatLng into an array of numbers
+        function parseLatLng(latLng) {
+            return latLng.split(',').map(Number);
+        }
+    
+
+     // Variables globales pour stocker la carte et les marqueurs
+let map;
+let map2;
+let markers = [];
+let stopMarkers = [];
+let routePath;
+let posToDraw = [];
+let allPositions = [];
+let markTruck;
+
+let completedCmds = new Set();
+
+
+
+// Fonction pour charger les traces du camion sélectionné
+function loadTracksForSelectedTruck(selectedCamion, date,cmdss,map) {
+
+
+
+    if (selectedCamion) {
+    } else {
+        console.warn("Aucun camion sélectionné pour le tracking.");
+        return;
+    }
+
+
+    const today = moment(date);
+    const theDay = today.format('DD');
+    const theMonth = today.format('MM');
+    const theYear = today.format('YYYY');
+
+    fetch(`/app/showTracks?day=${theDay}&month=${theMonth}&year=${theYear}&immat=${selectedCamion}`)
+        .then(response => response.json())
+        .then(result => {
+            if (result.length > 0) {
+                let pathCoordinates = [];
+                
+                // Supprimer les anciens marqueurs et itinéraires
+                markers.forEach(marker => marker.setMap(null));
+                stopMarkers.forEach(marker => marker.setMap(null));
+                if (routePath) {
+                    routePath.setMap(null);
+                }
+                markers = [];
+                stopMarkers = [];
+
+                posToDraw = [];
+                
+                // Définition de la plage de temps
+                const ionRange = {
+                    time: {
+                        min: moment(result[0].pos_time, 'DD/MM/YYYY HH:mm:ss').set('second', 0).format("X"),
+                        max: moment(result[result.length - 1].pos_time, 'DD/MM/YYYY HH:mm:ss').set('second', 0).format("X"),
+                        from: moment(result[0].pos_time, 'DD/MM/YYYY HH:mm:ss').set('second', 0).format("X")
+                    }
+                };
+
+                // Charger les arrêts du camion
+                fetch(`/app/showStops?day=${theDay}&month=${theMonth}&year=${theYear}&immat=${selectedCamion}`)
+                    .then(response => response.json())
+                    .then(result2 => {
+                 
+                        
+                        
+                        const bounds = new google.maps.LatLngBounds();
+
+                        // Parcours des positions du camion
+                        for (let x = 0; x < result.length; x++) {
+                            const theLat = parseFloat(result[x].latitude / 1000000);
+                            const theLng = parseFloat(result[x].longitude / 1000000);
+                            const myLatlng = new google.maps.LatLng(theLat, theLng);
+                            posToDraw.push({ lat: theLat, lng: theLng });
+                            pathCoordinates.push(myLatlng);
+
+
+                         
+                            
+                            cmdss.forEach(cmd => {
+                                
+    const [lat, lng] = cmd.LatLng.split(',').map(Number);
+   const  cmdPos=new google.maps.LatLng(lat, lng);
+ 
+
+    result2.forEach(stop => {
+        const stopLat = parseFloat(stop.latitude / 1000000);
+        const stopLng = parseFloat(stop.longitude / 1000000);
+        const stopPos = new google.maps.LatLng(stopLat, stopLng);
+
+        const distance = google.maps.geometry.spherical.computeDistanceBetween(stopPos, cmdPos);
+
+        if(cmd.Type=="Liv"){
+       
+            
+            
+
+        }
+       
+        
+
+        
+        
+        if (distance <= 2000) {
+            completedCmds.add(cmd.NumDossier); // Commande terminée
+        }
+    });
+    
+});
+
+
+
+
+
+completedCmds.forEach(element => {
+    markers_tour.forEach(element2 => {
+        if(element2.NumDossier==element){
+            element2.setMap(null);
+
+        }
+            
+        });
+    
+});
+
+
+cmdss = cmdss.filter(cmd => {
+    let isCompleted = false;
+
+
+    completedCmds.forEach(completed => {
+        if (parseInt(completed) === parseInt(cmd.NumDossier)) {
+            isCompleted = true;
+        }
+    });
+
+    return (
+        parseInt(cmd.NumDossier) !== parseInt(Num) &&
+        cmd.LatLng &&
+        (cmd.Type === "Liv" || cmd.Type === "En") &&
+        !isCompleted // Vérifie que la commande n'est pas complétée
+    );
+}).sort((a, b) => a.position - b.position);
+
+
+let count = cmdss.filter(cmd => (cmd.Type == "En" || cmd.Type == "Liv") && cmd.NumDossier != Num).length;
+
+let cmdCountElement = document.getElementById('cmd-count');
+let messageElement = document.querySelector('.info-box span'); 
+
+let isClientOrderCompleted = false;
+
+completedCmds.forEach(numDossier => {
+    if (parseInt(numDossier) === parseInt(Num)) {
+        isClientOrderCompleted = true;
+    }
+});
+
+if (isClientOrderCompleted) {
+    messageElement.innerHTML = "✅ Votre commande a déjà été livrée.";
+    markers_tour.forEach(element2 => {
+            element2.setMap(null);
+
+            
+        });
+        clearRoute();
+        updateBottomBar("0","0 min", 0);
+
+} else {
+    cmdss = cmdss.filter(cmd => {
+        let isCompleted = false;
+
+        completedCmds.forEach(completed => {
+            if (parseInt(completed) === parseInt(cmd.NumDossier)) {
+                isCompleted = true;
+            }
+        });
+
+        return (
+            parseInt(cmd.NumDossier) !== parseInt(Num) &&
+            cmd.LatLng &&
+            (cmd.Type === "Liv" || cmd.Type === "En") &&
+            !isCompleted // Vérifie que la commande n'est pas complétée
+        );
+    }).sort((a, b) => a.position - b.position);
+
+    let count = cmdss.length;
+
+    if (count === 0) {
+        messageElement.innerHTML = "🎉 Le chauffeur est en route ! Préparez-vous à recevoir votre commande.";
+    } else {
+        cmdCountElement.innerHTML = count;
+        messageElement.innerHTML = `Le chauffeur doit livrer <span id="cmd-count">${count}</span> commande(s) avant d’arriver à votre adresse.`;
+    }
+}
+
+
+                            var t=[theLat,theLng]
+                            // Marqueur du camion à la première position
+                            if (x === result.length - 1) {
+                              
+                                chauffeurPos=myLatlng;
+                                if (!markTruck) {
+                                    // Si le marqueur n'existe pas, le créer
+                                    markTruck = new google.maps.Marker({
+                                        position: myLatlng,
+                                        map: map,
+                                        title: `${result[x].objectname} ${result[x].objectno}`,
+                                        icon: "http://maps.google.com/mapfiles/ms/micons/truck.png"
+                                    });
+                                } else {
+                                    // Si le marqueur existe déjà, mettre à jour sa position
+                                    markTruck.setPosition(myLatlng);
+                                    markTruck.setMap(map)
+                                }
+                                markers.push(markTruck);
+                            }
+                        }
+
+
+                       clientPos = new google.maps.LatLng(clientPos[0], clientPos[1]);
+
+
+
+                        setTimeout(() => {
+                           calculateRoute(chauffeurPos, clientPos, cmdss,map);
+
+                           console.clear();
+                            
+                        }, 100);
+
+
+                     
+
+                      
+
+                        // Notification de mise à jour
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Mise à jour de la cartographie en temps réel.',
+                            toast: true,
+                            position: 'bottom-end',
+                            showConfirmButton: false,
+                            timer: 3000
+                        });
+                    });
+            } else {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Véhicule non géolocalisé',
+                    text: "Aucune information n'a pu être récupérée pour ce véhicule.",
+                    toast: true,
+                    position: 'center',
+                    showConfirmButton: false,
+                    timer: 4000
+                });
+            }
+        });
+}
+
+
+selectedCamion = null;
+
+
+
+
+// Fonction de conversion des coordonnées GPS au format décimal
+function convertCoordinates(formattedLat, formattedLng) {
+    const pattern = /(\d+)[°]+(\d+)[']+(\d+\.\d+)["]\s+([nsew])/i;
+    
+    const parseCoord = (coord, direction) => {
+        const matches = coord.match(pattern);
+        if (!matches) return null;
+        const sign = (matches[4] === direction) ? -1 : 1;
+        return sign * (parseFloat(matches[1]) + parseFloat(matches[2]) / 60 + parseFloat(matches[3]) / 3600);
+    };
+
+    return {
+        lat: parseCoord(formattedLat, 'S'),
+        lng: parseCoord(formattedLng, 'W')
+    };
+}
+
+let chauffeurPos = null;
+let clientPos = null;
+let markers_tour=[]
+let filteredCmds = null;
+
+const Num = '<%= order.NumDossier %>'; // ID de l'ordre à mettre à jour
+
+ // Function to initialize the map (assuming you are using Google Maps)
+ function initMap() {
+  Swal.fire({
+        title: "Chargement de la carte...",
+        text: "Veuillez patienter",
+        allowOutsideClick: false,
+        didOpen: () => {
+            Swal.showLoading(); // Active l'animation de chargement
+        }
+    })
+  const defaultLocation = { lat: 48.8566, lng: 2.3522 }; // Paris
+  
+  // Options de la carte
+  const mapOptions = {
+      center: defaultLocation,
+      zoom: 12,
+      streetViewControl: false,
+      mapTypeControl: false,
+      panControl: false,
+      disableDefaultUI: true
+  };
+  var type=  '<%= type %>' 
+
+
+  
+  
+  
+
+  if(type=="Liv"){
+    const mapLivraison = new google.maps.Map(document.getElementById("map-livraison"), mapOptions);
+       
+        map=mapLivraison;
+
+  }
+  else if(type=="En"){
+    const mapEnlevement = new google.maps.Map(document.getElementById("map-enlevement"), mapOptions);
+    
+
+        map=mapEnlevement;
+  }
+  else if(type=="Client"){
+    const mapEnlevement = new google.maps.Map(document.getElementById("map-enlevement"), mapOptions);
+   
+
+        map=mapEnlevement;
+        // Carte Livraison
+        const mapLivraison = new google.maps.Map(document.getElementById("map-livraison"), mapOptions);
+     
+        map2=mapLivraison;
+
+  }
+   
+
+  
+  if(type!="Client"){
+    if (tour && cmds && tour.id && cmds.length > 0) {
+        const tourDate = new Date(tour.Date);
+        const currentDate = new Date();
+        if (tourDate.getFullYear() !== currentDate.getFullYear() || 
+            tourDate.getMonth() !== currentDate.getMonth() || 
+            tourDate.getDate() !== currentDate.getDate()) {
+            return;
+        }
+
+        selectedCamion = tour.Immat;
+        const todayDate = new Date();
+      
+
+        // Sort commands by position
+        cmds.sort((a, b) => a.position - b.position);
+
+        let ccc = null;
+        // Find the current position of the chauffeur
+        cmds.forEach(cmd => {
+            if (parseInt(cmd.NumDossier) === parseInt(Num)) {
+                clientPos = parseLatLng(cmd.LatLng);
+                ccc = cmd.position;
+            }
+        });
+
+        // Filter only commands before the client's position
+        filteredCmds = cmds.filter(cmd => cmd.position <= ccc);
+
+
+
+
+        let counter = 0;
+        filteredCmds.forEach((cmd) => {
+            if (cmd.LatLng) {
+                const [lat, lng] = parseLatLng(cmd.LatLng);
+                const isHighlighted = parseInt(cmd.NumDossier) === parseInt(Num);
+                const circleColor = isHighlighted ? '#e74c3c' : '#3498db';
+                const borderColor = isHighlighted ? '#c0392b' : '#2980b9';
+                const circleSize = isHighlighted ? 20 : 18;
+                const fontSize = isHighlighted ? '20px' : '18px';
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 60;
+                canvas.height = 60;  // Adjust height to remove extra space
+
+                const image = new Image();
+                image.onload = function () {
+                    ctx.drawImage(image, 0, 0, 60, 60);  // Ensure image fits within canvas
+                    ctx.beginPath();
+                   
+                    let positionText = cmd.position;
+                    if (cmd.Type !== "depart" && cmd.Type !== "fin" && cmd.Type !== "Break") {
+                        counter++;
+                        positionText = counter.toString();
+                    }
+
+                    const marker = new google.maps.Marker({
+                        position: { lat, lng },
+                        map: map,
+                        NumDossier:cmd.NumDossier,
+                        title: `Type: ${cmd.Type}, Position: ${positionText}`,
+                        icon: {
+                            url: canvas.toDataURL(),
+                            size: new google.maps.Size(60, 60),  // Adjust to ensure correct size
+                        }
+                    });
+
+                    markers_tour.push(marker);
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `<strong>Tour: ${cmd.Type}</strong><br>Position: ${positionText}`
+                    });
+
+                    marker.addListener('click', () => {
+                        infoWindow.open(map, marker);
+                    });
+                };
+
+                image.src = cmd.Type === "Liv" ? (Num == parseInt(cmd.NumDossier) ? 'https://webtransportdev.fr/images/markers/finish.png' : 'https://webtransportdev.fr/images/markers/client_intermediaire.png') :
+                    cmd.Type === "depart" ? 'https://webtransportdev.fr/images/markers/Start.png' :
+                    cmd.Type === "fin" ? 'https://webtransportdev.fr/images/markers/finish.png' :
+                    'https://webtransportdev.fr/images/markers/client_intermediaire.png';
+            }
+        });
+
+
+
+        setInterval(() => {
+    loadTracksForSelectedTruck( selectedCamion,new Date(),filteredCmds,map)
+}, 3000);
+    } else {
+        setTimeout(() => {
+        Swal.close();
+    }, 3000);
+
+    function parseFrenchDate(dateString) {
+                    const months = {
+                        'janvier': '01', 'février': '02', 'mars': '03', 'avril': '04', 'mai': '05', 'juin': '06',
+                        'juillet': '07', 'août': '08', 'septembre': '09', 'octobre': '10', 'novembre': '11', 'décembre': '12'
+                    };
+        
+                    // Extrait le jour, le mois et l'année
+                    const parts = dateString.split(' '); // ['lundi', '03', 'février', '2025']
+                    const day = parts[1];  // '03'
+                    const month = months[parts[2].toLowerCase()];  // 'février' -> '02'
+                    const year = parts[3];  // '2025'
+        
+                    // Crée une date au format ISO (YYYY-MM-DD)
+                    const isoDateString = `${year}-${month}-${day}`;
+                    return new Date(isoDateString); // Retourne un objet Date valide
+                }
+        
+
+let messageElement = document.querySelector('.info-box span'); 
+
+const currentDate = new Date(); // Date actuelle
+let deliveryDate;
+
+if(type == "Liv") {
+    deliveryDate = parseFrenchDate("<%= order.DateLiv %>"); // Date de livraison
+
+    if (deliveryDate < currentDate) {
+        messageElement.innerHTML = `
+            <i class="fa fa-check-circle" aria-hidden="true"></i> 
+            La livraison a déjà été effectuée le : <strong><%= order.DateLiv %></strong>
+        `;
+    } else {
+        messageElement.innerHTML = `
+            <i class="fa fa-calendar-check" aria-hidden="true"></i> 
+            Vous devez attendre jusqu'au jour de livraison prévu : <strong><%= order.DateLiv %></strong>
+        `;
+    }
+} else {
+    deliveryDate = parseFrenchDate("<%= order.DateEn %>"); // Date d'enlèvement
+
+    if (deliveryDate < currentDate) {
+        messageElement.innerHTML = `
+            <i class="fa fa-check-circle" aria-hidden="true"></i> 
+            L'enlèvement a déjà été effectué le : <strong><%= order.DateEn %></strong>
+        `;
+    } else {
+        messageElement.innerHTML = `
+            <i class="fa fa-calendar-times" aria-hidden="true"></i> 
+            Vous devez attendre jusqu'au jour d'enlèvement prévu : <strong><%= order.DateEn %></strong>
+        `;
+    }
+}
+
+
+    
+        console.log('Tour or cmds data is not valid');
+    } 
+
+  }
+  else{
+    let cmds_liv = "<%= typeof cmds_liv !== 'undefined' && cmds_liv && cmds_liv.length > 0 ? JSON.stringify(cmds_liv) : '[]' %>";
+    let cmds_en = "<%= typeof cmds_en !== 'undefined' && cmds_en && cmds_en.length > 0 ? JSON.stringify(cmds_en) : '[]' %>";
+    let tour_liv = "<%= typeof tour_liv !== 'undefined' && tour_liv && Object.keys(tour_liv).length > 0 ? JSON.stringify(tour_liv) : '{}' %>";
+    let tour_en = "<%= typeof tour_en !== 'undefined' && tour_en && Object.keys(tour_en).length > 0 ? JSON.stringify(tour_en) : '{}' %>";
+    
+
+
+    if (tour_liv && cmds_liv && cmds_liv.length > 0) {
+
+      
+        const tourDate = new Date(tour_liv.Date);
+
+   
+        
+        const currentDate = new Date();
+        
+        if (tourDate.getFullYear() !== currentDate.getFullYear() || 
+            tourDate.getMonth() !== currentDate.getMonth() || 
+            tourDate.getDate() !== currentDate.getDate()) {
+            return;
+        }
+
+        selectedCamion = tour_liv.Immat;
+        const todayDate = new Date();
+      
+
+        // Sort commands by position
+        cmds_liv.sort((a, b) => a.position - b.position);
+
+        let ccc = null;
+        // Find the current position of the chauffeur
+        cmds_liv.forEach(cmd => {
+            if (parseInt(cmd.NumDossier) === parseInt(Num)) {
+                clientPos = parseLatLng(cmd.LatLng);
+                ccc = cmd.position;
+            }
+        });
+
+        // Filter only commands before the client's position
+        filteredCmds = cmds_liv.filter(cmd => cmd.position <= ccc);
+
+        let count = filteredCmds.filter(cmd => (cmd.Type == "En" || cmd.Type == "Liv") && cmd.NumDossier != Num).length;
+
+let cmdCountElement = document.getElementById('cmd-count');
+let messageElement = document.querySelector('.info-box span'); 
+
+if (count === 0) {
+    messageElement.innerHTML = "🎉 Le chauffeur est en route ! Préparez-vous à recevoir votre commande.";
+} else {
+    cmdCountElement.innerHTML = count;
+    messageElement.innerHTML = `Le chauffeur doit livrer <span id="cmd-count">${count}</span> commande(s) avant d’arriver à votre adresse.`;
+}
+
+
+
+        let counter = 0;
+   
+        
+        filteredCmds.forEach((cmd) => {
+            if (cmd.LatLng) {
+                const [lat, lng] = parseLatLng(cmd.LatLng);
+                const isHighlighted = parseInt(cmd.NumDossier) === parseInt(Num);
+                const circleColor = isHighlighted ? '#e74c3c' : '#3498db';
+                const borderColor = isHighlighted ? '#c0392b' : '#2980b9';
+                const circleSize = isHighlighted ? 20 : 18;
+                const fontSize = isHighlighted ? '20px' : '18px';
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                canvas.width = 60;
+                canvas.height = 60;  // Adjust height to remove extra space
+
+                const image = new Image();
+                image.onload = function () {
+                    ctx.drawImage(image, 0, 0, 60, 60);  // Ensure image fits within canvas
+                    ctx.beginPath();
+                   
+                    let positionText = cmd.position;
+                    if (cmd.Type !== "depart" && cmd.Type !== "fin" && cmd.Type !== "Break") {
+                        counter++;
+                        positionText = counter.toString();
+                    }
+
+                    const marker = new google.maps.Marker({
+                        position: { lat, lng },
+                        map: map2,
+                        NumDossier:cmd.NumDossier,
+                        title: `Type: ${cmd.Type}, Position: ${positionText}`,
+                        icon: {
+                            url: canvas.toDataURL(),
+                            size: new google.maps.Size(60, 60),  // Adjust to ensure correct size
+                        }
+                    });
+
+                    markers_tour.push(marker);
+
+                    const infoWindow = new google.maps.InfoWindow({
+                        content: `<strong>Tour: ${cmd.Type}</strong><br>Position: ${positionText}`
+                    });
+
+                    marker.addListener('click', () => {
+                        infoWindow.open(map, marker);
+                    });
+                };
+
+                image.src = cmd.Type === "Liv" ? (Num == parseInt(cmd.NumDossier) ? 'https://webtransportdev.fr/images/markers/finish.png' : 'https://webtransportdev.fr/images/markers/client_intermediaire.png') :
+                    cmd.Type === "depart" ? 'https://webtransportdev.fr/images/markers/Start.png' :
+                    cmd.Type === "fin" ? 'https://webtransportdev.fr/images/markers/finish.png' :
+                    'https://webtransportdev.fr/images/markers/client_intermediaire.png';
+            }
+        });
+
+
+
+        setInterval(() => {
+    loadTracksForSelectedTruck( selectedCamion,new Date(),filteredCmds,map2)
+}, 3000);
+    } else {
+        console.log('Tour liv not exist');
+    } 
+
+
+    if (tour_en && cmds_en && cmds_en.length > 0) {
+
+
+  const tourDate = new Date(tour_en.Date);
+
+
+  
+  const currentDate = new Date();
+  
+  if (tourDate.getFullYear() !== currentDate.getFullYear() || 
+      tourDate.getMonth() !== currentDate.getMonth() || 
+      tourDate.getDate() !== currentDate.getDate()) {
+      return;
+  }
+
+  selectedCamion = tour_en.Immat;
+  const todayDate = new Date();
+
+
+  // Sort commands by position
+  cmds_en.sort((a, b) => a.position - b.position);
+
+  let ccc = null;
+  // Find the current position of the chauffeur
+  cmds_en.forEach(cmd => {
+      if (parseInt(cmd.NumDossier) === parseInt(Num)) {
+          clientPos = parseLatLng(cmd.LatLng);
+          ccc = cmd.position;
+      }
+  });
+
+  // Filter only commands before the client's position
+  filteredCmds = cmds_en.filter(cmd => cmd.position <= ccc);
+
+  let count = filteredCmds.filter(cmd => (cmd.Type == "En" || cmd.Type == "Liv") && cmd.NumDossier != Num).length;
+
+let cmdCountElement = document.getElementById('cmd-count');
+let messageElement = document.querySelector('.info-box span'); 
+
+if (count === 0) {
+messageElement.innerHTML = "🎉 Le chauffeur est en route ! Préparez-vous à recevoir votre commande.";
+} else {
+cmdCountElement.innerHTML = count;
+messageElement.innerHTML = `Le chauffeur doit livrer <span id="cmd-count">${count}</span> commande(s) avant d’arriver à votre adresse.`;
+}
+
+
+
+  let counter = 0;
+
+  
+  filteredCmds.forEach((cmd) => {
+      if (cmd.LatLng) {
+          const [lat, lng] = parseLatLng(cmd.LatLng);
+          const isHighlighted = parseInt(cmd.NumDossier) === parseInt(Num);
+          const circleColor = isHighlighted ? '#e74c3c' : '#3498db';
+          const borderColor = isHighlighted ? '#c0392b' : '#2980b9';
+          const circleSize = isHighlighted ? 20 : 18;
+          const fontSize = isHighlighted ? '20px' : '18px';
+
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          canvas.width = 60;
+          canvas.height = 60;  // Adjust height to remove extra space
+
+          const image = new Image();
+          image.onload = function () {
+              ctx.drawImage(image, 0, 0, 60, 60);  // Ensure image fits within canvas
+              ctx.beginPath();
+             
+              let positionText = cmd.position;
+              if (cmd.Type !== "depart" && cmd.Type !== "fin" && cmd.Type !== "Break") {
+                  counter++;
+                  positionText = counter.toString();
+              }
+
+              const marker = new google.maps.Marker({
+                  position: { lat, lng },
+                  map: map,
+                  NumDossier:cmd.NumDossier,
+                  title: `Type: ${cmd.Type}, Position: ${positionText}`,
+                  icon: {
+                      url: canvas.toDataURL(),
+                      size: new google.maps.Size(60, 60),  // Adjust to ensure correct size
+                  }
+              });
+
+              markers_tour.push(marker);
+
+              const infoWindow = new google.maps.InfoWindow({
+                  content: `<strong>Tour: ${cmd.Type}</strong><br>Position: ${positionText}`
+              });
+
+              marker.addListener('click', () => {
+                  infoWindow.open(map, marker);
+              });
+          };
+
+          image.src = cmd.Type === "Liv" ? (Num == parseInt(cmd.NumDossier) ? 'https://webtransportdev.fr/images/markers/finish.png' : 'https://webtransportdev.fr/images/markers/client_intermediaire.png') :
+              cmd.Type === "depart" ? 'https://webtransportdev.fr/images/markers/Start.png' :
+              cmd.Type === "fin" ? 'https://webtransportdev.fr/images/markers/finish.png' :
+              'https://webtransportdev.fr/images/markers/client_intermediaire.png';
+      }
+  });
+
+
+
+  setInterval(() => {
+loadTracksForSelectedTruck( selectedCamion,new Date(),filteredCmds,map)
+}, 3000);
+} else {
+  console.log('Tour en not exist');
+} 
+
+
+
+
+    
+setTimeout(() => {
+        Swal.close();
+    }, 3000);
+  }
+
+  
+}
+
+// Fonction pour parser les coordonnées LatLng
+
+
+
+function parseLatLng(latlng) {
+    const [lat, lng] = latlng.split(',').map(Number);
+    return { lat, lng };
+}
+
+function parseLatLngg(latlngStr) {
+    if (!latlngStr) return null;
+    const parts = latlngStr.split(',');
+    if (parts.length !== 2) return null;
+
+    const lat = parseFloat(parts[0].trim());
+    const lng = parseFloat(parts[1].trim());
+
+    return isNaN(lat) || isNaN(lng) ? null : { lat, lng };
+}
+let directionsRenderer; // Déclaration globale pour pouvoir le supprimer plus tard
+
+
+// Fonction pour supprimer l'itinéraire affiché
+function clearRoute() {
+    if (directionsRenderer) {
+        directionsRenderer.setDirections({ routes: [] }); // Supprime l'affichage de l'itinéraire
+    }
+}
+
+// Calculer l'itinéraire et estimer la durée
+function calculateRoute(start, end, cmdss, map) {
+    const directionsService = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({ map, suppressMarkers: true });
+
+    const cmds = cmdss
+        .filter(cmd => parseInt(cmd.NumDossier) !== parseInt(Num) && cmd.LatLng && (cmd.Type == "Liv" || cmd.Type == "En"))
+        .sort((a, b) => a.position - b.position);
+
+        const waypoints = cmds
+    .filter(cmd => cmd.LatLng && isValidLatLng(cmd.LatLng))
+    .map(cmd => ({
+        location: parseLatLngg(cmd.LatLng),
+        stopover: true
+    }));
+
+function isValidLatLng(latlng) {
+    return latlng && typeof latlng.lat === 'number' && typeof latlng.lng === 'number'
+        && latlng.lat >= -90 && latlng.lat <= 90
+        && latlng.lng >= -180 && latlng.lng <= 180;
+}
+
+    directionsService.route(
+        {
+            origin: start,
+            destination: end,
+            waypoints: waypoints,
+            travelMode: google.maps.TravelMode.DRIVING
+        },
+        function (response, status) {
+            if (status === google.maps.DirectionsStatus.OK) {
+                directionsRenderer.setDirections(response);
+
+                let totalDuration = response.routes[0].legs.reduce((sum, leg) => sum + leg.duration.value, 0) / 60; // en minutes
+                totalDuration += waypoints.length * 20; // Ajouter 20 minutes par commande
+                let totalDistance = response.routes[0].legs.reduce((sum, leg) => sum + leg.distance.value, 0) / 1000; // en km
+
+                let formattedDuration = formatDuration(totalDuration);
+
+                updateBottomBar(totalDistance.toFixed(1), formattedDuration, cmds.length);
+                setTimeout(() => Swal.close(), 1000);
+            } else {
+                // 🔴 Gestion d'erreur - Afficher l'erreur
+               
+            }
+        }
+    );
+}
+
+function formatDuration(totalMinutes) {
+    let hours = Math.floor(totalMinutes / 60);
+    let minutes = Math.floor(totalMinutes % 60);
+    let seconds = Math.round((totalMinutes % 1) * 60);
+    
+    return `${hours}h ${minutes}m ${seconds}s`;
+}
+
+// Function to parse the LatLng string and return an array of latitude and longitude
+function parseLatLng(latLngStr) {
+    const [lat, lng] = latLngStr.split(',').map(coord => parseFloat(coord.trim()));
+    return [lat, lng];
+}
+
+// Function to parse the LatLng string and return an array of latitude and longitude
+function parseLatLng(latLngStr) {
+    const [lat, lng] = latLngStr.split(',').map(coord => parseFloat(coord.trim()));
+    return [lat, lng];
+}
+
+        // Initialize the map after the page loads
+        window.onload = initMap;
+    </script>
+    
+   </div>
+
+
+   <div style="display: flex; gap: 30px;" id="affrete-container">
+    
+    <!-- Carte des contacts -->
+    <div class="contacts-card" style="width: 108%; background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);">
+        <h3 style="color: #333; font-size: 18px; margin-bottom: 10px;">Transporteur attribué</h3>
+
+        <!-- <% if (order.CodeAff) { %> -->
+            <p style="color: #666; font-size: 14px; margin-bottom: 15px;">
+                Cette commande a été attribuée à un transporteur du réseau - véhicule non Géolocalisé 
+                <br>Code affrété : <strong stylae="color: #dc3545;"><%= order.CodeAff %></strong>
+            </p>
+
+          <div style="display: flex; align-items: center; gap: 15px; border-top: 1px solid #eee; padding-top: 15px;">
+                <img src="https://img.freepik.com/free-vector/illustration-businessman_53876-5856.jpg?uid=R95294288&ga=GA1.1.434205371.1720531667&semt=ais_incoming" alt="Photo du transporteur" 
+                    style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;">
+                <div>
+                    <p style="margin: 2px 0; font-size: 14px; color: #666;">Nom : <strong><%= affrete[0].Nom %></strong></p>
+                </div>
+            </div> 
+            
+        <% } else { %>
+            <p style="color: #666; font-size: 14px;">
+                <!-- Cette commande est en cours d’étude pour sélectionner votre transporteur. -->
+                Cette commande a été attribuée à un transporteur du réseau - véhicule non Géolocalisé 
+            </p>
+        <% } %>
+    </div>
+
+ 
+
+</div>
+
+        
+        
+        <style>
+
+            .map{
+                width: 100%;
+                height: 400px;
+            }
+            @media (max-width: 700px) {
+        .contacts-card, .map {
+            width: 100% !important;
+        }
+        
+        .contacts-card p{
+            width: 100%;
+        }
+        
+        #map-container {
+            flex-wrap: wrap;
+            gap: 0;
+        }
+    }
+            .contacts-container {
+                margin-top: 20px;
+                padding: 15px;
+                background: #f9f9f9;
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+        
+            .contact-list {
+                list-style: none;
+                padding: 0;
+            }
+        
+            .contact-item {
+                background: #fff;
+                padding: 10px;
+                margin-bottom: 8px;
+                border-radius: 5px;
+                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+        
+            .contact-info {
+                font-size: 14px;
+                color: #333;
+            }
+        
+            .add-contact-btn {
+/*                display: block;
+                width: 100%;*/
+                padding: 7px 10px;
+                margin-top: 1px;
+                background: #007B40;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+        
+            .add-contact-btn:hover {
+                background: #0056b3;
+            }
+        </style>
+        
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+          function addNewContact() {
+    Swal.fire({
+        title: 'Ajouter un nouveau contact',
+        html: `
+            <input type="text" id="nom" class="swal2-input" placeholder="Nom">
+            <input type="text" id="prenom" class="swal2-input" placeholder="Prénom">
+            <input type="text" id="mobile" class="swal2-input" placeholder="Numéro de mobile">
+        `,
+        confirmButtonText: 'Ajouter',
+        showCancelButton: true,
+        cancelButtonText: 'Annuler',
+        preConfirm: () => {
+            const nom = document.getElementById('nom').value.trim();
+            const prenom = document.getElementById('prenom').value.trim();
+            const mobile = document.getElementById('mobile').value.trim();
+
+            if (!nom || !mobile) {
+                Swal.showValidationMessage('Nom et Mobile sont obligatoires');
+                return false;
+            }
+
+            return { nom, prenom, mobile };
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const newContact = result.value;
+            let contacts_liv = JSON.parse('<%- JSON.stringify(order.contacts_liv) %>');
+
+// Ajouter le nouveau contact
+contacts_liv.push(newContact);
+    
+
+            // Ajouter le contact à la liste affichée
+            const contactList = document.querySelector('.contact-list');
+            const newListItem = document.createElement('li');
+            newListItem.classList.add('contact-item');
+            newListItem.innerHTML = `
+                <div class="contact-info">
+                    <strong>${newContact.nom} ${newContact.prenom}</strong> <br>
+                    <span>Tél: Non renseigné</span> <br>
+                    <span>Mobile: ${newContact.mobile}</span>
+                </div>
+            `;
+            contactList.appendChild(newListItem);
+
+            // Récupérer tous les contacts existants et envoyer au serveur
+            const updatedContacts = [];
+            document.querySelectorAll('.contact-item').forEach(item => {
+                const nameParts = item.querySelector('strong').textContent.trim().split(' ');
+                const mobile = item.querySelector('span:nth-child(3)').textContent.replace('Mobile: ', '').trim();
+
+                updatedContacts.push({
+                    nom: nameParts[0] || '',
+                    prenom: nameParts[1] || '',
+                    mobile: mobile
+                });
+            });
+
+            const orderId = '<%= order.id %>'; // ID de l'ordre à mettre à jour
+
+            // Envoi AJAX au serveur avec la liste complète des contacts
+            fetch('/app/updateOrderField', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:JSON.stringify({
+
+                        orderId: orderId,
+                        field: "contacts_liv",  // Nom du champ à mettre à jour
+                        value: contacts_liv
+                    })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire('Succès!', 'Le contact a été ajouté.', 'success');
+                } else {
+                    Swal.fire('Erreur', 'Une erreur est survenue.', 'error');
+                }
+            })
+            .catch(error => {
+                Swal.fire('Erreur', 'Impossible d\'ajouter le contact.', 'error');
+            });
+        }
+    });
+}
+
+      </script>
+        
+
+        <script>
+            function formatDate(date) {
+    const daysOfWeek = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
+    const months = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    
+    const d = new Date(date);
+    const day = d.getDate().toString().padStart(2, '0');  // Format du jour avec 2 chiffres
+    const month = months[d.getMonth()];  // Nom du mois
+    const year = d.getFullYear();  // Année
+    const dayOfWeek = daysOfWeek[d.getDay()];  // Jour de la semaine
+    
+    return `${dayOfWeek} ${day} ${month} ${year}`;
+}
+
+
+            // Fonction pour afficher/masquer un commentaire et masquer les autres
+            function toggleCommentInput(commentId) {
+                var allTextAreas = document.querySelectorAll('.comment-input'); // Sélectionner tous les textarea
+                var allIcons = document.querySelectorAll('.step-comment i'); // Sélectionner toutes les icônes de commentaire
+                var clickedTextArea = document.getElementById(commentId); // La textarea spécifique à afficher/masquer
+        
+                // Masquer tous les autres commentaires
+                allTextAreas.forEach(function(textarea) {
+                    if (textarea !== clickedTextArea) {
+                        textarea.style.display = "none"; // Masquer les autres commentaires
+                    }
+                });
+        
+                // Masquer toutes les icônes sauf celle qui est cliquée
+                allIcons.forEach(function(icon) {
+                    if (icon !== clickedTextArea.previousElementSibling) {
+                        icon.style.display = "inline-block"; // Afficher toutes les icônes
+                    }
+                });
+        
+                // Basculer la visibilité du champ de commentaire cliqué
+                if (clickedTextArea.style.display === "none" || clickedTextArea.style.display === "") {
+                    clickedTextArea.style.display = "block";  // Afficher le commentaire
+                    clickedTextArea.previousElementSibling.style.display = "none"; // Masquer l'icône
+                } else {
+                    clickedTextArea.style.display = "none";  // Masquer le commentaire
+                    clickedTextArea.previousElementSibling.style.display = "inline-block"; // Afficher l'icône
+                }
+            }
+        
+            // Fonction pour masquer tous les commentaires si on clique à l'extérieur
+            document.addEventListener('click', function(event) {
+                var isClickInside = event.target.closest('.step-comment');
+                var allTextAreas = document.querySelectorAll('.comment-input');
+                var allIcons = document.querySelectorAll('.step-comment i');
+        
+                // Si le clic est à l'extérieur de la zone de commentaire
+                if (!isClickInside) {
+                    allTextAreas.forEach(function(textarea) {
+                        textarea.style.display = "none"; // Masquer toutes les zones de commentaire
+                    });
+                    allIcons.forEach(function(icon) {
+                        icon.style.display = "inline-block"; // Afficher toutes les icônes de commentaire
+                    });
+                }
+            });
+        </script>
+        
+    <!-- Infos Order et Documents -->
+<div class="order-documents-container">
+
+<!-- Documents liés -->
+<div class="documents-box">
+    <div class="documents-header">
+        <i class="fas fa-folder-open"></i>
+        <span>Documents Associés</span>
+    </div>
+
+    
+
+    <% if (docs.length > 0) { %>
+        <% docs.forEach(function(doc) { %>
+            <div class="doc-item">
+                <i class="fas fa-file-pdf"></i>
+                <a href="<%= doc.url %>" class="doc-link" target="_blank">
+                    <%= doc.Name %>
+                </a>
+                <!-- Icone de téléchargement -->
+                <a href="<%= doc.url %>" class="download-link" download>
+                    <i class="fas fa-download"></i> Télécharger
+                </a>
+            </div>
+        <% }); %>
+    <% } else { %>
+        <div class="no-docs">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>Aucun document disponible pour ce colis.</span>
+        </div>
+    <% } %>
+</div>
+
+</div>
+
+<style>
+    .order-documents-container {
+        display: flex;
+        gap: 20px;
+        justify-content: space-between;
+        flex-wrap: wrap;
+/*        margin-top: 20px;*/
+    }
+.order-box, .documents-box {
+    flex: initial;
+    min-width: 300px;
+    padding: 20px;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+/*    text-align: center;*/
+    margin: 0 auto; /* centre horizontalement */
+}
+    .order-header, .documents-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+        font-weight: bold;
+        color: #0056b3;
+        margin-bottom: 15px;
+    }
+    .order-header i, .documents-header i {
+        font-size: 22px;
+        color: #0056b3;
+    }
+
+
+/* Style personnalisé pour la scrollbar */
+.container::-webkit-scrollbar {
+    width: 8px;  /* Largeur de la barre de défilement */
+}
+
+.container::-webkit-scrollbar-thumb {
+    background-color: #007bff;  /* Couleur de la barre de défilement */
+    border-radius: 10px;  /* Coins arrondis */
+    border: 2px solid #191e3a;  /* Ajoute un bord assorti au fond */
+}
+
+.container::-webkit-scrollbar-track {
+    background-color: #191e3a;  /* Fond de la barre de défilement */
+    border-radius: 10px;
+}
+
+/* Effet au survol de la scrollbar */
+.container::-webkit-scrollbar-thumb:hover {
+    background-color: #0056b3;  /* Couleur plus foncée au survol */
+}
+    .order-info {
+        font-size: 14px;
+        color: #555;
+        padding: 5px 0;
+        border-bottom: 1px solid #eee;
+    }
+    .doc-item {
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #f9f9f9;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 8px;
+        transition: all 0.3s ease;
+    }
+    .doc-item:hover {
+        background-color: #e9f5ff;
+    }
+    .doc-item i {
+        font-size: 20px;
+        color: white;
+        margin-right: 12px;
+    }
+    .doc-link {
+        font-size: 14px;
+        color: #333;
+        text-decoration: none;
+        font-weight: bold;
+    }
+    .doc-link:hover {
+        color: #0056b3;
+    }

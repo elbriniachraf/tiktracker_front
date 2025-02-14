@@ -1,0 +1,172 @@
+<div class="my-cloud-container">
+  <div 
+  class="context-menu" 
+  *ngIf="showContextMenu" 
+  [style.left.px]="contextMenuPosition.x" 
+  [style.top.px]="contextMenuPosition.y"
+  (mouseleave)="closeContextMenu()"
+>
+  <ul class="context-menu-list">
+    <li (click)="addFolder()" class="context-menu-item">
+      <fa-icon [icon]="'folder-plus'" class="context-menu-icon" style="margin-right: 5px;"></fa-icon>
+      <span>Ajouter un dossier</span>
+    </li>
+  
+    <li (click)="uploadFilee()" class="context-menu-item">
+      <fa-icon [icon]="'cloud-upload-alt'" class="context-menu-icon" style="margin-right: 5px;"></fa-icon>
+      <span>Téléverser un fichier</span>
+    </li>
+    <li (click)="refresh()" class="context-menu-item">
+      <fa-icon [icon]="'sync-alt'" class="context-menu-icon" style="margin-right: 5px;"></fa-icon>
+      <span>Actualiser</span>
+    </li>
+  </ul>
+</div>
+    <!-- Sidebar gauche -->
+    <aside class="sidebar">
+      <h2 class="sidebar-title">Menu</h2>
+      <ul class="sidebar-menu">
+        <li 
+          class="sidebar-item" 
+          (click)="changeSection('cloud')" 
+          [class.active]="currentSection === 'cloud'"
+        >
+          <fa-icon [icon]="'cloud'" class="icon"></fa-icon>
+          <span>Cloud</span>
+        </li>
+        <li 
+          class="sidebar-item" 
+          (click)="changeSection('shared')" 
+          [class.active]="currentSection === 'shared'"
+        >
+          <fa-icon [icon]="'file-invoice-dollar'" class="icon"></fa-icon>
+          <span>Factures</span>
+        </li>
+        <li 
+          class="sidebar-item" 
+          (click)="changeSection('bordereaux')" 
+          [class.active]="currentSection === 'bordereaux'"
+        >
+          <fa-icon [icon]="'file-alt'" class="icon"></fa-icon>
+          <span>Bordereaux</span>
+        </li>
+        <li 
+          class="sidebar-item" 
+          (click)="changeSection('favorites')" 
+          [class.active]="currentSection === 'favorites'"
+        >
+          <fa-icon [icon]="'heart'" class="icon"></fa-icon>
+          <span>Favoris</span>
+        </li>
+        <li 
+          class="sidebar-item" 
+          (click)="changeSection('trash')" 
+          [class.active]="currentSection === 'trash'"
+        >
+          <fa-icon [icon]="'trash-alt'" class="icon"></fa-icon>
+          <span>Corbeille</span>
+        </li>
+      </ul>
+    </aside>
+    
+  
+    <div class="backdrop" *ngIf="isRenameModalVisible" (click)="closeRenameModal()"></div>
+    <div class="rename-modal" *ngIf="isRenameModalVisible">
+      <div class="modal-content">
+        <h3>Renommer le fichier</h3>
+        <input
+          type="text"
+          [(ngModel)]="selectedFileForRename.name"
+          placeholder="Entrez le nouveau nom"
+        />
+        <div class="modal-actions">
+          <button (click)="renameFile()">Renommer</button>
+          <button (click)="closeRenameModal()">Annuler</button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Contenu central -->
+    <main class="content" style="position: relative;"  (contextmenu)="onRightClick($event)"  (dragover)="onDragOver($event)" (dragleave)="onDragLeave()" (drop)="onDrop($event)" sy>
+      <h2>{{ currentSection | titlecase }}</h2>
+
+   
+    
+      <div class="dropzone" *ngIf="isDragging" style="z-index: 99999999999999;">
+        <div class="dropzone-content">
+          <fa-icon [icon]="'cloud-upload-alt'" class="dropzone-icon"></fa-icon>
+          <h2 class="dropzone-title">Déposez vos fichiers ici</h2>
+          <p class="dropzone-description">Glissez et déposez vos fichiers pour les télécharger facilement et rapidement.</p>
+        </div>
+      </div>
+      
+      <div class="file-list" *ngIf="!isDragging">
+        <ng-container *ngFor="let file of filteredFiles">
+          <div class="file-card" *ngIf="!file.is_trashed" (click)="selectFile(file)" style="position:relative">
+            <div [ngClass]="file.type" style="padding:15px">
+              <img [src]="getFileIcon(file.extension)" alt="file icon" class="file-icon" />
+              <p>{{ file.name }}</p>
+              <p class="size">{{ file.size }}</p>
+              <fa-icon
+                [icon]="file.is_favorite ? 'star' : 'star'"
+                [ngClass]="{'favorite': file.is_favorite, 'not-favorite': !file.is_favorite}"
+                class="favorite-icon"
+                (click)="toggleFavorite(file, $event)"
+              ></fa-icon>
+            </div>
+        
+            <!-- Si le fichier est sélectionné, afficher les actions -->
+            <div *ngIf="file.selected" class="file-actions" style="background:#2c3e50;padding:5px">
+              <fa-icon [icon]="'edit'" (click)="showRenameModal(file)" class="file-action-icon"></fa-icon>
+              <fa-icon [icon]="'eye'" (click)="viewFile(file.path)" class="file-action-icon"></fa-icon>
+              <fa-icon [icon]="'trash'" (click)="deleteFile(file._id)" class="file-action-icon"></fa-icon>
+              <fa-icon [icon]="'download'" (click)="downloadFile(file)" class="file-action-icon"></fa-icon>
+              <fa-icon [icon]="'share-alt'" (click)="shareFile(file)" class="file-action-icon"></fa-icon>
+            </div>
+          </div>
+        </ng-container>
+        
+      </div>
+    </main>
+    
+    <aside class="stats-container">
+  
+      <div *ngIf="uploadInProgress" class="progress-container">
+          <p>Téléchargement en cours...</p>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+  
+      <div *ngIf="downloadInProgress" class="progress-container">
+          <p>Upload en cours...</p>
+          <mat-progress-bar mode="indeterminate"></mat-progress-bar>
+      </div>
+  
+      <div class="stats-cards" style="flex-direction: column;">
+          <div class="stat-card">
+              <i class="fa fa-hdd"></i>
+              <div class="stat-info">
+                <p><strong>Stockage Total:</strong> {{ statistics.totalSpace | number:'1.2-2' }} GB</p>
+                <p><strong>Stockage Utilisé:</strong> {{ statistics.usedSpace | number:'1.2-2' }} GB</p>
+                
+
+              </div>
+          </div>
+  
+          <div class="category-cards">
+              <div *ngFor="let category of statistics.categories" class="category-card">
+                  <div class="category-header">
+                      <i class="fa" [ngClass]="'fa-' + category.icon"></i>
+                      <h3>{{ category.name }}</h3>
+                  </div>
+                  <p>{{ category.count }} fichiers</p>
+                  <div class="progress-bar">
+                      <div class="progress" [style.width]="category.percentage + '%'"></div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </aside>
+  
+  
+  </div>
+  

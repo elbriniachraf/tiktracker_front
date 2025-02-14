@@ -1,0 +1,54 @@
+<nav class="navbar">
+    <div class="logo">
+      <img src="logoo.png" alt="Logo" />
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a (click)="navigateTo('main/dashboard')" [ngClass]="{'active': isActive('main/dashboard')}">
+          <fa-icon [icon]="faDashboard"></fa-icon> Dashboard
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateTo('main/gestion')" [ngClass]="{'active': isActive('main/gestion')}">
+          <fa-icon [icon]="faGestion"></fa-icon> Gestion des Entités
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateTo('main/produits-services/produits')" [ngClass]="{'active': isActive('main/produits-services')}">
+          <fa-icon [icon]="faProduitsServices"></fa-icon> Produit ou Service
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateTo('main/settings')" [ngClass]="{'active': isActive('main/settings')}">
+          <fa-icon [icon]="faCommandes"></fa-icon> Commandes
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateTo('main/settings')" [ngClass]="{'active': isActive('main/settings')}">
+          <fa-icon [icon]="faFactures"></fa-icon> Factures
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateTo('main/calendar')" [ngClass]="{'active': isActive('main/calendar')}">
+          <fa-icon [icon]="faAgenda"></fa-icon> Agenda
+        </a>
+      </li>
+      <li>
+        <a (click)="navigateTo('main/my-cloud')" [ngClass]="{'active': isActive('main/my-cloud')}">
+          <fa-icon [icon]="faMediatheque"></fa-icon> My Cloud
+        </a>
+      </li>
+      <li class="notification">
+        <fa-icon [icon]="faNotification" class="input-icon"></fa-icon>
+      </li>
+      <li class="avatar">
+        <img src="logo.png" alt="Profile" />
+      </li>
+    </ul>
+    
+  </nav>
+  
+  <div class="content">
+    <router-outlet></router-outlet>
+  </div>
+  
