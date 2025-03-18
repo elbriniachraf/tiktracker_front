@@ -59,6 +59,7 @@
     "sweetalert2": "^11.14.5",
     "tinymce": "^7.5.1",
     "tslib": "^2.3.0",
+    "world-flags-sprite": "^0.0.2",
     "zone.js": "~0.14.10"
   },
   "devDependencies": {

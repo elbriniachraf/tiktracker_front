@@ -7,20 +7,444 @@
       <button class="tab" [class.active]="selectedTab === 'list'" (click)="selectedTab = 'list'">
         <fa-icon [icon]="['fas', 'list']"></fa-icon> Liste des Devis
       </button>
-      <button class="tab" [class.active]="selectedTab === 'factures'" (click)="selectedTab = 'factures'">
-        <fa-icon [icon]="['fas', 'file-alt']"></fa-icon> Factures
+      <button class="tab" [class.active]="selectedTab === 'createFacture'" (click)="selectedTab = 'createFacture'">
+        <fa-icon [icon]="['fas', 'file-alt']"></fa-icon>  Créer Facture
       </button>
-      <button class="tab" [class.active]="selectedTab === 'avoirs'" (click)="selectedTab = 'avoirs'">
-        <fa-icon [icon]="['fas', 'receipt']"></fa-icon> Avoirs
+
+     
+
+      <button class="tab" [class.active]="selectedTab === 'listeFacture'" (click)="selectedTab = 'listeFacture'">
+        <fa-icon [icon]="['fas', 'file-alt']"></fa-icon>Liste  Factures
       </button>
-      <button class="tab" [class.active]="selectedTab === 'relances'" (click)="selectedTab = 'relances'">
-        <fa-icon [icon]="['fas', 'bell']"></fa-icon> Relances
+      <button class="tab" [class.active]="selectedTab === 'createAvoir'" (click)="selectedTab = 'createAvoir'">
+        <fa-icon [icon]="['fas', 'file-alt']"></fa-icon>  Créer Avoir
+      </button>
+      <button class="tab" [class.active]="selectedTab === 'listeAvoirs'" (click)="selectedTab = 'listeAvoirs'">
+        <fa-icon [icon]="['fas', 'receipt']"></fa-icon> Avoirss
+      </button>
+      <button class="tab" [class.active]="selectedTab === 'Deplacements'" (click)="selectedTab = 'Deplacements'">
+        <fa-icon [icon]="['fas', 'receipt']"></fa-icon> Frais de déplacements
+      </button>
+
+      <button class="tab" [class.active]="selectedTab === 'Currency'" (click)="selectedTab = 'Currency'">
+        <fa-icon [icon]="['fas', 'bell']"></fa-icon>  Currency
       </button>
     </div>
     
+    <div *ngIf="isModalOpen" class="modal">
+      <div class="modal-content">
+          <span (click)="closeModal()" class="close-btn">&times;</span>
+          <iframe [src]="pdfUrl" class="pdf-viewer"></iframe>
+      </div>
+  </div>
+ 
+
+<div class="avoir-list-container" *ngIf="selectedTab === 'listeAvoirs'">
+  <h2 class="section-title">Liste des Avoirs</h2>
+
+  <!-- Liste des Avoirs -->
+  <div *ngFor="let avoir of avoirs" class="avoir-card">
+      <div class="avoir-header">
+          <div class="avoir-info">
+              <h3>Avoir #{{ avoir.id }}</h3>
+              <p><strong>Client:</strong> {{ avoir.client.nom }}</p>
+              <p><strong>Date:</strong> {{ avoir.date | date:'dd/MM/yyyy' }}</p>
+          </div>
+          <div class="avoir-total">
+              <p><strong>Total HT:</strong> {{ avoir.total_ht | number:'1.2-2' }} €</p>
+              <p><strong>TVA:</strong> {{ avoir.total_tva | number:'1.2-2' }} €</p>
+              <p><strong>Total TTC:</strong> {{ avoir.total_ttc | number:'1.2-2' }} €</p>
+          </div>
+      </div>
+
+      <!-- Actions pour chaque avoir -->
+      <div class="avoir-actions">
+       
+      </div>
+
+      <div class="produits-section">
+          <h4>Produits</h4>
+          <table class="produits-table">
+              <thead>
+                  <tr>
+                      <th>Produit</th>
+                      <th>Quantité</th>
+                      <th>Prix Unitaire</th>
+                      <th>Total</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngFor="let produit of avoir.facture.produits">
+                      <td>{{ produit.produit_name }}</td>
+                      <td>{{ produit.produit_quantite }}</td>
+                      <td>{{ produit.produit_prix_unitaire | number:'1.2-2' }} €</td>
+                      <td>{{ (produit.quantite * produit.produit_prix_unitaire) | number:'1.2-2' }} €</td>
+                  </tr>
+              </tbody>
+          </table>
+      </div>
+  </div>
+</div>
+
+    <div class="facture-list-container" *ngIf="selectedTab === 'listeFacture'">
+      <h2 class="section-title">Liste des Factures</h2>
+      
+      <div *ngFor="let facture of factures" class="facture-card">
+          <div class="facture-header">
+              <div class="facture-info">
+                  <h3>Facture #{{ facture.id }}</h3>
+                  <p><strong>Client:</strong> {{ facture.client.nom }}</p>
+                  <p><strong>Date:</strong> {{ facture.date | date:'dd/MM/yyyy' }}</p>
+              </div>
+              
+              <div class="facture-total">
+                  <p><strong>Total HT:</strong> {{ facture.total_ht | number:'1.2-2' }} €</p>
+                  <p><strong>TVA:</strong> {{ facture.total_tva | number:'1.2-2' }} €</p>
+                  <p><strong>Total TTC:</strong> {{ facture.total_ttc | number:'1.2-2' }} €</p>
+              </div>
+          </div>
+          
+          <!-- Actions: Show, Download, Email -->
+          <div class="facture-actions">
+              <a (click)="showFacture(facture)" class="facture-link">
+                  <i class="fas fa-eye"></i> Afficher la Facture
+              </a>
+              <a (click)="downloadFacture(facture)" class="facture-link">
+                  <i class="fas fa-download"></i> Télécharger
+              </a>
+              <a (click)="sendFactureByEmail(facture)" class="facture-link">
+                  <i class="fas fa-envelope"></i> Envoyer par Email
+              </a>
+              <a (click)="goAvoir(facture)" class="facture-link">
+                <i class="fas fa-file-invoice"></i> Créer un Avoir
+            </a>
+            <a (click)="goRelance(facture)" class="facture-link">
+                <i class="fas fa-bell"></i> Créer une Relance
+            </a>
+          </div>
   
+          <div class="produits-section">
+              <h4>Produits</h4>
+              <table class="produits-table">
+                  <thead>
+                      <tr>
+                          <th>Produit</th>
+                          <th>Quantité</th>
+                          <th>Prix Unitaire</th>
+                          <th>Total</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr *ngFor="let produit of facture.produits">
+                          <td>{{ produit.product_info.label }}</td>
+                          <td>{{ produit.quantite }}</td>
+                          <td>{{ produit.prix_unitaire | number:'1.2-2' }} €</td>
+                          <td>{{ (produit.quantite * produit.prix_unitaire) | number:'1.2-2' }} €</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+      </div>
+  </div>
+
+
+  <div class="container" *ngIf="selectedTab === 'Deplacements'" >
+    <h2 class="page-title">Frais de Déplacement</h2>
+  
+    <!-- Table des Frais de Déplacement -->
+    <div class="table-container">
+      <h3 class="section-title">Liste des Frais de Déplacement</h3>
+      <table class="frais-table">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Date</th>
+            <th>Montant (€)</th>
+            <th>Motif</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let frais of fraisDeplacements">
+            <td>{{ frais.client }}</td>
+            <td>{{ frais.date | date:'dd/MM/yyyy' }}</td>
+            <td>{{ frais.montant | number:'1.2-2' }} €</td>
+            <td>{{ frais.motif }}</td>
+            <td>
+              <button class="btn-action edit-btn">Modifier</button>
+              <button class="btn-action delete-btn">Supprimer</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Formulaire d'ajout d'un nouveau client -->
+    <div class="form-container">
+      <h3 class="section-title">Ajouter un Nouveau Frais de Déplacement</h3>
+      <form (ngSubmit)="createFraisDeplacement()" #fraisForm="ngForm">
+        <div class="form-group">
+          <label for="client">Client</label>
+          <input type="text" id="client" name="client" [(ngModel)]="newFrais.client" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input type="date" id="date" name="date" [(ngModel)]="newFrais.date" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="montant">Montant (€)</label>
+          <input type="number" id="montant" name="montant" [(ngModel)]="newFrais.montant" required />
+        </div>
+  
+        <div class="form-group">
+          <label for="motif">Motif</label>
+          <textarea id="motif" name="motif" [(ngModel)]="newFrais.motif" required></textarea>
+        </div>
+  
+        <button type="submit" [disabled]="!fraisForm.form.valid" class="submit-button">Ajouter</button>
+      </form>
+    </div>
+  </div>
+  
+  
+  <div class="avoir-form-container" *ngIf="selectedTab === 'createAvoir'"  >
+    <h2>Créer un Avoir</h2>
+  
+    <form (ngSubmit)="createAvoir()" #avoirForm="ngForm" class="avoir-form">
+      <!-- Client ID -->
+      <div class="form-group">
+        <label for="client_id">Client</label>
+        <input
+          type="text"
+          id="client_id"
+          name="client_id"
+          [(ngModel)]="newAvoir.client_id"
+          required
+          readonly
+          disabled
+          placeholder="Numéro de client"
+        />
+      </div>
+    
+      <!-- Facture ID -->
+      <div class="form-group">
+        <label for="facture_id">Facture</label>
+        <input
+          type="text"
+          id="facture_id"
+          name="facture_id"
+          [(ngModel)]="newAvoir.facture_id"
+          required
+          readonly
+          disabled
+          placeholder="Numéro de facture"
+        />
+      </div>
+    
+      <!-- Date -->
+      <div class="form-group">
+        <label for="date">Date de création</label>
+        <input
+          type="date"
+          id="date"
+          name="date"
+          [(ngModel)]="newAvoir.date"
+          required
+        />
+      </div>
+    
+      <!-- Montant HT -->
+      <div class="form-group">
+        <label for="total_ht">Montant HT (€)</label>
+        <input
+          type="number"
+          id="total_ht"
+          name="total_ht"
+          [(ngModel)]="newAvoir.total_ht"
+          required
+          placeholder="Montant HT"
+          (input)="calculateTTC2()"
+        />
+      </div>
+    
+      <!-- Montant TVA -->
+      <div class="form-group">
+        <label for="total_tva">Montant TVA (€)</label>
+        <input
+          type="number"
+          id="total_tva"
+          name="total_tva"
+          [(ngModel)]="newAvoir.total_tva"
+          required
+          placeholder="Montant TVA"
+          (input)="calculateTTC2()"
+        />
+      </div>
+    
+      <!-- Montant TTC (calculé) -->
+      <div class="form-group">
+        <label for="total_ttc">Montant TTC (€)</label>
+        <input
+          type="number"
+          id="total_ttc"
+          name="total_ttc"
+          [(ngModel)]="newAvoir.total_ttc"
+          readonly
+          disabled
+          placeholder="Montant TTC"
+        />
+      </div>
+    
+      <!-- Raison -->
+      <div class="form-group">
+        <label for="reason">Raison de l'Avoir</label>
+        <textarea
+          id="reason"
+          name="reason"
+          [(ngModel)]="newAvoir.reason"
+          required
+          placeholder="Raison de l'avoir"
+        ></textarea>
+      </div>
+    
+      <!-- Bouton de soumission -->
+      <button type="submit" [disabled]="!avoirForm.form.valid" class="submit-button">
+        Créer l'Avoir
+      </button>
+    </form>
+    
+  </div>
+  
+
+
+    <div class="facture-container" *ngIf="selectedTab === 'createFacture'">
+      <h2>Créer une nouvelle facture</h2>
+  
+      <form (ngSubmit)="creerFacture()" class="facture-form">
+  
+          <!-- Informations client et date -->
+          <div class="form-group">
+              <label>Nom du client</label>
+              <input type="text" id="client_facture" name="client_facture" [(ngModel)]="facture.client"
+                     (keyup)="rechercherClients2()" placeholder="Rechercher un client...">
+              <ul *ngIf="clientsFiltres.length > 0" class="autocomplete-list">
+                  <li *ngFor="let client of clientsFiltres" (click)="selectionnerClient2(client)">
+                      {{ client.nom }}
+                  </li>
+              </ul>
+          </div>
+  
+          <div class="form-group">
+              <label>Date de la facture</label>
+              <input type="date" [(ngModel)]="facture.date" name="date" required />
+          </div>
+  
+          <!-- Tableau des produits -->
+          <h3>Produits</h3>
+          <table class="produits-table">
+              <thead>
+              <tr>
+                  <th>Produit</th>
+                  <th>Quantité</th>
+                  <th>Prix Unitaire (€)</th>
+                  <th>Total (€)</th>
+                  <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let produit of facture.produits; let i = index">
+                  <td>
+                      <input type="text"
+                             [(ngModel)]="produit.produit"
+                             name="produits{{i}}"
+                             (input)="filterProduits2(i, produit.produit)"
+                             placeholder="Rechercher un produit..."
+                             required />
+                      <ul id="suggestionsList-{{i}}" *ngIf="filteredProduits2 && filteredProduits2[i] && filteredProduits2[i].length > 0" class="autocomplete-list">
+                          <li *ngFor="let suggestion of filteredProduits2[i]"
+                              (click)="selectProduit2(i, suggestion)">
+                              {{ suggestion.label }}
+                          </li>
+                      </ul>
+                  </td>
+  
+                  <td><input type="number" name="quantite{{i}}" [(ngModel)]="produit.quantite" (input)="calculerTotalFacture()" required /></td>
+                  <td><input type="number" name="prixUnitaire{{i}}" [(ngModel)]="produit.prixUnitaire" (input)="calculerTotalFacture()" required /></td>
+                  <td>{{ produit.quantite * produit.prixUnitaire | number:'1.2-2' }} €</td>
+                  <td>
+                      <button type="button" class="delete-btn" (click)="supprimerProduitFacture(i)">🗑️</button>
+                  </td>
+              </tr>
+              </tbody>
+          </table>
+  
+          <!-- Bouton pour ajouter un produit -->
+          <button type="button" class="add-product-btn" (click)="ajouterProduitFacture()">+ Ajouter un produit</button>
+  
+          <!-- Totaux HT, TVA et TTC -->
+          <div class="totaux-section">
+  
+              <div class="totaux-item">
+                  <label>Total HT:</label>
+                  <input type="text" [(ngModel)]="totalHT" name="totalHT" readonly />
+              </div>
+  
+              <div class="totaux-item">
+                  <label>TVA (%):</label>
+                  <input type="number" [(ngModel)]="tva" name="tva" (input)="calculerTotalFacture()" />
+              </div>
+  
+              <div class="totaux-item">
+                  <label>Total TTC:</label>
+                  <input type="text" [(ngModel)]="totalTTC" name="totalTTC" readonly />
+              </div>
+          </div>
+  
+          <!-- Bouton soumission -->
+          <button type="submit" class="submit-btn">Créer la facture</button>
+      </form>
+  </div>
+  
+    
+  
+
+    <div class="currency-container" *ngIf="selectedTab === 'Currency'">
+      <h2>💱 Taux de change - {{ baseCurrency }} ({{ currencyDetails[baseCurrency].designation || 'Inconnu' }})</h2>
+    
+   
+      <table class="currency-table">
+        <thead>
+          <tr>
+            <th>Devise</th>
+            <th>Pays</th>
+            <th>Désignation</th>
+            <th>Taux de change</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let rate of filteredRates">
+            <td class="currency-name">
+              <span class="flag flag-{{ rate.key.toLowerCase() }}"></span>
+              {{ rate.key }}
+            </td>
+            <td>
+              {{ currencyDetails[rate.key].country || 'Inconnu' }}
+            </td>
+            <td>
+              {{ currencyDetails[rate.key].designation || 'Non définie' }}
+            </td>
+            <td>{{ rate.value | number: '1.4-4' }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    
     <!-- Contenu en fonction de l'onglet sélectionné -->
     <div *ngIf="selectedTab === 'create'">
+    
       <h2><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Créer un Devis</h2>
 
       <div style="display: flex;gap:20px">
