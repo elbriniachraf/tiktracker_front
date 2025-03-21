@@ -481,12 +481,13 @@
 <div class="toolbar">
   <!-- Barre de recherche -->
   <input
-    type="text"
-    class="search-input"
-    placeholder="🔍 Rechercher un produit..."
-    [(ngModel)]="searchQuery"
-    (input)="onSearch(searchQuery)"
-  />
+  type="text"
+  class="search-input"
+  placeholder="🔍 Rechercher un produit..."
+  [(ngModel)]="searchQuery"
+  (input)="onSearch(searchQuery)"
+/>
+
 
   <!-- Boutons d'actions -->
   <div class="actions">
@@ -600,10 +601,13 @@
         <div class="card-icon">
           <fa-icon [icon]="['fas', 'folder']"></fa-icon>
         </div>
-        <div class="card-content">
-          <h5>{{ category.name }}</h5>
-          <p>{{ category.description }}</p>
+        <div *ngFor="let product of products">
+          <div class="card-content">
+            <h5>{{ product.category?.name }}</h5>
+            <p>{{ product.category?.description }}</p>
+          </div>
         </div>
+        
         <div class="card-actions">
           <button class="btn btn-delete" (click)="deleteCategory(category._id)">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon> Supprimer
@@ -621,6 +625,7 @@
 
   <ngx-datatable
   class="material"
+  [rows]="filteredProducts" 
   [rows]="products"
   [columnMode]="'force'"
   [headerHeight]="60"
@@ -652,7 +657,7 @@
   <ngx-datatable-column name="Nom" prop="label" [sortable]="true"></ngx-datatable-column>
   
   <!-- Description -->
-  <ngx-datatable-column name="Description">
+  <ngx-datatable-column name="Description" >
     <ng-template ngx-datatable-cell-template let-row="row">
       <a href="javascript:void(0)" (click)="showDescription(row)" class="description-link">
         <fa-icon [icon]="'eye'"></fa-icon> Voir
@@ -664,7 +669,7 @@
   <ngx-datatable-column name="Catégorie" prop="category" [sortable]="true"></ngx-datatable-column>
   
   <!-- Prix -->
-  <ngx-datatable-column name="Prix" prop="price" [sortable]="true">
+  <ngx-datatable-column name="Prix" prop="selling_price" [sortable]="true">
     <ng-template let-value="value">
       <div class="price">
         <fa-icon [icon]="'money-bill-wave'"></fa-icon>
@@ -709,7 +714,7 @@
       <div class="action-buttons">
         <button class="btn btn-info btn-sm" (click)="viewProduct(row.id)">
           <fa-icon [icon]="'eye'"></fa-icon>
-        </button>
+        </button>        
         <button class="btn btn-warning btn-sm" (click)="editProduct(row.id)">
           <fa-icon [icon]="'edit'"></fa-icon>
         </button>
@@ -723,6 +728,7 @@
 
     
   </ngx-datatable>
+  
 
   <!-- Drawer pour afficher la description -->
   <div class="drawer" [class.open]="isDrawerOpen">
@@ -740,3 +746,4 @@
     <button><fa-icon [icon]="'chevron-right'"></fa-icon></button>
   </div>
 </div>
+
