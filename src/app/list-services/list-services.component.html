@@ -1,13 +1,14 @@
 <div class="product-list-container immersive-design">
     <!-- Barre d'outils -->
     <div class="toolbar">
+      
       <input
-        type="text"
-        class="search-input"
-        placeholder="Rechercher un service..."
-        [(ngModel)]="searchQuery"
-        (input)="onSearch(searchQuery)"
-      />
+      type="text"
+      class="search-input"
+      placeholder="🔍 Rechercher un service..."
+      [(ngModel)]="searchQuery"
+      (input)="onSearch(searchQuery)"
+    />
       <button class="btn btn-add"  (click)="ajouterService()">
         <fa-icon [icon]="'plus'"></fa-icon> Ajouter un service
       </button>
@@ -16,7 +17,7 @@
     <!-- Tableau -->
     <ngx-datatable
     class="material"
-    [rows]="services"
+    [rows]="filteredServices"
     [columnMode]="'force'"
     [headerHeight]="60"
     [footerHeight]="60"
@@ -36,7 +37,7 @@
     </ngx-datatable-column>
   
     <!-- Actions -->
-    <ngx-datatable-column name="Actions">
+    <!-- <ngx-datatable-column name="Actions">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <div class="dropdown">
           <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
@@ -61,8 +62,23 @@
           </ul>
         </div>
       </ng-template>
+    </ngx-datatable-column> -->
+    <ngx-datatable-column name="Actions">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <div class="action-buttons">
+          <button class="btn btn-info btn-sm" (click)="viewProduct(row.id)">
+            <fa-icon [icon]="'eye'"></fa-icon>
+          </button>        
+          <button class="btn btn-warning btn-sm" (click)="editProduct(row.id)">
+            <fa-icon [icon]="'edit'"></fa-icon>
+          </button>
+          <button class="btn btn-danger btn-sm" (click)="deleteService(row.id)">
+            <fa-icon [icon]="'trash'"></fa-icon>
+          </button>
+        
+        </div>
+      </ng-template>
     </ngx-datatable-column>
-  
     <!-- Nom du service -->
     <ngx-datatable-column name="Nom" prop="name" [sortable]="true">
       <ng-template let-value="value">
@@ -166,4 +182,32 @@
       </button>
     </div>
   </div>
+  <!-- Drawer pour afficher les détails du service -->
+<div class="drawer" [class.open]="isDrawerOpen">
+  <div class="drawer-header">
+    <h3>Détails du Service</h3>
+    <button (click)="closeDrawer()" class="close-btn">&times;</button>
+  </div>
+  <div class="drawer-content">
+    <div *ngIf="selectedService">
+      <p><strong>ID :</strong> {{ selectedService.id }}</p>
+      <p><strong>Nom :</strong> {{ selectedService.name }}</p>
+      <p><strong>Description :</strong> {{ selectedService.description }}</p>
+      <p><strong>Prix :</strong> {{ selectedService.price | currency }}</p>
+      <p><strong>Private :</strong> {{ selectedService.private }}</p>
+      <p><strong>Durée :</strong> {{ selectedService.duration }} heures</p>
+      <p><strong>Catégorie :</strong> {{ selectedService.category_id }}</p>
+      <p><strong>Statut :</strong> {{ selectedService.status }}</p>
+      <p><strong>Date de début :</strong> {{ selectedService.start_date | date }}</p>
+      <p><strong>Date de fin :</strong> {{ selectedService.end_date | date }}</p>
+      <p><strong>Fournisseur :</strong> {{ selectedService.service_provider }}</p>
+      <p><strong>Localisation :</strong> {{ selectedService.location }}</p>
+      <p><strong>Note :</strong> {{ selectedService.rating }}</p>
+      <p><strong>Caractéristiques :</strong> {{ selectedService.features | json }}</p>
+      <p><strong>Image :</strong> <img [src]="selectedService.image_url" alt="Service Image" width="100"></p>
+      <p><strong>Mis en avant :</strong> {{ selectedService.is_featured ? 'Oui' : 'Non' }}</p>
+      <p><strong>Tags :</strong> {{ selectedService.tags }}</p>
+    </div>
+  </div>
+</div>
   

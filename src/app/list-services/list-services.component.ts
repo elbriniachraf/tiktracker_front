@@ -30,15 +30,15 @@ export class ListServicesComponent {
   pageSize: number = 10;  // Nombre de produits par page
   loading: boolean = true;  // Indicateur de chargement
   totalRecords: number = 0;  // Total des enregistrements
-
+  selectedService: any = null;  // Service actuellement sélectionné
   constructor(private service: ServiceService) {}
   selectedDescription: string = '';
   isDrawerOpen: boolean = false;
+  
 
   closeDrawer(): void {
     this.isDrawerOpen = false;
   }
-
 
   
   deleteProduct(id: number) {
@@ -113,12 +113,24 @@ export class ListServicesComponent {
    * Recherche un produit et met à jour la pagination.
    */
   onSearch(query: string): void {
+    console.log("Recherche :", query);
     this.currentPage = 1;
-    this.filteredServices = this.services.filter(service =>
-      service.label.toLowerCase().includes(query.toLowerCase())
-    );
+  
+    // Si la recherche est vide, on réinitialise les services filtrés
+    if (!query.trim()) {
+      this.filteredServices = [...this.services]; // Assurez-vous que 'this.services' contient la liste des services
+    } else {
+      // On filtre les services en fonction de la recherche
+      this.filteredServices = this.services.filter(service =>
+        (service.name && service.name.toLowerCase().includes(query.toLowerCase())) || // Recherche par nom
+        (service.description && service.description.toLowerCase().includes(query.toLowerCase())) // Recherche par description
+      );
+    }
+  
+    console.log("Services filtrés :", this.filteredServices); // 🔹 Vérifier le résultat de la recherche
     this.totalPages = Math.ceil(this.filteredServices.length / this.pageSize);
   }
+  
   filteredServices: any[] = []; // Produits filtrés (ex. par recherche)
   currentPage: number = 1; // Page actuelle
   totalPages: number = 0; // Nombre total de pages
@@ -148,11 +160,32 @@ export class ListServicesComponent {
     console.log(`Modifier le service ID: ${serviceId}`);
   }
 
-  // Supprimer un service
-  deleteService(serviceId: number) {
-    console.log(`Supprimer le service ID: ${serviceId}`);
+  deleteService(id: number): void {
+    Swal.fire({
+      title: 'Êtes-vous sûr ?',
+      text: 'Cette action est irréversible !',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Oui, supprimer !'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.service.deleteService(id).subscribe( // Utilisez 'this.service' ici
+          () => {
+            // Supprimer le service de la liste locale
+            this.services = this.services.filter(service => service.id !== id);
+            Swal.fire('Supprimé !', 'Le service a été supprimé.', 'success');
+          },
+          (error) => {
+            console.error('Erreur lors de la suppression du service', error);
+            Swal.fire('Erreur', 'Impossible de supprimer le service.', 'error');
+          }
+        );
+      }
+    });
   }
-
+  
   // Changer le statut d'un service
   changeStatusService(serviceId: number) {
     console.log(`Changer le statut du service ID: ${serviceId}`);
@@ -178,4 +211,5 @@ export class ListServicesComponent {
   editProduct(productId: number): void {
     console.log('Éditer le produit', productId);
   }
+  
 }
