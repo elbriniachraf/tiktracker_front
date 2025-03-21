@@ -97,6 +97,12 @@
             "styles": [
               "src/styles.css",
   "node_modules/bootstrap/dist/css/bootstrap.min.css",
+
+
+  "node_modules/bootstrap/dist/css/bootstrap.min.css",
+
+
+
     "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
     "node_modules/world-flags-sprite/stylesheets/flags16.css"
             ],
@@ -112,3 +118,4 @@
     "analytics": "ad923589-1222-49db-901d-7aadd5e7a469"
   }
 }
+
