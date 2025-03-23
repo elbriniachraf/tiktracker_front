@@ -81,8 +81,28 @@ export class ListServicesComponent {
     // Assurer que selectedService est correctement peuplé avant d'ouvrir les drawers
     if (this.selectedService) {
         this.isDrawerOpen = true; // Ouvre le premier drawer (description)
-        this.isDrawerOpen2 = true; // Ouvre le second drawer (service)
+        this.isDrawerOpen2 = false; // Ouvre le second drawer (service)
     }
+}
+viewService(serviceId: number): void {
+  // Rechercher le service par son ID
+  const service = this.services.find(s => s.id === serviceId);
+  
+  if (service) {
+    // Enregistrer le service sélectionné
+    this.selectedService = service;
+    
+    // Ouvrir uniquement le drawer des détails (drawer2)
+    this.isDrawerOpen2 = true;
+    
+    // Fermer le drawer de description pour éviter la confusion
+    this.isDrawerOpen = false;
+    
+    console.log('Détails du service affichés:', service);
+  } else {
+    console.error(`Service avec ID ${serviceId} non trouvé.`);
+    // Optionnellement, afficher un message d'erreur à l'utilisateur
+  }
 }
   ngOnInit(): void {
     this.loadProducts();
@@ -177,17 +197,17 @@ export class ListServicesComponent {
   // Voir un service
   
   // Voir un service
-viewService(serviceId: number) {
-  this.isDrawerOpen2 = true;  // Ouvrir le drawer
+// viewService(serviceId: number) {
+//   this.isDrawerOpen2 = true;  // Ouvrir le drawer
 
-  const service = this.services.find(s => s.id === serviceId);
-  if (service) {
-    console.log('Détails du service:', service);  // Affiche tous les champs du service
-    // Vous pouvez aussi utiliser ces informations pour remplir un modal ou un autre composant d'affichage
-  } else {
-    console.log(`Service avec ID ${serviceId} non trouvé.`);
-  }
-}
+//   const service = this.services.find(s => s.id === serviceId);
+//   if (service) {
+//     console.log('Détails du service:', service);  // Affiche tous les champs du service
+//     // Vous pouvez aussi utiliser ces informations pour remplir un modal ou un autre composant d'affichage
+//   } else {
+//     console.log(`Service avec ID ${serviceId} non trouvé.`);
+//   }
+// }
 
 
 

@@ -715,9 +715,10 @@
         <button class="btn btn-info btn-sm" (click)="viewProduct(row.id)">
           <fa-icon [icon]="'eye'"></fa-icon>
         </button>        
-        <button class="btn btn-warning btn-sm" (click)="editProduct(row.id)">
-          <fa-icon [icon]="'edit'"></fa-icon>
+        <button class="btn btn-warning btn-sm" [routerLink]="['/main/produits-services/edit-product', row.id]">
+          <fa-icon [icon]="'edit'"></fa-icon> 
         </button>
+        
         <button class="btn btn-danger btn-sm" (click)="deleteProduct(row.id)">
           <fa-icon [icon]="'trash'"></fa-icon>
         </button>

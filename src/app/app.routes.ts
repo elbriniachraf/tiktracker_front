@@ -1,9 +1,10 @@
-import { type Routes, RouterModule } from '@angular/router';
+import { Routes , RouterModule } from '@angular/router';
 import { MainPageComponent } from './main-page/main-page.component';
 import { LoginComponent } from './auth/login/login.component';
 import { RegisterComponent } from './register/register.component';
 import { PageProduitComponent } from './page-produit/page-produit.component';
 import { MyCalendarComponent } from './my-calendar/my-calendar/my-calendar.component';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -33,10 +34,12 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'produits', pathMatch: 'full' }, // Redirection par défaut vers clients
           { path: 'produits', loadComponent: () => import('./list-produits/list-produits.component').then(m => m.ListProduitsComponent) },
-
+          { path: 'edit-product/:id', component: EditProductComponent },      
         ]
       },
       { path: 'settings', loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent) },
     ],
   },
+
 ];
+

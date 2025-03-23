@@ -60,5 +60,7 @@ export class ProductService {
   getProductById(id: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${id}`);
   }
-  
+  updateProduct(id: number, product: any): Observable<any> {
+    return this.http.put<any>(`${this.apiUrl}/${id}`, product);
+  }
 }

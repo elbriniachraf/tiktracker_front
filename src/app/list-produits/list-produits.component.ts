@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import Swal from 'sweetalert2';
 import { faUsers, faTruck, faUserPlus, faAddressBook } from '@fortawesome/free-solid-svg-icons';
+import { RouterModule } from '@angular/router';
 
 
 import { GoogleMapsModule } from "@angular/google-maps";
@@ -19,7 +20,7 @@ import { ServiceService } from '../service.service';
 @Component({
   selector: 'app-list-produits',
   standalone: true,
-  imports: [NgxDatatableModule, HttpClientModule,CommonModule,FontAwesomeModule,GoogleMapsModule,FormsModule],
+  imports: [NgxDatatableModule,RouterModule, HttpClientModule,CommonModule,FontAwesomeModule,GoogleMapsModule,FormsModule],
 
   templateUrl: './list-produits.component.html',
   styleUrl: './list-produits.component.css',
@@ -60,39 +61,24 @@ export class ListProduitsComponent {
     this.isDrawerOpen3 = false;
   }
   
-  // addCategory(): void {
-  //   this.newCategory={
-  //     name: this.newCategoryName,
-  //     description: this.newCategoryDescription
-  //   }
-  //   if (this.newCategoryName) {
-  //     this.categoryService.addCategory(this.newCategory).subscribe(
-  //       (data) => {
-  //         this.categories.push(data); // Ajoutez directement la catégorie à la liste
-  //         this.newCategory = { name: '', description: '' }; // Réinitialisez le formulaire
-  //       },
-  //       (error) => {
-  //         console.error('Erreur lors de l\'ajout de la catégorie', error);
-  //       }
-  //     );
-  //   }
-  // }
-  addCategory(): void {
-    console.log("Nouvelle catégorie", this.newCategory); // Vérifiez ce qui est envoyé
-    if (this.newCategory.name && this.newCategory.description) {
-      this.categoryService.addCategory(this.newCategory).subscribe(
+   addCategory(): void {
+     this.newCategory={
+      name: this.newCategoryName,
+      description: this.newCategoryDescription
+    }
+    if (this.newCategoryName) {
+     this.categoryService.addCategory(this.newCategory).subscribe(
         (data) => {
-          this.categories.push(data);
-          this.resetForm();
-        },
+           this.categories.push(data); // Ajoutez directement la catégorie à la liste
+          this.newCategory = { name: '', description: '' }; // Réinitialisez le formulaire
+         },
         (error) => {
           console.error('Erreur lors de l\'ajout de la catégorie', error);
-        }
+         }
       );
     }
   }
   
-
   closeDrawer(): void {
     this.isDrawerOpen = false;
   }
@@ -210,8 +196,10 @@ export class ListProduitsComponent {
     }
   }
   editProduct(id: number): void {
-    this.router.navigate([`/edit-product/${id}`]);
+    this.router.navigateByUrl(`/main/produits-services/edit-product/${id}`);
+    
   }
+  
   /**
    * Vérifie si on peut passer à la page suivante.
    */
