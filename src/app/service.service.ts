@@ -24,4 +24,5 @@ export class ServiceService {
   deleteService(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+  
 }
