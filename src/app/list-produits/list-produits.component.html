@@ -746,4 +746,42 @@
     <button><fa-icon [icon]="'chevron-right'"></fa-icon></button>
   </div>
 </div>
+ <!-- drawer -->
+<div class="drawer" [class.open]="isDrawerOpen3">
+  <div class="drawer-content">
+    <div class="drawer-header">
+      <h3>Détails du produit</h3>
+      <button (click)="closeDrawer3()" class="close-btn">&times;</button>
+    </div>
+
+    <div *ngIf="selectedProduct">
+      <p><strong>Référence:</strong> {{ selectedProduct.reference }}</p>
+      <p><strong>Libellé:</strong> {{ selectedProduct.label }}</p>
+      <p><strong>Catégorie:</strong> {{ selectedProduct.category }}</p>
+      <p><strong>En vente:</strong> {{ selectedProduct.is_selling ? 'Oui' : 'Non' }}</p>
+      <p><strong>Achat possible:</strong> {{ selectedProduct.is_purchasing ? 'Oui' : 'Non' }}</p>
+      <p><strong>Description:</strong> {{ selectedProduct.description }}</p>
+      <p><strong>URL publique:</strong> <a [href]="selectedProduct.public_url" target="_blank">{{ selectedProduct.public_url }}</a></p>
+      <p><strong>Type de produit:</strong> {{ selectedProduct.product_type }}</p>
+      <p><strong>Poids:</strong> {{ selectedProduct.weight }} kg</p>
+      <p><strong>Longueur:</strong> {{ selectedProduct.length }} cm</p>
+      <p><strong>Largeur:</strong> {{ selectedProduct.width }} cm</p>
+      <p><strong>Hauteur:</strong> {{ selectedProduct.height }} cm</p>
+      <p><strong>Dimensions:</strong> {{ selectedProduct.dimensions }}</p>
+      <p><strong>Surface:</strong> {{ selectedProduct.surface }} m²</p>
+      <p><strong>Volume:</strong> {{ selectedProduct.volume }} m³</p>
+      <p><strong>Code douanier:</strong> {{ selectedProduct.customs_code }}</p>
+      <p><strong>Pays d'origine:</strong> {{ selectedProduct.country_of_origin }}</p>
+      <p><strong>État d'origine:</strong> {{ selectedProduct.state_of_origin }}</p>
+      <p><strong>Note:</strong> {{ selectedProduct.note }}</p>
+      <p><strong>Tags:</strong> {{ selectedProduct.tags }}</p>
+      <p><strong>Prix de vente:</strong> {{ selectedProduct.selling_price | currency }}</p>
+      <p><strong>Prix:</strong> {{ selectedProduct.price | currency }}</p>
+      <p><strong>Prix de vente minimum:</strong> {{ selectedProduct.min_selling_price | currency }}</p>
+      <p><strong>Taux de taxe:</strong> {{ selectedProduct.tax_rate }}%</p>
+    </div>
+  </div>
+</div>
+
+
 
