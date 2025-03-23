@@ -1,50 +1,108 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { ClientService } from '../client.service';
-import { HttpClientModule } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import Swal from 'sweetalert2';
-import { faUsers, faTruck, faUserPlus, faAddressBook } from '@fortawesome/free-solid-svg-icons';
 
-
-import { GoogleMapsModule } from "@angular/google-maps";
-import { FormsModule } from '@angular/forms';
-import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
-import { Address } from 'ngx-google-places-autocomplete/objects/address';
-import { Router } from '@angular/router';
+import { faBox, faPlus, faCogs, faChartLine } from '@fortawesome/free-solid-svg-icons';
+import { ListProduitsComponent } from '../list-produits/list-produits.component';
 import { ProductService } from '../product.service';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AngularEditorModule } from '@wfpena/angular-wysiwyg';
+import { HttpClientModule } from '@angular/common/http';
+import { EditorModule } from '@tinymce/tinymce-angular';;
+import { ToastrService } from 'ngx-toastr'
 import { CategoryService } from '../category.service';
+import { ListServicesComponent } from '../list-services/list-services.component';
 import { ServiceService } from '../service.service';
+import { Router } from '@angular/router';
 @Component({
-  selector: 'app-list-produits',
+  selector: 'app-page-produit',
   standalone: true,
-  imports: [NgxDatatableModule, HttpClientModule,CommonModule,FontAwesomeModule,GoogleMapsModule,FormsModule],
+  imports: [FontAwesomeModule,CommonModule,ListProduitsComponent,ListServicesComponent, ReactiveFormsModule,HttpClientModule,FormsModule,EditorModule, HttpClientModule, AngularEditorModule],
+  templateUrl: './page-produit.component.html',
+  styleUrl: './page-produit.component.css',
+  providers: [ProductService,CategoryService,ServiceService], // Service injecté
 
-  templateUrl: './list-produits.component.html',
-  styleUrl: './list-produits.component.css',
-    providers: [ProductService,CategoryService,ServiceService], // Service injecté
-  
+
 })
-export class ListProduitsComponent {
-  @Output() productAjout = new EventEmitter<any>();
-  products: any[] = [];  // Liste des produits
-  pageSize: number = 10;  // Nombre de produits par page
-  loading: boolean = true;  // Indicateur de chargement
-  totalRecords: number = 0;  // Total des enregistrements
-  constructor(private productService: ProductService,private router: Router,    private categoryService: CategoryService,) {}
-  selectedDescription: string = '';
-  isDrawerOpen: boolean = false;
-  filteredProducts: any[] = []; // Produits filtrés après recherche
-  searchQuery: string = ''; // Stocke la recherche
-  currentPage: number = 1; // Page actuelle
-  totalPages: number = 0; // Nombre total de pages
-  sorts: any[] = [{ prop: 'label', dir: 'asc' }]; // Critère de tri
-  selectedProduct: any = null;    // Déclarer la variable selectedProduct
+export class PageProduitComponent {
+  selectedMenu: string = 'products'; // Valeur par défaut
+  productForm!: FormGroup;
+  htmlContent="";
+  showForm: boolean = false;
+    // Basculer l'affichage du formulaire
+    toggleForm(): void {
+      this.showForm = !this.showForm;
+    }
+    
+  constructor(
+    public router: Router,
 
-
-  newCategory = { name: '', description: '' };
+    private fb: FormBuilder,
+    private categoryService: CategoryService,
+    private productService: ProductService,
+  ) { }
   categories:any = [ ];
+  drawerOpen = false;
+  newCategoryName = '';
+  newCategoryDescription=""
+  resetForm() {
+    this.newCategoryName = '';
+    this.newCategoryDescription = '';
+  }
+  toggleDrawer(): void {
+    this.drawerOpen = !this.drawerOpen;
+  }
+
+  private toastr: ToastrService | undefined;
+ 
+
+  // Menu avec des éléments
+  menuItems = [
+    { label: 'Liste des Produits', icon: faBox, action: 'products' },
+    { label: 'Ajouter un Produit', icon: faPlus, action: 'addProduct' },
+    { label: 'Liste des Services', icon: faCogs, action: 'services' },
+    { label: 'Ajouter un Service', icon: faPlus, action: 'addService' },
+    { label: 'Statistiques', icon: faChartLine, action: 'statistics' }
+  ];
+
+  private initializeForm(): void {
+    this.fetchCategories();
+    this.productForm = this.fb.group({
+      label: ['', [Validators.required]],
+      reference: ['', [Validators.required]],
+      description: ['', [Validators.required]],
+      price: ['', [Validators.required, Validators.min(0)]],
+      category: ['', [Validators.required]],
+      weight: [''],
+      is_selling: [true],
+      is_purchasing: [true],
+      selling_price: ['', [Validators.required, Validators.min(0)]],
+      length: [''],
+      width: [''],
+      height: [''],
+      publicUrl: ['']
+    });
+  }
+
+
+
+  onProductAjout(product: any) {
+    this.selectedMenu = 'addProduct'; // Change d'onglet pour afficher le formulaire
+
+  }
+
+  fetchCategories(): void {
+    this.categoryService.getCategories().subscribe(
+      (data) => {
+        this.categories = data;
+      },
+      (error) => {
+        console.error('Erreur lors de la récupération des catégories', error);
+      }
+    );
+  }
+  newCategory = { name: '', description: '' };
+
   deleteCategory(id: number): void {
     this.categoryService.deleteCategory(id).subscribe(
       () => {
@@ -73,224 +131,42 @@ export class ListProduitsComponent {
     }
   }
 
-  closeDrawer(): void {
-    this.isDrawerOpen = false;
-  }
 
 
-  drawerOpen = false;
-
-  toggleDrawer(): void {
-    this.drawerOpen = !this.drawerOpen;
-  }
-
-
-
-  
-  // deleteProduct(id: number) {
-  //   console.log(`Deleting product ${id}`);
-  // }
-  
-  changeStatus(id: number) {
-    console.log(`Changing status of product ${id}`);
-  }
-  
-  sendReport(id: number) {
-    console.log(`Sending report for product ${id}`);
-  }
-
-  /**
-   * Affiche la description dans un drawer.
-   */
-  newCategoryName = '';
-  newCategoryDescription=""
-  showDescription(row: any): void {
-    this.selectedDescription = row.description;
-    this.isDrawerOpen = true;
-  }
-  showForm: boolean = false;
-  // Basculer l'affichage du formulaire
-  toggleForm(): void {
-    this.showForm = !this.showForm;
-  }
-  toggleForm2() {
-    this.isFormOpen = !this.isFormOpen;
-  }
-
-  isDrawerOpen2 = false;
-  tvaList = [
-    { id: 1, nom: 'TVA Réduite', taux: 5.5 },
-    { id: 2, nom: 'TVA Normale', taux: 20 }
-  ];
-  isFormOpen = false;
-  newTva = { nom: '', taux: 0 };
-
-  toggleDrawer2() {
-    this.isDrawerOpen2 = !this.isDrawerOpen2;
-  }
-
-  addTva() {
-    const newTva = { id: Date.now(), nom: 'Nouvelle TVA', taux: 10 };
-    this.tvaList.push(newTva);
-  }
-
-  editTva(tva: any) {
-  }
-
-  deleteTva(id: number) {
-    this.tvaList = this.tvaList.filter(tva => tva.id !== id);
-  }
-  resetForm() {
-    this.newCategoryName = '';
-    this.newCategoryDescription = '';
-  }
   ngOnInit(): void {
-    this.loadProducts();
-  this.fetchCategories();
+    this.initializeForm();
 
-  }
-  fetchCategories(): void {
-    this.categoryService.getCategories().subscribe(
-      (data) => {
-        this.categories = data;
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des catégories', error);
-      }
-    );
-  }
-  ajouterProd(): void {
-    this.productAjout.emit([]);
-  }
-
-  updatePagination(): void {
-    const start = (this.currentPage - 1) * this.pageSize;
-    const end = start + this.pageSize;
-    this.filteredProducts = this.products.slice(start, end);
-    this.totalPages = Math.ceil(this.products.length / this.pageSize);
-  }
-
-  /**
-   * Passe à la page suivante.
-   */
-  nextPage(): void {
-    if (this.canNext()) {
-      this.currentPage++;
-      this.updatePagination();
-    }
-  }
-
-  /**
-   * Revient à la page précédente.
-   */
-  previousPage(): void {
-    if (this.canPrevious()) {
-      this.currentPage--;
-      this.updatePagination();
-    }
-  }
-
-  /**
-   * Vérifie si on peut passer à la page suivante.
-   */
-  canNext(): boolean {
-    return this.currentPage < this.totalPages;
-  }
-
-  /**
-   * Vérifie si on peut revenir à la page précédente.
-   */
-  canPrevious(): boolean {
-    return this.currentPage > 1;
-  }
-//la rechercherch 
-  onSearch(query: string): void {
-    console.log("Recherche :", query); 
-    this.currentPage = 1;
-  
-    if (!query.trim()) {
-      this.filteredProducts = [...this.products];
-    } else {
-      this.filteredProducts = this.products.filter(product =>
-        (product.label && product.label.toLowerCase().includes(query.toLowerCase())) ||
-        (product.reference && product.reference.toLowerCase().includes(query.toLowerCase())) // 🔹 Vérifie si les champs existent
-      );
-    }
-  
-    console.log("Produits filtrés :", this.filteredProducts); // 🔹 Vérifier le résultat de la recherche
-    this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
-  }
-  
-  getProducts(): void {
-    this.productService.getProducts().subscribe(
-      (response) => {
-        console.log("Produits récupérés :", response); // 🔹 Vérifier les données
-        this.products = response;
-        this.filteredProducts = [...this.products];
-        this.totalPages = Math.ceil(this.filteredProducts.length / this.pageSize);
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des produits:', error);
-      }
-    );
-  }
-  
-  // Charger les produits depuis le service
-  loadProducts(): void {
-    this.productService.getProducts(1).subscribe(
-      (response: { data: any[]; total: number; }) => {
-        this.products = response.data;  // Données des produits
-        this.totalRecords = response.total;  // Nombre total d'enregistrements
-        this.loading = false;  // Fin du chargement
-      },
-      (error: any) => {
-        console.error('Erreur lors du chargement des produits:', error);
-        this.loading = false;
-      }
-    );
-  }
-
-  // Gestion du tri
-  onSort(event: any): void {
-    this.sorts = event.sorts;
-    this.loadProducts();  // Recharger les produits avec le tri
-  }
-
-  // Voir le détail du produit
  
-
-  // Éditer le produit
-  editProduct(productId: number): void {
-    console.log('Éditer le produit', productId);
   }
-  deleteProduct(id: number): void {
-    Swal.fire({
-      title: 'Êtes-vous sûr ?',
-      text: "Cette action est irréversible !",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#d33',
-      cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Oui, supprimer !'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        this.productService.deleteProduct(id.toString()).subscribe( // Convertir id en string
-          () => {
-            // Supprimer le produit de la liste locale
-            this.products = this.products.filter(product => product.id !== id);
-            Swal.fire('Supprimé !', 'Le produit a été supprimé.', 'success');
-          },
-          (error) => {
-            console.error('Erreur lors de la suppression du produit', error);
-            Swal.fire('Erreur', 'Impossible de supprimer le produit.', 'error');
-          }
-        );
+
+
+  onSubmit(): void {
+    if (this.productForm.invalid) {
+      this.toastr?.error('Veuillez remplir correctement tous les champs obligatoires.', 'Erreur');
+      return;
+    }
+
+    const productData = this.productForm.value;
+
+    this.productService.addProduct(productData).subscribe({
+      next: (response) => {
+        this.toastr?.success('Produit ajouté avec succès !', 'Succès');
+        this.productForm.reset(); // Réinitialiser le formulaire après ajout
+        this.router.navigate(['/main/produits-services/produits']);
+        this.selectedMenu="addProduct"
+      },
+      error: (error) => {
+        this.toastr?.error('Une erreur est survenue lors de l\'ajout du produit.', 'Erreur');
+        console.error('Erreur:', error);
       }
     });
   }
-  
-  viewProduct(product: any): void {
-    this.selectedProduct = product;
-    this.isDrawerOpen = true;  // Ouvrir la drawer
+
+
+ 
+  // Méthode pour sélectionner un menu
+  selectMenu(item: any) {
+    this.selectedMenu = item.action;
   }
 }
+ 
