@@ -66,7 +66,7 @@
     <ngx-datatable-column name="Actions">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <div class="action-buttons">
-          <button class="btn btn-info btn-sm" (click)="viewProduct(row.id)">
+          <button class="btn btn-info btn-sm" (click)="viewService(row.id)">
             <fa-icon [icon]="'eye'"></fa-icon>
           </button>        
           <button class="btn btn-warning btn-sm" (click)="editProduct(row.id)">
@@ -183,31 +183,32 @@
     </div>
   </div>
   <!-- Drawer pour afficher les détails du service -->
-<div class="drawer" [class.open]="isDrawerOpen">
-  <div class="drawer-header">
-    <h3>Détails du Service</h3>
-    <button (click)="closeDrawer()" class="close-btn">&times;</button>
-  </div>
-  <div class="drawer-content">
-    <div *ngIf="selectedService">
-      <p><strong>ID :</strong> {{ selectedService.id }}</p>
-      <p><strong>Nom :</strong> {{ selectedService.name }}</p>
-      <p><strong>Description :</strong> {{ selectedService.description }}</p>
-      <p><strong>Prix :</strong> {{ selectedService.price | currency }}</p>
-      <p><strong>Private :</strong> {{ selectedService.private }}</p>
-      <p><strong>Durée :</strong> {{ selectedService.duration }} heures</p>
-      <p><strong>Catégorie :</strong> {{ selectedService.category_id }}</p>
-      <p><strong>Statut :</strong> {{ selectedService.status }}</p>
-      <p><strong>Date de début :</strong> {{ selectedService.start_date | date }}</p>
-      <p><strong>Date de fin :</strong> {{ selectedService.end_date | date }}</p>
-      <p><strong>Fournisseur :</strong> {{ selectedService.service_provider }}</p>
-      <p><strong>Localisation :</strong> {{ selectedService.location }}</p>
-      <p><strong>Note :</strong> {{ selectedService.rating }}</p>
-      <p><strong>Caractéristiques :</strong> {{ selectedService.features | json }}</p>
-      <p><strong>Image :</strong> <img [src]="selectedService.image_url" alt="Service Image" width="100"></p>
-      <p><strong>Mis en avant :</strong> {{ selectedService.is_featured ? 'Oui' : 'Non' }}</p>
-      <p><strong>Tags :</strong> {{ selectedService.tags }}</p>
+  <div class="drawer" [class.open]="isDrawerOpen2">
+    <div class="drawer-content">
+      <div class="drawer-header">
+        <h3>Détails du service</h3>
+        <button (click)="closeDrawer2()" class="close-btn">&times;</button>
+      </div>
+  
+      <div *ngIf="selectedService">
+        <p><strong>Nom:</strong> {{ selectedService.name }}</p>
+        <p><strong>Description:</strong> {{ selectedService.description }}</p>
+        <p><strong>Prix:</strong> {{ selectedService.price | currency }}</p>
+        <p><strong>Privé:</strong> {{ selectedService.private ? 'Oui' : 'Non' }}</p>
+        <p><strong>Durée:</strong> {{ selectedService.duration }} heures</p>
+        <p><strong>Catégorie:</strong> {{ selectedService.category_id }}</p>
+        <p><strong>Statut:</strong> {{ selectedService.status === 'active' ? 'Actif' : 'Inactif' }}</p>
+        <p><strong>Date de début:</strong> {{ selectedService.start_date | date }}</p>
+        <p><strong>Date de fin:</strong> {{ selectedService.end_date | date }}</p>
+        <p><strong>Fournisseur du service:</strong> {{ selectedService.service_provider }}</p>
+        <p><strong>Localisation:</strong> {{ selectedService.location }}</p>
+        <p><strong>Note:</strong> {{ selectedService.rating }}</p>
+        <p><strong>Caractéristiques:</strong> {{ selectedService.features | json }}</p>
+        <p><strong>Image:</strong> <img [src]="selectedService.image_url" alt="Service Image" width="100" height="100"></p>
+        <p><strong>Mis en avant:</strong> {{ selectedService.is_featured ? 'Oui' : 'Non' }}</p>
+        <p><strong>Tags:</strong> {{ selectedService.tags | json }}</p>
+      </div>
     </div>
   </div>
-</div>
+  
   

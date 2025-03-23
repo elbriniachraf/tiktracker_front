@@ -34,11 +34,16 @@ export class ListServicesComponent {
   constructor(private service: ServiceService) {}
   selectedDescription: string = '';
   isDrawerOpen: boolean = false;
-  
+  isDrawerOpen2: boolean = false; 
 
   closeDrawer(): void {
     this.isDrawerOpen = false;
+
   }
+  closeDrawer2() {
+    this.isDrawerOpen2 = false;  // Ferme le drawer2
+    this.selectedService = null;  // Réinitialise selectedService pour éviter de garder des données obsolètes
+}
 
   
   deleteProduct(id: number) {
@@ -56,10 +61,29 @@ export class ListServicesComponent {
   /**
    * Affiche la description dans un drawer.
    */
+  // showDescription(row: any): void {
+  //   this.selectedDescription = row.description;
+  //   this.isDrawerOpen = true;
+  //   this.isDrawerOpen2 = true;  // Ouvrir le second drawer
+
+
+  // }
+  // showDescription(row: any): void {
+  //   this.selectedDescription = row.description;
+  //   this.selectedService = row; // Mettre à jour selectedService avec le service sélectionné
+  //   this.isDrawerOpen = true;
+  //   this.isDrawerOpen2 = true;  // Ouvrir le second drawer
+  // }
   showDescription(row: any): void {
     this.selectedDescription = row.description;
-    this.isDrawerOpen = true;
-  }
+    this.selectedService = row; // Mettre à jour selectedService avec les données du service sélectionné
+    
+    // Assurer que selectedService est correctement peuplé avant d'ouvrir les drawers
+    if (this.selectedService) {
+        this.isDrawerOpen = true; // Ouvre le premier drawer (description)
+        this.isDrawerOpen2 = true; // Ouvre le second drawer (service)
+    }
+}
   ngOnInit(): void {
     this.loadProducts();
   }
@@ -151,9 +175,23 @@ export class ListServicesComponent {
     );
   }
   // Voir un service
-  viewService(serviceId: number) {
-    console.log(`Voir le service ID: ${serviceId}`);
+  
+  // Voir un service
+viewService(serviceId: number) {
+  this.isDrawerOpen2 = true;  // Ouvrir le drawer
+
+  const service = this.services.find(s => s.id === serviceId);
+  if (service) {
+    console.log('Détails du service:', service);  // Affiche tous les champs du service
+    // Vous pouvez aussi utiliser ces informations pour remplir un modal ou un autre composant d'affichage
+  } else {
+    console.log(`Service avec ID ${serviceId} non trouvé.`);
   }
+}
+
+
+
+
 
   // Modifier un service
   editService(serviceId: number) {
