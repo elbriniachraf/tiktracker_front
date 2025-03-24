@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -36,7 +36,7 @@ export class PageProduitComponent {
     
   constructor(
     public router: Router,
-
+    private location: Location,
     private fb: FormBuilder,
     private categoryService: CategoryService,
     private productService: ProductService,
@@ -138,7 +138,9 @@ export class PageProduitComponent {
 
  
   }
-
+  goBack() {
+    this.location.back();
+  }
 
   onSubmit(): void {
     if (this.productForm.invalid) {
@@ -167,6 +169,9 @@ export class PageProduitComponent {
   // Méthode pour sélectionner un menu
   selectMenu(item: any) {
     this.selectedMenu = item.action;
+    if (item.action === 'statistics') {
+      this.router.navigate(['/statistics']); // Naviguer vers la page des statistiques
+    }
   }
 }
  

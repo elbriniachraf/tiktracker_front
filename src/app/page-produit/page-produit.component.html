@@ -13,10 +13,13 @@
       </li>
     </ul>
   </div>
-  
+ 
   <div class="main-content">
     <div  class="content-section" >
       <div class="add-product-container" *ngIf="selectedMenu === 'addProduct'" style="position: relative;">
+        <button (click)="goBack()" class="btn btn-back">
+          <fa-icon [icon]="'arrow-left'"></fa-icon> 
+        </button>
         <h3>Ajouter un Produit</h3>
       
         <!-- Formulaire pour ajouter un produit -->

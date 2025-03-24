@@ -290,6 +290,21 @@
     background-color: #4CAF50;
     color: white;
   }
+  .btn-back {
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  
+  .btn-back fa-icon {
+    font-size: 20px;
+    color: #007bff;
+  }
   
   .btn-reset {
     background-color: #f44336;
