@@ -1,0 +1,70 @@
+/* statistics.component.css */
+.page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .back-arrow-container {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10;
+  }
+  
+  .back-arrow {
+    font-size: 2.5rem;
+    color: #007bff;  /* Bleu pour la flèche */
+    text-decoration: none;
+    font-weight: bold;
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .back-arrow:hover {
+    transform: scale(1.2);  /* Effet de zoom sur la flèche */
+    color: #0056b3;  /* Couleur bleue plus foncée au survol */
+  }
+  
+  .page-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 2.5rem;
+    color: #333;
+    margin-top: 60px;  /* Remonter le titre un peu plus haut */
+    text-align: center;
+    position: relative;
+  }
+  
+  .statistics-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  .stat-box {
+    background-color: white;
+    padding: 20px;
+    width: 300px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    transition: box-shadow 0.3s ease-in-out;
+  }
+  
+  .stat-box:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .chart {
+    width: 100%;
+    height: 250px;
+  }
+  
+  .page-container {
+    position: relative;
+  }
+  
