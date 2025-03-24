@@ -25,12 +25,10 @@ export class CategoryService {
     );
   }
 
-  // Delete a category
-  deleteCategory(id: string | number): Observable<any> {
-    return this.http.post(`${this.apiUrl}/delete`, { id: id }).pipe(
-      catchError(this.handleError) // Gestion des erreurs pour cette requête
-    );
+  deleteCategory(id: number): Observable<any> {
+    return this.http.delete(`http://127.0.0.1:8000/api/categories/${id}`);
   }
+  
 
   // Fonction pour gérer les erreurs
   private handleError(error: any): Observable<never> {

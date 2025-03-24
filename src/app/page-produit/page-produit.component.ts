@@ -103,16 +103,22 @@ export class PageProduitComponent {
   }
   newCategory = { name: '', description: '' };
 
-  deleteCategory(id: number): void {
-    this.categoryService.deleteCategory(id).subscribe(
-      () => {
-        this.categories = this.categories.filter((cat:any) => cat._id !== id); // Mettez à jour la liste
-      },
-      (error) => {
-        console.error('Erreur lors de la suppression de la catégorie', error);
-      }
-    );
+  deleteCategory(id: number) {
+    if (id) {  // Vérifie que l'id n'est pas undefined
+      this.categoryService.deleteCategory(id).subscribe(
+        (response) => {
+          console.log('Category deleted successfully:', response);
+          // Actualise la liste des catégories ou fais d'autres actions nécessaires
+        },
+        (error) => {
+          console.error('Erreur lors de la suppression de la catégorie:', error);
+        }
+      );
+    } else {
+      console.error('ID de la catégorie est undefined');
+    }
   }
+  
   addCategory(): void {
     this.newCategory={
       name: this.newCategoryName,

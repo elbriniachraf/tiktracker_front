@@ -601,13 +601,10 @@
         <div class="card-icon">
           <fa-icon [icon]="['fas', 'folder']"></fa-icon>
         </div>
-        <div *ngFor="let product of products">
-          <div class="card-content">
-            <h5>{{ product.category?.name }}</h5>
-            <p>{{ product.category?.description }}</p>
-          </div>
+        <div class="card-content">
+          <h5>{{ category.name }}</h5>
+          <p>{{ category.description }}</p>
         </div>
-        
         <div class="card-actions">
           <button class="btn btn-delete" (click)="deleteCategory(category._id)">
             <fa-icon [icon]="['fas', 'trash']"></fa-icon> Supprimer
@@ -621,6 +618,7 @@
     </button>
   </div>
 </div>
+
 
 
   <ngx-datatable
@@ -715,10 +713,9 @@
         <button class="btn btn-info btn-sm" (click)="viewProduct(row.id)">
           <fa-icon [icon]="'eye'"></fa-icon>
         </button>        
-        <button class="btn btn-warning btn-sm" [routerLink]="['/main/produits-services/edit-product', row.id]">
-          <fa-icon [icon]="'edit'"></fa-icon> 
+        <button class="btn btn-warning btn-sm" (click)="editProduct(row.id)">
+          <fa-icon [icon]="'edit'"></fa-icon>
         </button>
-        
         <button class="btn btn-danger btn-sm" (click)="deleteProduct(row.id)">
           <fa-icon [icon]="'trash'"></fa-icon>
         </button>

@@ -189,9 +189,9 @@
         
       
         <!-- Ajouter une catégorie -->
-        <button (click)="toggleDrawer()" class="btn btn-add-category">
+        <!-- <button (click)="toggleDrawer()" class="btn btn-add-category">
           <fa-icon [icon]="'plus'"></fa-icon> Ajouter une catégorie
-        </button>
+        </button> -->
       </div>
       
       <app-list-produits *ngIf="selectedMenu === 'products'"  (productAjout)="onProductAjout($event)"></app-list-produits>
@@ -199,7 +199,7 @@
 
     </div>
 
-    <div class="drawer" [class.open]="drawerOpen">
+    <!-- <div class="drawer" [class.open]="drawerOpen">
         <div class="drawer-content">
           <div class="expand-button" (click)="toggleForm()">
             <fa-icon [icon]="['fas', 'plus-circle']"></fa-icon> Ajouter une catégorie
@@ -260,6 +260,6 @@
           </button>
         </div>
       </div>
-      
+       -->
   </div>
 </div>

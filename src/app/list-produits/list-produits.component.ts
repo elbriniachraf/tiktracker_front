@@ -61,23 +61,29 @@ export class ListProduitsComponent {
     this.isDrawerOpen3 = false;
   }
   
-   addCategory(): void {
-     this.newCategory={
-      name: this.newCategoryName,
-      description: this.newCategoryDescription
-    }
-    if (this.newCategoryName) {
-     this.categoryService.addCategory(this.newCategory).subscribe(
+  addCategory(): void {
+    if (this.newCategoryName.trim() && this.newCategoryDescription.trim()) {
+      const newCategoryData = {
+        name: this.newCategoryName,
+        description: this.newCategoryDescription
+      };
+  
+      this.categoryService.addCategory(newCategoryData).subscribe(
         (data) => {
-           this.categories.push(data); // Ajoutez directement la catégorie à la liste
-          this.newCategory = { name: '', description: '' }; // Réinitialisez le formulaire
-         },
+          this.categories.push(data); // Ajout à la liste après succès
+          Swal.fire('Succès', 'Catégorie ajoutée avec succès', 'success');
+          this.resetForm(); // Réinitialiser le formulaire après ajout
+        },
         (error) => {
           console.error('Erreur lors de l\'ajout de la catégorie', error);
-         }
+          Swal.fire('Erreur', 'Impossible d\'ajouter la catégorie', 'error');
+        }
       );
+    } else {
+      Swal.fire('Erreur', 'Veuillez remplir tous les champs', 'warning');
     }
   }
+  
   
   closeDrawer(): void {
     this.isDrawerOpen = false;
@@ -155,16 +161,17 @@ export class ListProduitsComponent {
   this.fetchCategories();
 
   }
-  fetchCategories(): void {
-    this.categoryService.getCategories().subscribe(
-      (data) => {
-        this.categories = data;
-      },
-      (error) => {
-        console.error('Erreur lors de la récupération des catégories', error);
-      }
-    );
-  }
+ fetchCategories(): void {
+  this.categoryService.getCategories().subscribe(
+    (data) => {
+      this.categories = data;
+    },
+    (error) => {
+      console.error('Erreur lors de la récupération des catégories', error);
+    }
+  );
+}
+
   ajouterProd(): void {
     this.productAjout.emit([]);
   }
