@@ -1,0 +1,156 @@
+<div class="edit-product" *ngIf="productId">
+    <h2>Modifier le produit</h2>
+  
+    <form [formGroup]="productForm" (ngSubmit)="updateProduct()">
+      <!-- Champ Référence -->
+      <div class="form-group">
+        <label for="reference">Référence :</label>
+        <input id="reference" type="text" formControlName="reference" class="form-control" required />
+      </div>
+  
+      <!-- Champ Label -->
+      <div class="form-group">
+        <label for="label">Label :</label>
+        <input id="label" type="text" formControlName="label" class="form-control" required />
+      </div>
+  
+      <!-- Champ Catégorie -->
+      <div class="form-group">
+        <label for="category">Catégorie :</label>
+        <input id="category" type="text" formControlName="category" class="form-control" />
+      </div>
+  
+      <!-- Champ En vente -->
+      <div class="form-group">
+        <label for="is_selling">En vente :</label>
+        <input id="is_selling" type="checkbox" formControlName="is_selling" />
+      </div>
+  
+      <!-- Champ Achat possible -->
+      <div class="form-group">
+        <label for="is_purchasing">Achat possible :</label>
+        <input id="is_purchasing" type="checkbox" formControlName="is_purchasing" />
+      </div>
+  
+      <!-- Champ Description -->
+      <div class="form-group">
+        <label for="description">Description :</label>
+        <textarea id="description" formControlName="description" class="form-control"></textarea>
+      </div>
+  
+      <!-- Champ URL publique -->
+      <div class="form-group">
+        <label for="public_url">URL publique :</label>
+        <input id="public_url" type="text" formControlName="public_url" class="form-control" />
+      </div>
+  
+      <!-- Champ Type de produit -->
+      <div class="form-group">
+        <label for="product_type">Type de produit :</label>
+        <input id="product_type" type="text" formControlName="product_type" class="form-control" />
+      </div>
+  
+      <!-- Champ Poids -->
+      <div class="form-group">
+        <label for="weight">Poids (kg) :</label>
+        <input id="weight" type="number" formControlName="weight" class="form-control" />
+      </div>
+  
+      <!-- Champ Longueur -->
+      <div class="form-group">
+        <label for="length">Longueur (cm) :</label>
+        <input id="length" type="number" formControlName="length" class="form-control" />
+      </div>
+  
+      <!-- Champ Largeur -->
+      <div class="form-group">
+        <label for="width">Largeur (cm) :</label>
+        <input id="width" type="number" formControlName="width" class="form-control" />
+      </div>
+  
+      <!-- Champ Hauteur -->
+      <div class="form-group">
+        <label for="height">Hauteur (cm) :</label>
+        <input id="height" type="number" formControlName="height" class="form-control" />
+      </div>
+  
+      <!-- Champ Dimensions -->
+      <div class="form-group">
+        <label for="dimensions">Dimensions (L x l x H) :</label>
+        <input id="dimensions" type="text" formControlName="dimensions" class="form-control" placeholder="Ex: 10 x 5 x 3" />
+      </div>
+  
+      <!-- Champ Surface -->
+      <div class="form-group">
+        <label for="surface">Surface :</label>
+        <input id="surface" type="number" formControlName="surface" class="form-control" />
+      </div>
+  
+      <!-- Champ Volume -->
+      <div class="form-group">
+        <label for="volume">Volume :</label>
+        <input id="volume" type="number" formControlName="volume" class="form-control" />
+      </div>
+  
+      <!-- Champ Code douanier -->
+      <div class="form-group">
+        <label for="customs_code">Code douanier :</label>
+        <input id="customs_code" type="text" formControlName="customs_code" class="form-control" />
+      </div>
+  
+      <!-- Champ Pays d'origine -->
+      <div class="form-group">
+        <label for="country_of_origin">Pays d'origine :</label>
+        <input id="country_of_origin" type="text" formControlName="country_of_origin" class="form-control" />
+      </div>
+  
+      <!-- Champ État d'origine -->
+      <div class="form-group">
+        <label for="state_of_origin">État d'origine :</label>
+        <input id="state_of_origin" type="text" formControlName="state_of_origin" class="form-control" />
+      </div>
+  
+      <!-- Champ Note -->
+      <div class="form-group">
+        <label for="note">Note :</label>
+        <textarea id="note" formControlName="note" class="form-control"></textarea>
+      </div>
+  
+      <!-- Champ Tags -->
+      <div class="form-group">
+        <label for="tags">Tags :</label>
+        <input id="tags" type="text" formControlName="tags" class="form-control" placeholder="Ex: électronique, maison" />
+      </div>
+  
+      <!-- Champ Prix de vente -->
+      <div class="form-group">
+        <label for="selling_price">Prix de vente (€) :</label>
+        <input id="selling_price" type="number" formControlName="selling_price" class="form-control" />
+      </div>
+  
+      <!-- Champ Prix d'achat -->
+      <div class="form-group">
+        <label for="price">Prix d'achat (€) :</label>
+        <input id="price" type="number" formControlName="price" class="form-control" />
+      </div>
+  
+      <!-- Champ Prix minimum de vente -->
+      <div class="form-group">
+        <label for="min_selling_price">Prix minimum de vente (€) :</label>
+        <input id="min_selling_price" type="number" formControlName="min_selling_price" class="form-control" />
+      </div>
+  
+      <!-- Champ Taux de TVA -->
+      <div class="form-group">
+        <label for="tax_rate">Taux de TVA (%) :</label>
+        <input id="tax_rate" type="number" formControlName="tax_rate" class="form-control" />
+      </div>
+  
+      <!-- Boutons Submit et Annuler -->
+      <div class="form-group">
+        <button type="submit" class="btn btn-primary" [disabled]="productForm.invalid">Mettre à jour</button>
+        <button type="button" class="btn btn-secondary" (click)="router.navigate(['/products'])">Annuler</button>
+      </div>
+    </form>
+  </div>
+  
