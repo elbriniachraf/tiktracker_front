@@ -5,6 +5,7 @@ import { RegisterComponent } from './register/register.component';
 import { PageProduitComponent } from './page-produit/page-produit.component';
 import { MyCalendarComponent } from './my-calendar/my-calendar/my-calendar.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
+import { StatisticsComponent } from './statistics/statistics.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -34,12 +35,13 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'produits', pathMatch: 'full' }, // Redirection par défaut vers clients
           { path: 'produits', loadComponent: () => import('./list-produits/list-produits.component').then(m => m.ListProduitsComponent) },
-          { path: 'edit-product/:id', component: EditProductComponent },      
+          { path: 'edit-product/:id', component: EditProductComponent },     
         ]
       },
       { path: 'settings', loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent) },
     ],
   },
+  { path: 'statistics', component: StatisticsComponent }, // Déplacer cette route ici
 
 ];
 
