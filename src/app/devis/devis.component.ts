@@ -639,6 +639,8 @@ selectProduit(product: any, index: number) {
     this.fraisDeplacements.splice(index, 1);
   }
 
+  
+
   // Méthode pour modifier un frais de déplacement
   editFrais(index: number): void {
     const frais = this.fraisDeplacements[index];
