@@ -6,6 +6,8 @@ import { PageProduitComponent } from './page-produit/page-produit.component';
 import { MyCalendarComponent } from './my-calendar/my-calendar/my-calendar.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
 import { StatisticsComponent } from './statistics/statistics.component';
+import { TvaRateListComponent } from './tva-rate-list/tva-rate-list.component';
+import { EditTvaComponent } from './edit-tva/edit-tva.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
@@ -35,13 +37,16 @@ export const routes: Routes = [
         children: [
           { path: '', redirectTo: 'produits', pathMatch: 'full' }, // Redirection par défaut vers clients
           { path: 'produits', loadComponent: () => import('./list-produits/list-produits.component').then(m => m.ListProduitsComponent) },
-          { path: 'edit-product/:id', component: EditProductComponent },     
+          { path: 'edit-product/:id', component: EditProductComponent },  
+   
         ]
       },
       { path: 'settings', loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent) },
     ],
   },
   { path: 'statistics', component: StatisticsComponent }, // Déplacer cette route ici
+  { path: 'tva', component: TvaRateListComponent }, // Route pour la liste des TVA
+  { path: 'edit-tva/:id', component: EditTvaComponent },  // Définir la route pour l'édition de TVA avec un paramètre dynamique
 
 ];
 
