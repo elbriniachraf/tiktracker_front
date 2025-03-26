@@ -62,7 +62,8 @@ export class PageProduitComponent {
     { label: 'Ajouter un Produit', icon: faPlus, action: 'addProduct' },
     { label: 'Liste des Services', icon: faCogs, action: 'services' },
     { label: 'Ajouter un Service', icon: faPlus, action: 'addService' },
-    { label: 'Statistiques', icon: faChartLine, action: 'statistics' }
+    { label: 'Statistiques', icon: faChartLine, action: 'statistics' },
+    { label: 'Gestion des TVA', icon: faChartLine, action: 'tva' } 
   ];
 
   private initializeForm(): void {
@@ -90,6 +91,7 @@ export class PageProduitComponent {
     this.selectedMenu = 'addProduct'; // Change d'onglet pour afficher le formulaire
 
   }
+ 
 
   fetchCategories(): void {
     this.categoryService.getCategories().subscribe(
@@ -175,9 +177,14 @@ export class PageProduitComponent {
   // Méthode pour sélectionner un menu
   selectMenu(item: any) {
     this.selectedMenu = item.action;
+  
     if (item.action === 'statistics') {
       this.router.navigate(['/statistics']); // Naviguer vers la page des statistiques
+    } else if (item.action === 'tva') {
+      this.router.navigate(['/tva']); // Naviguer vers la page des TVA
     }
+    // Tu peux ajouter d'autres conditions ici pour d'autres actions
   }
+  
 }
  

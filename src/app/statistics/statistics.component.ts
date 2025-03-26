@@ -1,4 +1,3 @@
-// statistics.component.ts
 import { Component, OnInit } from '@angular/core';
 
 declare var google: any;
