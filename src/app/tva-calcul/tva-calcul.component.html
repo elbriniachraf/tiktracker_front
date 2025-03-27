@@ -1,0 +1,51 @@
+<div class="form-container">
+    <h2>Formulaire TVA</h2>
+
+    <div class="form-group">
+        <label for="product">Produit</label>
+        <select id="product" [(ngModel)]="selectedProduct">
+            <option value="">Sélectionner un produit</option>
+            <option *ngFor="let product of products" [value]="product.label">{{ product.label }}</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="service">Service</label>
+        <select id="service" [(ngModel)]="selectedService">
+            <option value="">Sélectionner un service</option>
+            <option *ngFor="let service of services" [value]="service.name">{{ service.name }}</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="tva">Type de TVA</label>
+        <select id="tva" [(ngModel)]="selectedTva" (change)="calculate()">
+            <option value="">Sélectionner une TVA</option>
+            <option *ngFor="let tva of tvaRates" [value]="tva.rate">{{ tva.label }} ({{ tva.rate }}%)</option>
+        </select>
+    </div>
+
+    <div class="form-group switch-container">
+        <label>Calcul basé sur :</label>
+        <button (click)="toggleCalculationMode()">
+            {{ isHTtoTTC ? 'HT → TTC' : 'TTC → HT' }}
+        </button>
+    </div>
+
+    <div class="form-group">
+        <label for="price">{{ isHTtoTTC ? 'Prix Hors Taxes (€)' : 'Prix TTC (€)' }}</label>
+        <input id="price" type="number" [(ngModel)]="priceInput" (input)="calculate()">
+    </div>
+
+    <div class="form-group">
+        <label>Résultat :</label>
+        <span>{{ resultPrice | number: '1.2-2' }} €</span>
+    </div>
+
+    <div class="calculation-details">
+        <p>Taux appliqué : <strong>{{ selectedTva }}%</strong></p>
+        <p>Montant TVA : <strong>{{ tvaAmount | number: '1.2-2' }} €</strong></p>
+    </div>
+
+    <button (click)="onSubmit()">Soumettre</button>
+</div>
