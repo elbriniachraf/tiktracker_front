@@ -8,7 +8,7 @@ import { EditProductComponent } from './edit-product/edit-product.component';
 import { StatisticsComponent } from './statistics/statistics.component';
 import { TvaRateListComponent } from './tva-rate-list/tva-rate-list.component';
 import { EditTvaComponent } from './edit-tva/edit-tva.component';
-
+import { TvaCalculComponent } from './tva-calcul/tva-calcul.component';
 export const routes: Routes = [
   { path: '', redirectTo: 'main', pathMatch: 'full' },
   { path: 'login', component: LoginComponent },
@@ -47,6 +47,6 @@ export const routes: Routes = [
   { path: 'statistics', component: StatisticsComponent }, // Déplacer cette route ici
   { path: 'tva', component: TvaRateListComponent }, // Route pour la liste des TVA
   { path: 'edit-tva/:id', component: EditTvaComponent },  // Définir la route pour l'édition de TVA avec un paramètre dynamique
-
+  { path: 'calcul', component: TvaCalculComponent },
 ];
 

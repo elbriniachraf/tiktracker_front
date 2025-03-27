@@ -16,13 +16,15 @@ export class ServiceService {
   }
   
   // Ajouter un service
-  addService(service: any): Observable<any> {
-    return this.http.post<any>(this.apiUrl, service);
+  addService(formData: FormData): Observable<any> {
+    return this.http.post<any>(this.apiUrl, formData);
   }
+
 
   // Supprimer un service
   deleteService(id: number): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/${id}`);
   }
+  
   
 }
