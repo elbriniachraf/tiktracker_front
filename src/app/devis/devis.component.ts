@@ -33,7 +33,51 @@ import { AvoirService } from '../services/avoir.service';
 
 })
 export class DevisComponent implements OnInit {
-  devis: any[] = [];
+  // devis: any[] = [];
+  avoirs = [
+    {
+      _id: 'AV001',
+      client: 'Jean Dupont',
+      dateCommande: '2024-04-01',
+      totalTTC: 150.75,
+      statut: 'En attente',
+      showMenu: false
+    },
+    {
+      _id: 'AV002',
+      client: 'Marie Curie',
+      dateCommande: '2024-03-20',
+      totalTTC: 299.99,
+      statut: 'Facturé',
+      showMenu: false
+    },
+    {
+      _id: 'AV003',
+      client: 'Albert Einstein',
+      dateCommande: '2024-02-15',
+      totalTTC: 120.50,
+      statut: 'Annulé',
+      showMenu: false
+    }
+  ];
+  
+  devis = [
+    { _id: '001', client: 'Société Alpha', date: '2025-04-01', totalTTC: 1500, statut: 'Facturé', showMenu: false },
+    { _id: '002', client: 'Entreprise Beta', date: '2025-03-28', totalTTC: 3200, statut: 'Facturé', showMenu: false },
+    { _id: '003', client: 'SARL Gamma', date: '2025-03-25', totalTTC: 2100, statut: 'Annulé', showMenu: false },
+    { _id: '004', client: 'EURL Delta', date: '2025-03-22', totalTTC: 4500, statut: 'Facturé', showMenu: false },
+    { _id: '005', client: 'SAS Omega', date: '2025-03-20', totalTTC: 800, statut: 'Facturé', showMenu: false },
+  ];
+  toggleMenu(devis: any) {
+    this.devis.forEach(d => d.showMenu = false);
+    devis.showMenu = !devis.showMenu;
+  }
+
+  action(action: string, devis: any) {
+    console.log(`${action} sur ${devis._id}`);
+    devis.showMenu = false;
+  }
+
 
   goAvoir(facture: any): void {
     // Changer d'onglet pour créer un Avoir et transmettre la facture associée
@@ -360,7 +404,7 @@ createRelance(): void {
   });
 }
 
-public avoirs: any[] = [];
+//  public avoirs: any[] = [];
 getAvoirs(): void {
   this.avoirService.getAvoirs().subscribe((data) => {
     console.log("data");
@@ -529,7 +573,8 @@ selectProduit(product: any, index: number) {
           timer: 3000,  // Le toast disparaît après 3 secondes
           timerProgressBar: true,  // Affiche une barre de progression pendant le décompte
           didOpen: () => {
-            Swal.showLoading();  // Optionnel : afficher l'animation de chargement pendant l'affichage
+            Swal.showLoading(null);
+            // Optionnel : afficher l'animation de chargement pendant l'affichage
           }
         });
         this.selectedTab="listeFacture";
@@ -598,7 +643,7 @@ selectProduit(product: any, index: number) {
         timer: 3000,  // Le toast disparaît après 3 secondes
         timerProgressBar: true,  // Affiche une barre de progression pendant le décompte
         didOpen: () => {
-          Swal.showLoading();  // Optionnel : afficher l'animation de chargement pendant l'affichage
+          Swal.showLoading(null);// Optionnel : afficher l'animation de chargement pendant l'affichage
         }
       });
       this.selectedTab="listeAvoirs";
@@ -817,6 +862,11 @@ selectProduit(product: any, index: number) {
       icon: 'info',
       confirmButtonText: 'Fermer'
     });
+  }
+  onPageSizeChange(event: any) {
+    const selectedPageSize = event.target.value;
+    console.log(`Nombre d'éléments par page : ${selectedPageSize}`);
+    // Ici tu pourrais mettre à jour la logique de pagination pour afficher le nombre d'éléments en fonction de ce choix
   }
   
 

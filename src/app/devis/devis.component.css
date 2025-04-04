@@ -1,1493 +1,1164 @@
-/* Style global */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  body {
-    background-color: #f4f7fb;
-    color: #333;
-  }
-  
-  /* Conteneur principal */
-  .container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
-    overflow: hidden;
-  }
-  
-  /* Tabbar */
-  .tabbar {
-    display: flex;
-    justify-content: space-around;
-    background: linear-gradient(145deg, #dfece5, #56e356);
-    padding: 10px;
-    border-radius: 10px 10px 0 0;
-    margin-bottom: 20px;
-  }
-  
-  .tab {
-    background: transparent;
-    border: none;
-    font-size: 16px;
-    color: black;
-    cursor: pointer;
-    padding: 10px 20px;
-    transition: background 0.3s ease;
-  }
-  
-  .tab:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-  
-  .tab.active {
-    background: rgba(255, 255, 255, 0.3);
-    border-radius: 5px;
-  }
-  
-  .tab i {
-    margin-right: 8px;
-  }
-  
-  /* Formulaire de création de devis */
-  .devis-form {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  label {
-    font-size: 14px;
-    font-weight: bold;
-    color: #555;
-    margin-bottom: 5px;
-  }
-  
-  input[type="text"],
-  input[type="date"] {
-    padding: 10px;
-    font-size: 17px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    transition: border-color 0.3s ease;
-  }
-  
-  input[type="text"]:focus,
-  input[type="date"]:focus {
-    border-color: #4caf50;
-    outline: none;
-  }
-  
-  .autocomplete-list {
-    list-style-type: none;
-    padding: 0;
-    margin-top: 5px;
-    background: #fff;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    max-height: 200px;
-    overflow-y: auto;
-    border-radius: 5px;
-    position: absolute;
-    width: 100%;
-  }
-  
-  .autocomplete-list li {
-    padding: 10px;
-    cursor: pointer;
-    background-color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  
-  .autocomplete-list li:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /* Produits */
-  .produits-container {
-    margin-top: 20px;
-  }
-  
-  .produit-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-    padding: 15px;
-    background: #fafafa;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .produit-item input {
-    width: 120px;
-  }
-  
-  .produit-item button {
-    background: transparent;
-    border: none;
-    color: #f44336;
-    font-size: 18px;
-    cursor: pointer;
-  }
-  
-  .produit-item button:hover {
-    color: #d32f2f;
-  }
-  
-  /* Boutons */
-  button.btn {
-    padding: 12px 25px;
-    font-size: 16px;
-    border-radius: 8px;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  button.btn.add {
-    background: linear-gradient(
-      135deg,
-      #0b3d2e,
-      #0f4a39);
-  }
-  
-  button.btn.save {
-    background: linear-gradient(90deg, #ff9800, #ffb74d);
-  }
-  
-  .save{
-    background: linear-gradient(90deg, #ff9800, #ffb74d) !important;
-
-  }
-  button.btn:hover {
-    opacity: 0.9;
-  }
-  
-  button.btn.delete {
-    background: transparent;
-    color: #f44336;
-  }
-  
-  button.btn.delete:hover {
-    color: #d32f2f;
-  }
-  
-  /* Liste des devis */
-  .devis-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .devis-table th,
-  .devis-table td {
-    padding: 12px;
-    text-align: center;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .devis-table th {
-    background: #f4f7fb;
-    color: #333;
-  }
-  
-  .devis-table td {
-    color: #555;
-  }
-  
-  .statut {
-    font-weight: bold;
-  }
-  
-  .statut.brouillon {
-    color: #ff9800;
-
-  }
-  
-  .statut.facture {
-    color: #4caf50;
-  }
-  
-  .devis-table button.convert {
-    background: linear-gradient(90deg, #2196f3, #64b5f6);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-  
-  .devis-table button.convert:hover {
-    background: #1976d2;
-  }
-  
-
-  /* General Styling */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  }
-  
-  body {
-    background-color: #f4f7fc;
-    color: #333;
-  }
-  
-  /* Container */
-  .container {
-    width: 100%;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Tabbar Styling */
-  .tabbar {
-    display: flex;
-    justify-content: space-around;
-    background: linear-gradient(45deg, #32cd32, #008000);
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .tab {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.3s ease;
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .tab:hover {
-    background-color: rgba(255, 255, 255, 0.2);
-  }
-  
-  .tab.active {
-    background-color: rgba(255, 255, 255, 0.4);
-  }
-  
-  /* Form Styling */
-  .devis-form {
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  /* Form Group */
-  .form-group {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group label {
-    font-size: 14px;
-    color: #555;
-    margin-bottom: 5px;
-  }
-  
-  .form-group input {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-size: 14px;
-    color: #333;
-    transition: border-color 0.3s ease;
-  }
-  
-  .form-group input:focus {
-    border-color: #32cd32;
-  }
-  
-  /* Autocomplete */
-  .autocomplete-list {
-    margin-top: 5px;
-    padding: 0;
-    list-style: none;
-    background-color: #fff;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    max-height: 200px;
-    overflow-y: auto;
-  }
-  
-  .autocomplete-list li {
-    padding: 10px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .autocomplete-list li:hover {
-    background-color: #f0f0f0;
-  }
-  
-  /* Produit Section */
-  .produits-container {
-    margin-top: 20px;
-    width:100%;
-  }
-  
-  .produit-item {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    padding: 10px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    margin-bottom: 10px;
-  }
-  
-  .produit-item input {
-    width: 30%;
-  }
-  
-  .produit-item .btn {
-    padding: 8px 12px;
-    border: none;
-    background: #ff4c4c;
-    color: white;
-    font-size: 14px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .produit-item .btn:hover {
-    background: #e03d3d;
-  }
-  
-  /* Buttons */
-  .btn {
-    padding: 12px 25px;
-    background: linear-gradient(45deg, #32cd32, #008000);
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .btn:hover {
-    background: linear-gradient(45deg, #006400, #32cd32);
-  }
-  
-  /* Save Button */
-  .btn.save {
-    background: #4caf50;
-   
-  }
-  
-  .btn.save:hover {
-    background: #45a049;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .container {
-      width: 95%;
-    }
-  
-    .tabbar {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .form-group input {
-      width: 100%;
-    }
-  
-    .produit-item {
-      flex-direction: column;
-      align-items: flex-start;
-    }
-  
-    .btn {
-      width: 100%;
-    }
-  
-    .btn.save {
-      width: 100%;
-    }
-  }
-  
-
-  .pdf-preview-container {
-    margin-top: 20px;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-  }
-  
-  .pdf-preview-content h4 {
-    font-size: 18px;
-    color: #333;
-  }
-  
-  .pdf-preview-content p {
-    font-size: 16px;
-  }
-  
-  .pdf-preview-content ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .pdf-preview-content ul li {
-    font-size: 14px;
-    margin: 5px 0;
-  }
-  
-
-
-  .pdf-preview-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-family: Arial, sans-serif;
-    background-color: #fff;
-  }
-  
-  .pdf-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .pdf-header .logo img {
-    width: 80px;
-    height: auto;
-  }
-  
-  .pdf-header .title {
-    text-align: center;
-    flex-grow: 1;
-  }
-  
-  .pdf-header .address {
-    text-align: right;
-  }
-  
-  .pdf-content {
-    margin-bottom: 30px;
-  }
-  
-  .pdf-content .description {
-    margin-bottom: 20px;
-  }
-  
-  .pdf-content .client-info,
-  .pdf-content .products-info {
-    margin-bottom: 20px;
-  }
-  
-  .pdf-content .products-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  
-  .pdf-content .products-table th, .pdf-content .products-table td {
-    padding: 8px;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
-  
-  .pdf-content .products-table th {
-    background-color: #f4f4f4;
-  }
-  
-  .signature {
-    text-align: center;
-    margin-top: 30px;
-  }
-  
-  .signature-box {
-    border-top: 2px solid #000;
-    margin-top: 10px;
-    padding-top: 20px;
-  }
-  
-
-  .button-container {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 20px;
-  }
-  
-  .btn-action {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-  }
-  
-  .btn-action i {
-    font-size: 18px;
-  }
-  
-  .btn-action:hover {
-    background-color: #0056b3;
-    transform: scale(1.05);
-  }
-  
-  /* Spécifique au bouton email */
-  .btn-action.email {
-    background-color: #28a745;
-  }
-  
-  .btn-action.email:hover {
-    background-color: #218838;
-  }
-  
-
-  .produits-container {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  
-  .produit-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: #f8f9fa;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .input-icon {
-    position: relative;
-    width: 100%;
-  }
-  
-  .input-icon .icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-  }
-  
-  .input-icon input {
-    width: 100%;
-    padding: 8px 12px 8px 32px;
-    border: 1px solid #ced4da;
-    border-radius: 4px;
-    font-size: 14px;
-  }
-  
-  .input-icon input:focus {
-    outline: none;
-    border-color: #28a745;
-    box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
-  }
-  
-  .btn.delete {
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .btn.delete:hover {
-    background: #c82333;
-  }
-
-  .devis-table {
-    width: 100%;
-    border-collapse: collapse;
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-  }
-  
-  .devis-table thead {
-    background: #007bff;
-    color: white;
-    text-align: left;
-  }
-  
-  .devis-table th, .devis-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .devis-table tbody tr:hover {
-    background: #f8f9fa;
-  }
-  
-  .statut {
-    font-weight: bold;
-    padding: 5px 10px;
-    border-radius: 5px;
-    text-align: center;
-    width: 120px;
-  }
-  
-  .brouillon {
-    background: #f0ad4e;
-    color: white !important;
-  }
-  
-  .facture {
-    background: #28a745;
-    color: white !important;
-  }
-  
-  .annule {
-    background: #dc3545;
-    color: white !important;
-  }
-  
-  .actions {
-    display: flex;
-    gap: 10px;
-  }
-  
-  .actions .btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-  
-  .btn.convert {
-    background: #007bff;
-    color: white;
-  }
-  
-  .btn.email {
-    background: #17a2b8;
-    color: white;
-  }
-  
-  .btn.cancel {
-    background: #dc3545;
-    color: white;
-  }
-  
-  .btn.view {
-    background: #6c757d;
-    color: white;
-  }
-  
-  .btn:hover {
-    opacity: 0.8;
-  }
-
-  
-  .tabbar {
-    display: flex;
-    justify-content: start;
-    background: #fff;
-    padding: 10px;
-    border-radius: 12px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  .tab {
-    background: #f5f5f5;
-    border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: 600;
-    color: #555;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
-    margin: 0 5px;
-  }
-  
-  .tab fa-icon {
-    font-size: 18px;
-  }
-  
-  .tab:hover {
-    background: #e0e0e0;
-  }
-  
-  .tab.active {
-    background: linear-gradient(
-      135deg,
-      #0b3d2e,
-      #0f4a39);
-    color: white;
-  }
-  
-  .tab.active fa-icon {
-    color: white;
-  }
-  
-  
-
-  .facture-container {
-    max-width: 80%;
-    margin: 30px 20px;
-    padding: 20px;
-    background-color: #f8f9fa;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    font-family: Arial, sans-serif;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #0f4a39;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-  }
-  
-  input {
-    width: 100%;
-    padding: 8px;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-  }
-  
-  .produits-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
-  }
-  
-  .produits-table th,
-  .produits-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: center;
-  }
-  
-  .produits-table th {
-    background:linear-gradient(135deg,#0b3d2e,#0f4a39) !important;
-    color: white;
-  }
-  
-  .add-product-btn, .submit-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 15px;
-  }
-  
-  .add-product-btn:hover, .submit-btn:hover {
-    background-color: #218838;
-  }
-  
-  .delete-btn {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 5px 8px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .delete-btn:hover {
-    background-color: #c82333;
-  }
-  
-  .total-section {
-    margin-top: 15px;
-    font-size: 18px;
-    text-align: right;
-  }
-  
-
-
-  .currency-container {
-    max-width: 700px;
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    font-family: 'Arial', sans-serif;
-  }
-  
-  h2 {
-    text-align: center;
-    color: #0f4a39;
-    margin-bottom: 20px;
-  }
-  
-  .currency-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  
-  .currency-table th {
-    background: linear-gradient(
-      135deg,
-      #0b3d2e,
-      #0f4a39);
-    color: white;
-    padding: 12px;
-    text-align: center;
-    font-size: 16px;
-  }
-  
-  .currency-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-    text-align: center;
-    font-size: 15px;
-  }
-  
-  .currency-name {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  
-  .flag-icon {
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-  }
-  
-
-  .facture-form {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    font-weight: bold;
-    margin-bottom: 5px;
-    display: block;
-}
-
-input, table {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.produits-table th {
-    background-color: #f8f9fa;
-    padding: 10px;
-    text-align: left;
-}
-
-.produits-table td {
-    padding: 8px;
-}
-
-.delete-btn {
-    background: #ff4d4d;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
-.add-product-btn, .submit-btn {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    cursor: pointer;
-    margin-top: 15px;
-    border-radius: 4px;
-}
-
-.totaux-section {
-    display: flex;
-    justify-content: space-between;
-    gap: 15px;
-    margin-top: 20px;
-    background: #f9f9f9;
-    padding: 15px;
-    border-radius: 6px;
-    border: 1px solid #eee;
-}
-
-.totaux-item {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-}
-
-.totaux-item label {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.totaux-item input {
-    background: #fff;
-    font-weight: bold;
-    color: #555;
-}
-.facture-form {
-  background: #fff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-}
-
-.form-group {
-  margin-bottom: 15px;
-}
-
-.form-group label {
-  font-weight: bold;
-  margin-bottom: 5px;
-  display: block;
-}
-
-input, table {
+.main-content {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.produits-table th {
-  background-color: #f8f9fa;
-  padding: 10px;
-  text-align: left;
-}
-
-.produits-table td {
-  padding: 8px;
-}
-
-.delete-btn {
-  background: #ff4d4d;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.add-product-btn, .submit-btn {
-  background-color: #28a745;
-  color: white;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  margin-top: 15px;
-  border-radius: 4px;
-}
-
-.totaux-section {
-  display: flex;
-  justify-content: space-between;
-  gap: 15px;
-  margin-top: 20px;
-  background: #f9f9f9;
-  padding: 15px;
-  border-radius: 6px;
-  border: 1px solid #eee;
-}
-
-.totaux-item {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.totaux-item label {
-  font-weight: bold;
-  margin-bottom: 5px;
-}
-
-.totaux-item input {
-  background: #fff;
-  font-weight: bold;
-  color: #555;
-}
-
-.facture-list-container {
+  max-width: 100%;
   padding: 20px;
-  background: #f9f9f9;
-  font-family: 'Arial', sans-serif;
-}
-
-.section-title {
-  font-size: 24px;
-  margin-bottom: 20px;
-  color: #333;
-  border-bottom: 2px solid #4CAF50;
-  padding-bottom: 5px;
-}
-
-.facture-card {
   background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  overflow: hidden;
-  border-left: 5px solid #4CAF50;
-  transition: transform 0.3s ease;
 }
 
-.facture-card:hover {
-  transform: translateY(-5px);
-}
-
-.facture-header {
+/* En-tête */
+.header {
   display: flex;
   justify-content: space-between;
-  padding: 15px;
-  background: #f1f1f1;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header h2 {
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  color: black;
+}
+
+.header h2 fa-icon {
+  margin-right: 10px;
+  color: #008000;
+}
+
+/* Bouton Ajouter avec icône et arrondi */
+.add-button {
+  background: #008000;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.add-button fa-icon {
+  font-size: 14px;
+}
+
+.add-button:hover {
+  background: #006400;
+}
+
+/* Filtres et recherche - alignement correct */
+.filters-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Partie Filtres */
+.filters {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filters label {
+  font-weight: bold;
+}
+
+.filter-select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius:10px; /* Arrondi */
+  background: white;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+
+
+/* Conteneur personnalisé pour la barre de recherche */
+.custom-search {
+  
+  display: flex;
+  align-items: center;
+   color: white;              /* Couleur du texte */
+          
+  
+}
+
+/* Réinitialisation et style personnalisé pour l'input */
+.custom-search input {
+  all: unset; /* Réinitialise tous les styles par défaut */
+  display: block;
+  width: 300px; /* Augmentez la largeur ici */
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #333;
+  background-color: #fff;
+  box-sizing: border-box;
+}
+
+/* Style du placeholder */
+.custom-search input::placeholder {
+  color: #777;
+  font-style: italic;
+}
+
+
+
+
+
+/* Table */
+.devis-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.devis-table th, .devis-table td {
+  padding: 12px;
+  text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-.facture-info h3 {
-  margin: 0;
-  font-size: 18px;
-  color: #4CAF50;
-}
-
-.facture-info p, .facture-total p {
-  margin: 5px 0;
-  font-size: 14px;
-  color: #666;
-}
-
-.facture-total {
-  text-align: right;
-}
-
-.produits-section {
-  padding: 15px;
-}
-
-.produits-section h4 {
-  margin: 0 0 10px;
-  font-size: 16px;
-  color: #4CAF50;
-}
-
-.produits-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-}
-
-.produits-table th, .produits-table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid #f1f1f1;
-}
-
-.produits-table th {
-  background: #f9f9f9;
+.devis-table th {
   font-weight: bold;
 }
 
-.produits-table tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-
-
-.produits-table tr:hover {
+.devis-table tr:hover {
   background: #f1f1f1;
 }
 
+/* Statuts */
 
-.facture-actions .btn i {
-  margin-right: 8px; /* Espace entre l'icône et le texte */
-  font-size: 16px; /* Taille de l'icône */
-}
-
-.btn-show i {
-  color: #fff;
-}
-
-.btn-download i {
-  color: #fff;
-}
-
-.btn-send i {
-  color: #fff;
-}
-
-.btn-show:hover i, .btn-download:hover i, .btn-send:hover i {
-  color: #fff;
-  transition: color 0.3s ease;
-}
-
-/* Conteneur des actions */
-.facture-actions {
-  display: flex;
-  gap: 15px;
-  margin-top: 15px;
-}
-
-/* Styles des liens */
-.facture-link {
-  display: inline-flex;
-  align-items: center;
-  color: white;
-  background-color: #28a745; /* Vert */
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 5px;
-  font-weight: 500;
-  transition: background-color 0.3s, transform 0.3s;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.facture-link i {
-  margin-right: 8px;
-  font-size: 16px;
-}
-
-/* Effet au survol */
-.facture-link:hover {
-  background-color: #218838; /* Vert foncé */
-  transform: translateY(-2px);
-}
-
-/* Effet au clic */
-.facture-link:active {
-  background-color: #1e7e34;
-  transform: translateY(0);
-}
-
-/* Styles pour l'apparence de la carte facture */
-.facture-card {
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Titre section */
-.section-title {
-  font-size: 24px;
-  color: #fff;
-  margin-bottom: 15px;
-}
-
-/* En-tête de la facture */
-.facture-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 15px;
-}
-
-/* Total des factures */
-.facture-total p {
-  color: #fff;
+.id-green {
+  color: #4caf50;
   font-weight: bold;
 }
 
+/* Statuts stylisés */
+.statut {
+  font-weight: bold;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-align: center;
+}
 
-/* Modal Styles */
-.modal {
+.statut.annule {
+  color: #ff0000;
+}
+.statut.annule::before {
+  content: "•";
+  color: #ff4d4d;
+  margin-right: 5px;
+  font-size: 20px;
+  line-height: 1;
+}
+.statut.facture {
+  color:  #4caf50;
+}
+
+.statut.facture::before {
+  content: "•";
+  color:  #4caf50;
+  margin-right: 5px;
+  font-size: 20px;
+  line-height: 1;
+}
+
+/* Bouton Détails */
+.btn-detail {
+  background: none;
+  border: none;
+  color:  #4caf50;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-decoration: underline; /* Ajout du soulignement permanent */
+  text-underline-offset: 3px; 
+}
+.btn-detail:hover {
+  color: #007a35; /* Légère variation de couleur au survol */
+}
+
+
+/* Conteneur du menu */
+.menu-container {
+  position: relative;
+  text-align: center;
+}
+
+/* Icône des trois points */
+.menu-icon {
+  cursor: pointer;
+  font-size: 18px;
+  color: #333;
+}
+
+/* Dropdown menu */
+.menu-dropdown {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  display: flex;
+  flex-direction: column;
+  min-width: 120px;
+  z-index: 10;
+}
+
+.menu-dropdown button {
+  border: none;
+  background: none;
+  padding: 8px 12px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.menu-dropdown button:hover {
+  background: #f0f0f0;
+}
+
+/* Icônes dans le menu */
+.menu-dropdown fa-icon {
+  font-size: 14px;
+  color: #333;
+}
+
+.cancel-button {
+  color: red;
+}
+
+/* Pagination */
+.pagination-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-size {
+  display: flex;
+  align-items: center;
+}
+
+.page-size label {
+  margin-right: 10px;
+  padding: 2px;
+  margin: 10px;
+}
+
+.page-size select {
+  padding: 5px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.page-size span {
+  color: black; /* Texte "par page" en noir */
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 20px;
+}
+
+.pagination button {
+  padding: 8px 12px;
+  margin: 0 5px;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+  background: white;
+  border: 2px solid grey;
+
+
+}
+
+.pagination button.active {
+  background: white;
+  border: 2px solid #008000;
+  color: #008000;
+}
+
+.pagination button:hover {
+  background: #006400;
+}
+
+
+/*ajouter une facture */
+/* Style global */
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #f7fdf9; /* Vert très clair */
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-}
-
-.modal-content {
-  position: relative;
-  background-color: white;
+  min-height: 100vh;
+  margin: 0;
   padding: 20px;
-  width: 80%;
-  height: 80%;
-  overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.pdf-viewer {
-  width: 100%;
   height: 100%;
-  border: none;
+  padding: 0;
 }
 
-/* Close button */
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 24px;
-  color: #333;
-  cursor: pointer;
-}
-/* Conteneur du formulaire */
-.avoir-form-container {
-  max-width: 600px;
-  padding: 20px;
-  background-color: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-family: 'Arial', sans-serif;
-}
-
-/* Titre du formulaire */
-.avoir-form-container h2 {
-  text-align: center;
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Styles généraux pour le formulaire */
-.avoir-form {
+/* Conteneur principal */
+.facture-container {
+  width: 100%;
+  height: 100vh;
+  max-width: 100%;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 40px;
+  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.15);
+  border-radius: 0;
 }
 
-/* Groupes de champs */
-.form-group {
-  margin-bottom: 15px;
+.facture-container:hover {
+  box-shadow: 0 6px 16px rgba(0, 128, 0, 0.2);
 }
 
-.form-group label {
+/* Titres */
+h2, h3 {
+  color: #14532d; /* Vert foncé */
   font-weight: 600;
-  color: #555;
-  margin-bottom: 5px;
-  display: block;
+  margin-bottom: 15px;
+  letter-spacing: 0.5px;
 }
 
-/* Input et textarea */
-.form-group input,
-.form-group select,
-.form-group textarea {
+/* Formulaire */
+.facture-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Champs de saisie */
+input {
   width: 100%;
   padding: 10px;
-  border-radius: 5px;
-  border: 1px solid #ddd;
-  font-size: 14px;
-  color: #333;
-}
-
-.form-group textarea {
-  min-height: 100px;
-}
-
-/* Ajout d'un focus sur les champs */
-.form-group input:focus,
-.form-group select:focus,
-.form-group textarea:focus {
-  border-color: #4caf50;
-  outline: none;
-}
-
-/* Bouton de soumission */
-.submit-button {
-  background-color: #4caf50;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.submit-button:hover {
-  background-color: #45a049;
-}
-
-.submit-button:disabled {
-  background-color: #ddd;
-  cursor: not-allowed;
-}
-
-/* Responsive pour les petits écrans */
-@media (max-width: 768px) {
-  .avoir-form-container {
-    padding: 15px;
-  }
-
-  .submit-button {
-    padding: 10px 18px;
-  }
-}
-
-/* Container principal */
-.avoir-list-container {
-  margin: 30px;
-  font-family: 'Arial', sans-serif;
-  background-color: #f9f9f9;
+  border: 2px solid #a3e635;
   border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: #f7fff0;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s;
 }
 
-/* Titre de la section */
-.section-title {
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 20px;
-  text-align: center;
+input:focus {
+  border-color: #52b788;
+  box-shadow: 0 0 5px #a3e635;
 }
 
-/* Carte d'Avoir */
-.avoir-card {
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  margin-bottom: 20px;
-  transition: all 0.3s ease;
-}
-
-.avoir-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-/* En-tête de la carte Avoir */
-.avoir-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-/* Informations sur l'Avoir */
-.avoir-info h3 {
-  font-size: 20px;
-  font-weight: bold;
-  color: #333;
-}
-
-.avoir-info p {
-  color: #555;
-  font-size: 14px;
-}
-
-/* Total */
-.avoir-total p {
-  color: #555;
-  font-size: 14px;
-}
-
-/* Actions sur l'Avoir */
-.avoir-actions {
-  margin-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  font-size: 14px;
-}
-
-.avoir-link {
-  text-decoration: none;
-  color: #1e88e5;
-  display: flex;
-  align-items: center;
-  transition: color 0.3s ease;
-}
-
-.avoir-link:hover {
-  color: #1976d2;
-}
-
-.avoir-link i {
-  margin-right: 8px;
-}
-
-/* Section des produits */
-.produits-section {
-  margin-top: 20px;
-}
-
+/* Table des produits */
 .produits-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 10px;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 128, 0, 0.1);
+  margin-top: 15px;
 }
 
-.produits-table th, .produits-table td {
+.produits-table th {
+  background: #4caf50;
+  color: white;
+  padding: 12px;
+  font-weight: 500;
+}
+
+.produits-table td {
   padding: 10px;
+  border-bottom: 1px solid #d3f9d8;
+  text-align: center;
+}
+
+/* Boutons */
+.add-product-btn, .submit-btn {
+  background: #1b5e20;
+  color: white;
+  font-size: 16px;
+  padding: 12px 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.add-product-btn:hover, .submit-btn:hover {
+  background: #388e3c;
+  box-shadow: 0 3px 8px rgba(0, 128, 0, 0.2);
+}
+
+/* Bouton supprimer */
+.delete-btn {
+  background: none;
+  border: none;
+  color: #e63946;
+  font-size: 18px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.delete-btn:hover {
+  color: #c92a2a;
+  transform: scale(1.1);
+}
+
+/* Totaux */
+.totaux-section {
+  background: #ecfdf5;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.totaux-item {
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* Liste déroulante de suggestions */
+.autocomplete-list {
+  background: white;
+  border: 1px solid #52b788;
+  border-radius: 8px;
+  list-style: none;
+  padding: 5px;
+  position: absolute;
+  width: calc(100% - 20px);
+}
+
+.autocomplete-list li {
+  padding: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.autocomplete-list li:hover {
+  background: #b7e4c7;
+  border-radius: 5px;
+}
+/*Créer un Avoir*/
+/* Conteneur du formulaire de création d'avoir */
+.create-avoir-form-container {
+  max-width: 800px;  
+  margin: 20px auto; 
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+/* Titre */
+.create-avoir-form-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color:#008000;
+
+}
+
+/* Formulaire */
+.create-avoir-form {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 20px; 
+  justify-content: space-between;
+}
+
+/* Groupes de champs */
+.create-avoir-form .form-group {
+  width: 48%; /* Pour afficher deux champs par ligne */
+  min-width: 200px;
+}
+
+/* Labels des champs */
+.create-avoir-form .form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Champs de formulaire (input et textarea) */
+.create-avoir-form .form-group input,
+.create-avoir-form .form-group textarea {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0;
+  border: 1px solid #4CAF50;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+/* Champs désactivés */
+.create-avoir-form .form-group input:disabled,
+.create-avoir-form .form-group textarea:disabled {
+  background-color: #f1f1f1;
+}
+
+/* Taille de la textarea */
+.create-avoir-form textarea {
+  height: 100px;
+}
+
+/* Bouton de soumission */
+.create-avoir-form button.submit-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4CAF50;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Effet de survol sur le bouton */
+.create-avoir-form button.submit-button:hover {
+  background-color: #45a049;
+}
+
+/* Bouton désactivé */
+.create-avoir-form button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* Container pour la sidebar */
+.container {
+  display: flex;
+  height: 100vh;
+}
+
+/* Sidebar */
+.tabbar {
+  width: 250px;
+  height: 100vh;
+  background-color: #000000; 
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  color: white;
+  gap: 8px; 
+}
+
+/* Style des boutons */
+.tab {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.1); 
+  border: none;
+  color: white;
+  padding: 12px; 
+  text-align: left; 
+  font-size: 14px; 
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start;
+  gap: 6px; 
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+  font-weight: 500;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2); 
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  &.active {
+    background-color: #008000;
+    font-weight: bold;
+  }
+
+  /* Style des icônes */
+  fa-icon {
+    font-size: 20px; 
+  }
+}
+
+/* Style du bouton de déconnexion */
+.logout {
+  margin-top: auto; 
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px; 
+  text-align: left;
+  font-size: 14px; 
+  display: flex;
+  align-items: center;
+  gap: 6px; 
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  font-weight: 500;
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.logout:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+
+
+/* Ajout du bouton Déconnexion */
+.logout {
+  margin-top: auto;
+  background-color: transparent;
+  color: #ff4d4d; 
+  border: none;
+  padding: 12px 15px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: rgba(255, 77, 77, 0.1);
+  }
+}
+
+/* Style Global */
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f4fdf4; 
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Titre principal */
+.page-title {
+  color: #2c5e2c; 
+  font-size: 32px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+/* Déplacement*/
+.content-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+/* Table des Frais de Déplacement */
+.table-container {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+  overflow-x: auto;
+}
+
+.section-title {
+  color: #2c5e2c;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Style de la table */
+.frais-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.frais-table th,
+.frais-table td {
+  padding: 12px;
+  text-align: left;
+  font-size: 16px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+}
+
+.frais-table th {
+  background-color: #008000;
+  color: white;
+  font-weight: bold;
+}
+
+.frais-table tbody tr:hover {
+  background-color: #f4f9f4;
+}
+
+.btn-action {
+  background: none;
+  border: none;
+  color: #2c5e2c;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  font-size: 16px;
+}
+
+.btn-action:hover {
+  color: #1e7a1e; 
+}
+
+.edit-btn {
+  margin-right: 10px;
+}
+
+.delete-btn {
+  color: #d9534f; 
+}
+
+.delete-btn:hover {
+  color: #c9302c;
+}
+
+/* Formulaire d'ajout de frais de déplacement */
+.form-container {
+  flex: 1;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 128, 0, 0.1);
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  color: #2c5e2c;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #b2d8b2;
+  border-radius: 8px;
+  background: #f8fff8;
+  font-size: 16px;
+  transition: 0.3s ease;
+}
+
+input:focus,
+textarea:focus {
+  border-color: #2c5e2c;
+  box-shadow: 0 0 6px rgba(46, 139, 87, 0.3);
+}
+
+textarea {
+  resize: vertical;
+  height: 120px;
+}
+
+.submit-button {
+  background-color: #2c5e2c;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100%;
+}
+
+.submit-button:hover {
+  background-color: #1e7a1e;
+}
+
+.submit-button:disabled {
+  background-color: #c8e6c9;
+  cursor: not-allowed;
+}
+
+/* crees un devis */
+
+.avoir-list-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+.devis-table {
+  width: 100%;
+  border-collapse: collapse;
+  flex: 1; 
+
+}
+
+
+
+.filters-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding:15px;
+  border-radius: 5px;
+}
+
+.avoir-table {
+  width: 100%;
+  border-collapse: collapse; 
+}
+
+.avoir-table th, 
+.avoir-table td {
+  padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
 }
 
-.produits-table th {
-  background-color: #f4f4f4;
+.avoir-table tr {
+  margin: 0; 
+}
+
+.avoir-table tbody tr td {
+  line-height: 1.2; 
+}
+/* devis */
+:root {
+  --primary-green: #00a651;
+  --secondary-green: #e6f7ef; 
+  --border-color: #e1e1e1;
+  --light-grey: #f5f5f5;
+  --text-grey: #555;
+  --white: #ffffff;
+  --form-padding: 20px;
+}
+
+/* Styles généraux */
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.main-container {
+  display: flex;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--white);
+  gap: 20px;
+  padding: 20px;
+}
+
+
+.left-panel {
+  width: 500px;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 5px;
+  margin-left: 0; 
+  margin-top: -30px; 
+}
+
+
+.panel-header {
+  font-size: 24px; 
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.panel-header fa-icon {
+  margin-right: 8px;
+  color: #28a745;
+  font-size: 24px;
+}
+
+.panel-subtitle {
+  font-size: 16px; 
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* Style des inputs */
+.form-group {
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.form-control {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-bottom: 2px solid #28a745;
+  font-size: 18px;
+  background: transparent;
+  color: #333;
+  outline: none;
+}
+
+.input-wrapper {
+  position: relative;
+}
+
+.input-wrapper fa-icon {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #28a745;
+  font-size: 22px;
+}
+
+/* Tableau Produits - Prix - Quantité */
+.product-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.product-row .form-control {
+  flex: 1;
+  text-align: center;
+  border-bottom: 2px solid #28a745;
+}
+
+/* Zone d'upload */
+.upload-document {
+  text-align: center;
+  padding: 20px;
+  border: 2px dashed black;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.upload-box fa-icon {
+  font-size: 30px; 
+  margin-bottom: 10px;
+}
+
+.upload-box-text {
+  font-size: 18px; 
+  font-weight: bold;
+  color: #333;
+}
+
+.upload-box-note {
+  font-size: 16px; 
+  color: #666;
+}
+
+.btn-submit {
+  width: 100%;
+  color:white;
+  background: #28a745 !important;
+  font-size: 15px; 
+  font-weight: bold;
+  padding: 10px; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 30px;
+
+}
+
+.btn-submit:hover {
+  background: #218838;
+}
+
+
+.date-input-wrapper {
+  position: relative;
+}
+
+.date-input-wrapper input[type="date"] {
+  background-color: var(--secondary-green);
+  border-color: var(--primary-green);
+}
+
+.date-icon {
+  position: absolute;
+  color: #008000;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.invoice-container {
+  display: flex;
+  background: #f8f8f8;
+  padding: 20px;
+  gap: 20px; 
+}
+
+.invoice-preview {
+  background: white;
+  padding: 20px;
+  width: 600px; 
+  box-sizing: border-box; 
+}
+.invoice-header {
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 2px solid green;
+}
+.invoice-table {
+  margin-top: 20px;
+  border: 1px solid green;
+}
+.table-header {
+  background: green;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.table-row {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+}
+.invoice-total {
+  background: #4caf50;
+  color: white;
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+}
+.invoice-sidebar {
+  background-color:  green; 
+  width: 220px; 
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  color: white;
+  border-radius: 4px;
+}
+
+/* Contrôles de zoom */
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 5px;
+  gap: 8px;
+  padding: 5px 0;
+}
+
+.zoom-controls label {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.85);
+  text-transform: uppercase;
+  margin-right: 5px;
+}
+
+.zoom-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.zoom-controls span {
+  font-size: 14px;
+  min-width: 40px;
+  text-align: center;
+  color: white;
+}
+
+/* Boutons de la sidebar */
+.sidebar-btn {
+  background-color: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  padding: 12px 15px;
+  text-align: left;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  transition: background-color 0.2s;
+}
+
+.sidebar-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-btn i {
+  margin-right: 10px;
+  font-size: 16px;
+  opacity: 0.9;
+  min-width: 20px;
+  text-align: center;
+}
+
+.invoice-sidebar > * {
+  width: 100%;
+}
+.invoice-header h2 {
+  font-size: 24px; 
   font-weight: bold;
 }
 
-.produits-table tr:hover {
-  background-color: #f1f1f1;
+.invoice-header h4 {
+  font-size: 14px;
+  font-weight: normal; 
+  color: #555; 
+}
+.product-table-header {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  padding: 10px 0; 
 }
 
+.product-table-header div {
+  flex: 1; 
+  text-align: center; 
+  font-weight: bold; 
+}
