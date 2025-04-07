@@ -32,7 +32,9 @@ import { AvoirService } from '../services/avoir.service';
 
 
 })
+
 export class DevisComponent implements OnInit {
+  
   // devis: any[] = [];
   avoirs = [
     {
@@ -60,6 +62,25 @@ export class DevisComponent implements OnInit {
       showMenu: false
     }
   ];
+  factures = [
+    {
+      id: 1,
+      client: { nom: 'Youssra' },
+      date: new Date(),
+      total_ht: 100,
+      total_tva: 20,
+      total_ttc: 120,
+      produits: [
+        {
+          product_info: { label: 'Produit A' },
+          quantite: 2,
+          prix_unitaire: 50
+        }
+      ],
+      showMenu: false
+
+    }
+  ];
   
   devis = [
     { _id: '001', client: 'Société Alpha', date: '2025-04-01', totalTTC: 1500, statut: 'Facturé', showMenu: false },
@@ -71,6 +92,7 @@ export class DevisComponent implements OnInit {
   toggleMenu(devis: any) {
     this.devis.forEach(d => d.showMenu = false);
     devis.showMenu = !devis.showMenu;
+
   }
 
   action(action: string, devis: any) {
@@ -379,7 +401,7 @@ filterTopCurrencies() {
     .map(([key, value]) => ({ key, value: value as number }));
 }
 
-factures: any[] = [];
+// factures: any[] = [];
 public relances: any[] = [];
 getRelances(): void {
   this.relanceService.getRelances().subscribe((data) => {
@@ -868,6 +890,12 @@ selectProduit(product: any, index: number) {
     console.log(`Nombre d'éléments par page : ${selectedPageSize}`);
     // Ici tu pourrais mettre à jour la logique de pagination pour afficher le nombre d'éléments en fonction de ce choix
   }
+  annulerFacture(facture: any): void {
+    // Logique pour annuler la facture
+    console.log('Annulation de la facture', facture);
+  }
   
-
+toggleMenu1(facture: any): void {
+  facture.showMenu = !facture.showMenu;
+}
 }

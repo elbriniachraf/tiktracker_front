@@ -236,8 +236,105 @@
     
   </div>
 
-    <div class="facture-list-container" *ngIf="selectedTab === 'listeFacture'">
-      <h2 class="section-title">Liste des Factures</h2>
+  <div class="main-content" *ngIf="selectedTab === 'listeFacture'">
+    <!-- En-tête -->
+    <div class="header">
+      <h2><fa-icon [icon]="['fas', 'file-invoice']"></fa-icon> Liste des Factures</h2>
+      <button class="add-button">
+        <fa-icon [icon]="['fas', 'plus']"></fa-icon> Nouvelle Facture
+      </button>
+    </div>
+  
+    <!-- Filtres -->
+    <div class="filters-container">
+      <div class="filters">
+        <span>Filtrer par :</span>
+        <select class="filter-select">
+          <option>Date de Facture</option>
+        </select>
+        <select class="filter-select">
+          <option>Client</option>
+        </select>
+      </div>
+      <div class="custom-search">
+        <input type="text" placeholder="🔍 Rechercher par client ou produit...">
+      </div>
+    </div>
+  
+    <!-- Tableau -->
+    <table class="devis-table">
+      <thead>
+        <tr>
+          <th>Référence</th>
+          <th>Client</th>
+          <th>Date</th>
+          <th>Produits</th>
+          <th>Total TTC</th>
+          <th>Détail Produits</th>
+          <th></th> 
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let facture of factures">
+          <td class="id-green">{{ facture.id }}</td>
+          <td>{{ facture.client?.nom }}</td>
+          <td>{{ facture.date | date:'dd/MM/yyyy' }}</td>
+          <td>
+            <ul>
+              <li *ngFor="let produit of facture.produits">
+                {{ produit.product_info?.label }} (x{{ produit.quantite }})
+              </li>
+            </ul>
+          </td>
+          <td>{{ facture.total_ttc | number:'1.2-2' }} €</td>
+          <td class="actions">
+            <button class="btn-detail">
+              Détails
+            </button>
+          </td>
+        <td class="menu-container">
+  <fa-icon 
+    [icon]="['fas', 'ellipsis-h']" 
+    class="menu-icon" 
+    (click)="toggleMenu1(facture)">
+  </fa-icon>
+
+  <div class="menu-dropdown" *ngIf="facture.showMenu">
+    <button>
+      <fa-icon [icon]="['fas', 'paper-plane']"></fa-icon> Envoyer
+    </button>
+    <button class="cancel-button" (click)="annulerFacture(facture)">
+      <fa-icon [icon]="['fas', 'times']"></fa-icon> Annuler
+    </button>
+  </div>
+</td>
+
+        </tr>
+      </tbody>
+    </table>
+  
+    <!-- Pagination -->
+    <div class="pagination-container">
+      <div class="page-size">
+        <span>Afficher</span>
+        <select id="page-size" (change)="onPageSizeChange($event)">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+        </select>
+        <span>par page</span>
+      </div>
+  
+      <div class="pagination">
+        <button class="active">1</button>
+        <button>2</button>
+        <button>3</button>
+        <button>4</button>
+      </div>
+    </div>
+  </div>
+        <!-- <h2 class="section-title">Liste des Factures</h2>
       
       <div *ngFor="let facture of factures" class="facture-card">
           <div class="facture-header">
@@ -252,10 +349,10 @@
                   <p><strong>TVA:</strong> {{ facture.total_tva | number:'1.2-2' }} €</p>
                   <p><strong>Total TTC:</strong> {{ facture.total_ttc | number:'1.2-2' }} €</p>
               </div>
-          </div>
+          </div> -->
           
-          <!-- Actions: Show, Download, Email -->
-          <div class="facture-actions">
+        
+          <!-- <div class="facture-actions">
               <a (click)="showFacture(facture)" class="facture-link">
                   <i class="fas fa-eye"></i> Afficher la Facture
               </a>
@@ -264,16 +361,16 @@
               </a>
               <a (click)="sendFactureByEmail(facture)" class="facture-link">
                   <i class="fas fa-envelope"></i> Envoyer par Email
-              </a>
+              </a> 
               <a (click)="goAvoir(facture)" class="facture-link">
                 <i class="fas fa-file-invoice"></i> Créer un Avoir
             </a>
             <a (click)="goRelance(facture)" class="facture-link">
                 <i class="fas fa-bell"></i> Créer une Relance
             </a>
-          </div>
+          </div> -->
   
-          <div class="produits-section">
+          <!-- <div class="produits-section">
               <h4>Produits</h4>
               <table class="produits-table">
                   <thead>
@@ -295,7 +392,7 @@
               </table>
           </div>
       </div>
-  </div>
+  </div> -->
 
 
   <div class="container" *ngIf="selectedTab === 'Deplacements'">
