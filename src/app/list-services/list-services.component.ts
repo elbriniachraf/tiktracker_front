@@ -8,14 +8,33 @@ import { CommonModule } from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import Swal from 'sweetalert2';
 import { faUsers, faTruck, faUserPlus, faAddressBook } from '@fortawesome/free-solid-svg-icons';
-
-
+import { CategoryService } from '../category.service';
 import { GoogleMapsModule } from "@angular/google-maps";
 import { FormsModule } from '@angular/forms';
 import { GooglePlaceModule } from 'ngx-google-places-autocomplete';
 import { Address } from 'ngx-google-places-autocomplete/objects/address';
 import { Router } from '@angular/router';
 import { ServiceService } from '../service.service';
+import { routes } from '../app.routes';
+
+interface Service {
+  id: string;
+  name: string;
+  description: string;
+  price: number;
+  duration: number;
+  unit: string;
+  status: string;
+  category: string;
+  provider: string;
+  tva: string;
+  rating?: number;
+  start_date?: Date;
+  end_date?: Date;
+  image_url?: string;
+  is_featured?: boolean;
+  selected: boolean;
+}
 @Component({
   selector: 'app-list-services',
   standalone: true,
@@ -25,21 +44,38 @@ import { ServiceService } from '../service.service';
   styleUrl: './list-services.component.css'
 })
 export class ListServicesComponent {
+
   @Output() productAjout = new EventEmitter<any>();
+  categories: any[] = [];
   services: any[] = [];  // Liste des produits
   pageSize: number = 10;  // Nombre de produits par page
   loading: boolean = true;  // Indicateur de chargement
   totalRecords: number = 0;  // Total des enregistrements
-  selectedService: any = null;  // Service actuellement sélectionné
-  constructor(private service: ServiceService) {}
+  // selectedService: any = null;  // Service actuellement sélectionné
+  constructor(private service: ServiceService, private router: Router,  
+  ) {}
+  drawerOpen3: boolean = false;  // Variable pour contrôler l'ouverture/fermeture du drawer
+
   selectedDescription: string = '';
   isDrawerOpen: boolean = false;
   isDrawerOpen2: boolean = false; 
-
+  isAddingService = false;
+   isDrawerOpenEdit: boolean = false;
+   selectedService: any = { // Initialisation avec un objet vide
+    name: '',
+    description: '',
+    price: 0,
+    duration: 0,
+    category_name: '',
+    status: 'active',
+    start_date: '',
+    end_date: ''
+  };
+  
   closeDrawer(): void {
     this.isDrawerOpen = false;
-
   }
+ 
   closeDrawer2() {
     this.isDrawerOpen2 = false;  // Ferme le drawer2
     this.selectedService = null;  // Réinitialise selectedService pour éviter de garder des données obsolètes
@@ -106,10 +142,14 @@ viewService(serviceId: number): void {
 }
   ngOnInit(): void {
     this.loadProducts();
+    this.loadServices();
+
+
   }
-  ajouterService(): void {
-    this.productAjout.emit([]);
+  ajouterService() {
+    this.isAddingService = true; // Active l'affichage du formulaire
   }
+
   searchQuery=''
 
   updatePagination(): void {
@@ -214,10 +254,10 @@ viewService(serviceId: number): void {
 
 
   // Modifier un service
-  editService(serviceId: number) {
-    console.log(`Modifier le service ID: ${serviceId}`);
-  }
-
+  // editService(serviceId: number) {
+  //   console.log(`Modifier le service ID: ${serviceId}`);
+  // }
+ 
   deleteService(id: number): void {
     Swal.fire({
       title: 'Êtes-vous sûr ?',
@@ -269,5 +309,200 @@ viewService(serviceId: number): void {
   editProduct(productId: number): void {
     console.log('Éditer le produit', productId);
   }
-  
+ 
+navigateToAddService() {
+  this.router.navigate(['/add-service']); // Change '/ajouter-service' selon ta route
+}
+
+navigateToEditService(id: string): void {
+  // Naviguer vers la page d'édition avec l'ID du produit
+  this.router.navigate(['/edit-service', id]);
+}
+  sortBy(column: string): void {
+    // Implémentation du tri
+    this.filteredServices.sort((a, b) => {
+      if (a[column] < b[column]) return -1;
+      if (a[column] > b[column]) return 1;
+      return 0;
+    });
+  }
+  toggleSelectAll(event: any): void {
+    const isChecked = event.target.checked;
+    this.filteredServices.forEach(service => service.selected = isChecked);
+  }
+  loadServices(): void {
+    this.loading = true;
+    
+    // Données du tableau de services
+    const serviceData: Partial<Service>[] = [
+      {
+        id: '00015',
+        name: 'Audit Comptable',
+        description: 'Ce service propose un audit comptable complet pour analyser la santé financière de votre entreprise et identifier les opportunités d\'optimisation fiscale.',
+        price: 450,
+        duration: 8,
+        unit: 'Heures',
+        status: 'inactive',
+        category: 'Comptables',
+        provider: 'Cabinet Martin & Associés',
+        rating: 4.8,
+        start_date: new Date('2025-01-15'),
+        end_date: new Date('2025-01-16'),
+        is_featured: false
+      },
+      {
+        id: '00014',
+        name: 'Campagne Marketing Digital',
+        description: 'Service de création et gestion de campagnes publicitaires sur les réseaux sociaux pour augmenter votre visibilité en ligne.',
+        price: 350,
+        duration: 5,
+        unit: 'Jours',
+        status: 'active',
+        category: 'Publicité',
+        provider: 'AgenceWeb Pro',
+        rating: 4.5,
+        start_date: new Date('2025-02-01'),
+        end_date: new Date('2025-02-06'),
+        is_featured: true
+      },
+      {
+        id: '00013',
+        name: 'Étude Technique',
+        description: 'Analyse technique approfondie des systèmes existants et recommandations pour l\'amélioration des processus industriels.',
+        price: 600,
+        duration: 12,
+        unit: 'Heures',
+        status: 'inactive',
+        category: 'Ingénierie',
+        provider: 'TechSolutions Engineering',
+        rating: 4.9,
+        start_date: new Date('2025-03-10'),
+        end_date: new Date('2025-03-12'),
+        is_featured: false
+      },
+      {
+        id: '00012',
+        name: 'Développement Application Mobile',
+        description: 'Conception et développement d\'une application mobile sur mesure pour iOS et Android, incluant le design UX/UI.',
+        price: 1200,
+        duration: 15,
+        unit: 'Jours',
+        status: 'inactive',
+        category: 'Informatiques',
+        provider: 'CodeMasters',
+        rating: 4.7,
+        start_date: new Date('2025-01-20'),
+        end_date: new Date('2025-02-10'),
+        is_featured: false
+      },
+      {
+        id: '00011',
+        name: 'Consultation Juridique',
+        description: 'Consultation juridique avec un avocat spécialisé en droit des affaires pour résoudre vos problèmes légaux.',
+        price: 180,
+        duration: 2,
+        unit: 'Jours',
+        status: 'inactive',
+        category: 'Juridiques',
+        provider: 'Cabinet Légal Durand',
+        rating: 4.6,
+        start_date: new Date('2025-02-15'),
+        end_date: new Date('2025-02-17'),
+        is_featured: false
+      },
+      {
+        id: '00010',
+        name: 'Maintenance Serveurs',
+        description: 'Service de maintenance et optimisation de serveurs pour garantir la performance et la sécurité de votre infrastructure informatique.',
+        price: 280,
+        duration: 4,
+        unit: 'Jours',
+        status: 'inactive',
+        category: 'Informatiques',
+        provider: 'IT Solutions Plus',
+        rating: 4.3,
+        start_date: new Date('2025-03-01'),
+        end_date: new Date('2025-03-05'),
+        is_featured: false
+      },
+      {
+        id: '00009',
+        name: 'Création Site Vitrine',
+        description: 'Création d\'un site web vitrine moderne et responsive pour présenter votre entreprise et vos produits à vos clients.',
+        price: 800,
+        duration: 7,
+        unit: 'Jours',
+        status: 'active',
+        category: 'Publicité',
+        provider: 'WebDesign Expert',
+        rating: 4.7,
+        start_date: new Date('2025-02-05'),
+        end_date: new Date('2025-02-12'),
+        is_featured: true
+      },
+      {
+        id: '00008',
+        name: 'Vidéo Promotionnelle',
+        description: 'Réalisation d\'une vidéo promotionnelle professionnelle incluant le tournage, le montage et la post-production.',
+        price: 650,
+        duration: 5,
+        unit: 'Jours',
+        status: 'active',
+        category: 'Publicité',
+        provider: 'Visual Media Productions',
+        rating: 4.8,
+        start_date: new Date('2025-03-15'),
+        end_date: new Date('2025-03-20'),
+        is_featured: true
+      },
+      {
+        id: '00007',
+        name: 'SEO & Référencement',
+        description: 'Optimisation de votre site web pour les moteurs de recherche afin d\'améliorer votre positionnement et votre visibilité en ligne.',
+        price: 400,
+        duration: 8,
+        unit: 'Jours',
+        status: 'active',
+        category: 'Publicité',
+        provider: 'RankUp SEO',
+        rating: 4.5,
+        start_date: new Date('2025-01-25'),
+        end_date: new Date('2025-02-02'),
+        is_featured: true
+      },
+      {
+        id: '00006',
+        name: 'Formation E-commerce',
+        description: 'Formation professionnelle sur les stratégies de vente en ligne, la gestion de boutique e-commerce et les techniques de conversion.',
+        price: 320,
+        duration: 3,
+        unit: 'Jours',
+        status: 'active',
+        category: 'Publicité',
+        provider: 'E-Commerce Academy',
+        rating: 4.6,
+        start_date: new Date('2025-04-01'),
+        end_date: new Date('2025-04-04'),
+        is_featured: true
+      }
+    ];
+
+    // Conversion des données partielles en objets Service complets
+    this.services = serviceData.map(data => ({
+      ...data,
+      tva: '0033225566',
+      image_url: '/api/placeholder/80/80',
+      selected: false
+    } as Service));
+    
+    this.filteredServices = [...this.services];
+    this.totalPages = Math.ceil(this.services.length / this.pageSize);
+    this.loading = false;
+  }
+  goToPage(page: number): void {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      // Logique pour charger les données de la page
+    }
+  }
 }

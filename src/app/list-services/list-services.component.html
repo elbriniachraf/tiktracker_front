@@ -1,214 +1,193 @@
-<div class="product-list-container immersive-design">
-    <!-- Barre d'outils -->
-    <div class="toolbar">
-      
-      <input
-      type="text"
-      class="search-input"
-      placeholder="🔍 Rechercher un service..."
-      [(ngModel)]="searchQuery"
-      (input)="onSearch(searchQuery)"
-    />
-      <button class="btn btn-add"  (click)="ajouterService()">
-        <fa-icon [icon]="'plus'"></fa-icon> Ajouter un service
-      </button>
-    </div>
-  
-    <!-- Tableau -->
-    <ngx-datatable
-    class="material"
-    [rows]="filteredServices"
-    [columnMode]="'force'"
-    [headerHeight]="60"
-    [footerHeight]="60"
-    [rowHeight]="'auto'"
-    [limit]="pageSize"
-    [scrollbarH]="true"
-    [sorts]="sorts"
-    (sort)="onSort($event)"
-    [loadingIndicator]="loading"
-    style="width: 100%; border-radius: 8px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-  
-    <!-- Numéro de ligne -->
-    <ngx-datatable-column name="#" [sortable]="false">
-      <ng-template ngx-datatable-cell-template let-row="row" let-rowIndex="rowIndex">
-        <strong>{{ rowIndex + 1 }}</strong>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Actions -->
-    <!-- <ngx-datatable-column name="Actions">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        <div class="dropdown">
-          <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-            Actions
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <li>
-              <a class="dropdown-item" (click)="viewService(row.id)">
-                <fa-icon [icon]="'eye'"></fa-icon> Voir
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="editService(row.id)">
-                <fa-icon [icon]="'edit'"></fa-icon> Modifier
-              </a>
-            </li>
-            <li>
-              <a class="dropdown-item" (click)="deleteService(row.id)">
-                <fa-icon [icon]="'trash'"></fa-icon> Supprimer
-              </a>
-            </li>
-          </ul>
-        </div>
-      </ng-template>
-    </ngx-datatable-column> -->
-    <ngx-datatable-column name="Actions">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        <div class="action-buttons">
-          <button class="btn btn-info btn-sm" (click)="viewService(row.id)">
-            <fa-icon [icon]="'eye'"></fa-icon>
-          </button>        
-          <button class="btn btn-warning btn-sm" (click)="editProduct(row.id)">
-            <fa-icon [icon]="'edit'"></fa-icon>
-          </button>
-          <button class="btn btn-danger btn-sm" (click)="deleteService(row.id)">
-            <fa-icon [icon]="'trash'"></fa-icon>
-          </button>
-        
-        </div>
-      </ng-template>
-    </ngx-datatable-column>
-    <!-- Nom du service -->
-    <ngx-datatable-column name="Nom" prop="name" [sortable]="true">
-      <ng-template let-value="value">
-        <strong>{{ value }}</strong>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Description -->
-    <ngx-datatable-column name="Description">
-      <ng-template ngx-datatable-cell-template let-row="row">
-        <a href="javascript:void(0)" (click)="showDescription(row)" class="description-link">Voir Description</a>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Catégorie -->
-    <ngx-datatable-column name="Catégorie" prop="category.name" [sortable]="true">
-    </ngx-datatable-column>
-  
-    <!-- Prix -->
-    <ngx-datatable-column name="Prix" prop="price" [sortable]="true">
-      <ng-template let-value="value">
-        <div class="price">{{ value | currency:'EUR' }} MAD</div>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Statut -->
-    <ngx-datatable-column name="Statut" prop="status" [sortable]="true">
-      <ng-template let-value="value">
-        <span [class]="value === 'actif' ? 'badge bg-success' : 'badge bg-danger'">{{ value === 'actif' ? 'Actif' : 'Inactif' }}</span>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Durée -->
-    <ngx-datatable-column name="Durée" prop="duration" [sortable]="true">
-      <ng-template let-value="value">
-        <div>{{ value }} minutes</div>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Fournisseur -->
-    <ngx-datatable-column name="Fournisseur" prop="service_provider" [sortable]="true">
-    </ngx-datatable-column>
-  
-    <!-- Note -->
-    <ngx-datatable-column name="Note" prop="rating" [sortable]="true">
-      <ng-template let-value="value">
-        <div class="rating">
-          <fa-icon [icon]="'star'"></fa-icon> {{ value }} / 5
-        </div>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Date de début -->
-    <ngx-datatable-column name="Début" prop="start_date" [sortable]="true">
-      <ng-template let-value="value">
-        <div>{{ value | date:'short' }}</div>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Date de fin -->
-    <ngx-datatable-column name="Fin" prop="end_date" [sortable]="true">
-      <ng-template let-value="value">
-        <div>{{ value | date:'short' }}</div>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Image -->
-    <ngx-datatable-column name="Image">
-      <ng-template ngx-datatable-cell-template let-row="row">
-        <img [src]="row.image_url" alt="Image du service" style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%;"/>
-      </ng-template>
-    </ngx-datatable-column>
-  
-    <!-- Mis en avant -->
-    <ngx-datatable-column name="Mis en avant" prop="is_featured" [sortable]="true">
-      <ng-template let-value="value">
-        <span [class]="value ? 'badge bg-warning' : 'badge bg-secondary'">{{ value ? 'Oui' : 'Non' }}</span>
-      </ng-template>
-    </ngx-datatable-column>
-  
-  </ngx-datatable>
-  
-  
-  
-      <!-- Drawer pour afficher la description -->
-      <div class="drawer" [class.open]="isDrawerOpen">
-        <div class="drawer-header">
-          <h3>Description</h3>
-          <button (click)="closeDrawer()" class="close-btn">&times;</button>
-        </div>
-        <div class="drawer-content" [innerHTML]="selectedDescription"></div>
+<div class="product-list-container">
+  <!-- En-tête avec titre et bouton d'ajout -->
+  <div class="header-container">
+    <h2><i class="fas fa-exchange-alt"></i> Liste des Service</h2>
+    <button class="btn-add" (click)="navigateToAddService()">
+      <i class="fas fa-plus"></i> Ajouter
+    </button>
+  </div>
+
+  <!-- Filtres -->
+  <div class="filters-container">
+    <div class="filter-group">
+      <span>Filter par:</span>
+      <div class="dropdown">
+        <button class="dropdown-toggle">
+          Date 
+        </button>
       </div>
-    <!-- Pagination -->
-    <div class="pagination">
-      <button  >
-        <fa-icon [icon]="'chevron-left'"></fa-icon>
-      </button>
-      <span>Page  sur </span>
-      <button>
-        <fa-icon [icon]="'chevron-right'"></fa-icon>
-      </button>
+      <div class="dropdown">
+        <button class="dropdown-toggle">
+          Fournisseur 
+        </button>
+      </div>
+    </div>
+    <div class="search-container">
+      <input type="text" placeholder="Rechercher" [(ngModel)]="searchQuery" (input)="onSearch(searchQuery)">
+      <i class="fas fa-search"></i>
     </div>
   </div>
-  <!-- Drawer pour afficher les détails du service -->
+
+  <!-- Tableau -->
+  <table class="services-table">
+    <thead>
+      <tr>
+        <th class="checkbox-column"><input type="checkbox" (change)="toggleSelectAll($event)"></th>
+        <th (click)="sortBy('id')">Référence <i class="fas fa-sort"></i></th>
+        <th (click)="sortBy('name')">Service</th>
+        <th (click)="sortBy('duration')">Durée</th>
+        <th (click)="sortBy('provider')">Fournisseur</th>
+        <th (click)="sortBy('unit')">Unité</th>
+        <th (click)="sortBy('price')">Prix</th>
+        <th (click)="sortBy('tva')">TVA (%)</th>
+        <th (click)="sortBy('description')">Description</th>
+        <th (click)="sortBy('category')">Catégorie</th>
+        <th (click)="sortBy('status')">Statut</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let service of filteredServices; let i = index">
+        <td><input type="checkbox" [(ngModel)]="service.selected"></td>
+        <td class="reference">{{ service.id }}</td>
+        <td>{{ service.name }}</td>
+        <td>{{ service.duration }} {{ service.unit }}</td>
+        <td>{{ service.provider }}</td>
+        <td>{{ service.unit === 'Heures' ? 'Heure' : 'Jour' }}</td>
+        <td>{{ service.price }}€</td>
+        <td>{{ service.tva }}</td>
+        <td class="description">
+          <a href="javascript:void(0)" (click)="showDescription(service)">Voir Description</a>
+        </td>
+        <td>
+          <span class="category-badge" [ngClass]="{
+            'comptables': service.category === 'Comptables',
+            'publicite': service.category === 'Publicité',
+            'ingenierie': service.category === 'Ingénierie',
+            'informatiques': service.category === 'Informatiques',
+            'juridiques': service.category === 'Juridiques'
+          }">
+            {{ service.category }}
+          </span>
+        </td>
+        <td>
+          <span class="status-badge" [ngClass]="service.status === 'active' ? 'active' : 'inactive'">
+            {{ service.status === 'active' ? 'Active' : 'Inactive' }}
+          </span>
+        </td>
+        <td class="actions">
+          <button class="btn-action" (click)="viewService(service.id)"><i class="fas fa-eye"></i></button>
+          <button class="btn-action" (click)="navigateToEditService(service.id)"><i class="fas fa-edit"></i></button>
+          <button class="btn-action" (click)="deleteService(service.id)"><i class="fas fa-trash"></i></button>
+          <button class="btn-action"><i class="fas fa-ellipsis-v"></i></button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="pagination-controls">
+    <div class="items-per-page">
+      <span>Afficher</span>
+      <select [(ngModel)]="pageSize">
+        <option>10</option>
+        <option>20</option>
+        <option>50</option>
+      </select>
+      <span>par page</span>
+    </div>
+    <div class="page-selector">
+      <button class="page-button" [ngClass]="{'active': currentPage === 1}" (click)="goToPage(1)">1</button>
+      <button class="page-button" [ngClass]="{'active': currentPage === 2}" (click)="goToPage(2)">2</button>
+      <button class="page-button" [ngClass]="{'active': currentPage === 3}" (click)="goToPage(3)">3</button>
+      <button class="page-button" [ngClass]="{'active': currentPage === 4}" (click)="goToPage(4)">4</button>
+    </div>
+  </div>
+
+  <!-- Drawer pour la description -->
+  <div class="drawer" [class.open]="isDrawerOpen">
+    <div class="drawer-header">
+      <h3>Description</h3>
+      <button (click)="closeDrawer()" class="close-btn">&times;</button>
+    </div>
+    <div class="drawer-content" [innerHTML]="selectedDescription"></div>
+  </div>
+
+  <!-- Drawer pour les détails du service -->
   <div class="drawer" [class.open]="isDrawerOpen2">
     <div class="drawer-content">
       <div class="drawer-header">
         <h3>Détails du service</h3>
         <button (click)="closeDrawer2()" class="close-btn">&times;</button>
       </div>
-  
-      <div *ngIf="selectedService">
-        <p><strong>Nom:</strong> {{ selectedService.name }}</p>
-        <p><strong>Description:</strong> {{ selectedService.description }}</p>
-        <p><strong>Prix:</strong> {{ selectedService.price | currency }}</p>
-        <p><strong>Privé:</strong> {{ selectedService.private ? 'Oui' : 'Non' }}</p>
-        <p><strong>Durée:</strong> {{ selectedService.duration }} heures</p>
-        <p><strong>Catégorie:</strong> {{ selectedService.category_id }}</p>
-        <p><strong>Statut:</strong> {{ selectedService.status === 'active' ? 'Actif' : 'Inactif' }}</p>
-        <p><strong>Date de début:</strong> {{ selectedService.start_date | date }}</p>
-        <p><strong>Date de fin:</strong> {{ selectedService.end_date | date }}</p>
-        <p><strong>Fournisseur du service:</strong> {{ selectedService.service_provider }}</p>
-        <p><strong>Localisation:</strong> {{ selectedService.location }}</p>
-        <p><strong>Note:</strong> {{ selectedService.rating }}</p>
-        <p><strong>Caractéristiques:</strong> {{ selectedService.features | json }}</p>
-        <p><strong>Image:</strong> <img [src]="selectedService.image_url" alt="Service Image" width="100" height="100"></p>
-        <p><strong>Mis en avant:</strong> {{ selectedService.is_featured ? 'Oui' : 'Non' }}</p>
-        <p><strong>Tags:</strong> {{ selectedService.tags | json }}</p>
+      <div *ngIf="selectedService" class="service-details">
+        <div class="service-image">
+          <img [src]="selectedService.image_url || '/api/placeholder/120/120'" alt="Image du service">
+        </div>
+        <div class="service-info">
+          <h4>{{ selectedService.name }}</h4>
+          <p class="service-category"><span [ngClass]="{
+            'comptables': selectedService.category === 'Comptables',
+            'publicite': selectedService.category === 'Publicité',
+            'ingenierie': selectedService.category === 'Ingénierie',
+            'informatiques': selectedService.category === 'Informatiques',
+            'juridiques': selectedService.category === 'Juridiques'
+          }">{{ selectedService.category }}</span></p>
+          
+          <div class="detail-row">
+            <span class="label">Description:</span>
+            <span class="value">{{ selectedService.description }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Prix:</span>
+            <span class="value price">{{ selectedService.price }}€</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Durée:</span>
+            <span class="value">{{ selectedService.duration }} {{ selectedService.unit }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Statut:</span>
+            <span class="value">
+              <span class="status-badge" [ngClass]="selectedService.status === 'active' ? 'active' : 'inactive'">
+                {{ selectedService.status === 'active' ? 'Active' : 'Inactive' }}
+              </span>
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Fournisseur:</span>
+            <span class="value">{{ selectedService.provider }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Note:</span>
+            <span class="value">
+              <span class="rating">
+                <i class="fas fa-star"></i> {{ selectedService.rating || 0 }}/5
+              </span>
+            </span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Date de début:</span>
+            <span class="value">{{ selectedService.start_date | date:'dd/MM/yyyy' }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Date de fin:</span>
+            <span class="value">{{ selectedService.end_date | date:'dd/MM/yyyy' }}</span>
+          </div>
+          
+          <div class="detail-row">
+            <span class="label">Mis en avant:</span>
+            <span class="value">{{ selectedService.is_featured ? 'Oui' : 'Non' }}</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  
-  
+</div>

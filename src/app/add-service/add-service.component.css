@@ -1,0 +1,190 @@
+/* Style général du formulaire */
+form {
+  width: 500px; /* Augmenté par rapport aux 450px précédents */
+  margin: 0 auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  background-color: white;
+  padding: 20px; /* Augmenté pour un meilleur espacement */
+  border-radius: 5px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/* En-tête du formulaire */
+.form-header {
+  position: relative;
+  margin-bottom: 25px; /* Augmenté */
+  padding-bottom: 15px; /* Augmenté */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.form-header h2 {
+  font-size: 18px; /* Légèrement plus grand */
+  font-weight: 500;
+  color: #333;
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 20px; /* Plus grand */
+  color: #999;
+  cursor: pointer;
+}
+
+/* Groupes de formulaires */
+.form-group {
+  margin-bottom: 20px; /* Augmenté */
+}
+
+.form-row {
+  display: flex;
+  gap: 15px; /* Augmenté */
+}
+
+.form-group.half {
+  width: 50%;
+}
+
+/* Style pour tous les champs - uniquement ligne en bas */
+.form-control {
+  width: 100%;
+  padding: 10px 0; /* Augmenté */
+  font-size: 15px; /* Légèrement plus grand */
+  color: #495057;
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid #ced4da;
+  border-radius: 0;
+  transition: border-color 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  border-bottom-color: #28a745;
+  outline: 0;
+  box-shadow: none;
+}
+
+/* Style spécifique pour les selects */
+select.form-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2328a745' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  background-size: 16px;
+  padding-right: 20px;
+  color: #a0a0a0; /* Pour simuler l'apparence d'un placeholder */
+}
+
+/* Assurer que les options dans les selects sont correctement stylées */
+select.form-control option {
+  color: #495057;
+}
+
+select.form-control option:first-child {
+  color: #a0a0a0;
+}
+
+/* Style pour le textarea */
+textarea.form-control {
+  resize: none;
+  min-height: 100px; /* Augmenté */
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 10px; /* Augmenté */
+}
+
+/* Style du bouton de soumission */
+.btn-submit {
+  display: block;
+  width: 100%;
+  padding: 14px; /* Augmenté */
+  color: white;
+  background-color: #28a745;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px; /* Légèrement plus grand */
+  font-weight: 500;
+  cursor: pointer;
+  margin-top: 15px; /* Augmenté */
+  text-align: center;
+}
+
+.btn-submit:hover {
+  background-color: #218838;
+}
+
+/* Placeholder style */
+::placeholder {
+  color: #a0a0a0;
+  opacity: 1;
+}
+
+/* Style pour les placeholders dans les sélects */
+select:invalid, 
+select option:first-child {
+  color: #a0a0a0;
+}
+
+/* Pour que le contenu soit centré verticalement */
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+}
+/* Style pour l'option servant de placeholder */
+select option[value=""] {
+  color: #a0a0a0;
+}
+
+/* Style spécifique pour les selects avec flèches */
+select.form-control {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2328a745' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0 center;
+  background-size: 16px;
+  padding-right: 20px;
+}
+
+/* Pour les selects spécifiques qui doivent avoir une flèche des deux côtés */
+select#duree, 
+select#categorie, 
+select#prix, 
+select#tva,
+select#statut {
+  background-image: 
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2328a745' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'%3E%3C/polyline%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2328a745' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-position: 
+    right 0 top 25%, 
+    right 0 bottom 25%;
+  background-repeat: no-repeat, no-repeat;
+  background-size: 16px, 16px;
+}
+
+/* Ajustement de la position des flèches en fonction de la hauteur du select */
+@media screen and (min-height: 768px) {
+  select#duree, 
+  select#categorie, 
+  select#prix, 
+  select#tva,
+  select#statut {
+    background-position: 
+      right 0 top 30%, 
+      right 0 bottom 30%;
+  }
+}

@@ -1,0 +1,130 @@
+<!-- <form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
+  <label for="name">Nom du Service :</label>
+  <input id="name" type="text" formControlName="name" required />
+
+  <label for="description">Description :</label>
+  <textarea id="description" formControlName="description"></textarea>
+
+  <label for="price">Prix :</label>
+  <input id="price" type="number" formControlName="price" required />
+
+  <label for="private">Privé :</label>
+  <input id="private" type="checkbox" formControlName="private" />
+
+  <label for="duration">Durée :</label>
+  <input id="duration" type="text" formControlName="duration" required />
+  <label for="category">Catégorie :</label>
+  <select id="category" formControlName="category" class="form-control">
+    <option value="">Sélectionner une catégorie</option>
+    <option *ngFor="let category of categories" [value]="category.name">
+      {{ category.name }}
+    </option>
+  </select>
+  <label for="status">Statut :</label>
+  <select id="status" formControlName="status">
+    <option value="active">Actif</option>
+    <option value="inactive">Inactif</option>
+  </select>
+
+  <label for="start_date">Date de début :</label>
+  <input id="start_date" type="date" formControlName="start_date" required />
+
+  <label for="end_date">Date de fin :</label>
+  <input id="end_date" type="date" formControlName="end_date" required />
+
+  <label for="service_provider">Prestataire :</label>
+  <input id="service_provider" type="text" formControlName="service_provider" required />
+
+  <label for="location">Emplacement :</label>
+  <input id="location" type="text" formControlName="location" required />
+
+  <label for="rating">Note :</label>
+  <input id="rating" type="number" formControlName="rating" required />
+
+  <label for="features">Caractéristiques :</label>
+  <textarea id="features" formControlName="features"></textarea>
+
+  <label for="image_url">Image URL :</label>
+  <input id="image_url" type="text" formControlName="image_url" />
+
+  <label for="is_featured">Mis en avant :</label>
+  <input id="is_featured" type="checkbox" formControlName="is_featured" />
+
+  <label for="tags">Tags :</label>
+  <input id="tags" type="text" formControlName="tags" />
+
+  <button type="submit" [disabled]="serviceForm.invalid">Ajouter Service</button>
+</form> -->
+<form [formGroup]="serviceForm" (ngSubmit)="onSubmit()">
+  <div class="form-header">
+    <h2>Ajouter un Service</h2>
+    <button type="button" class="close-btn">&times;</button>
+  </div>
+  
+  <div class="form-group">
+    <input id="referenceService" type="text" formControlName="referenceService" class="form-control" placeholder="Référence du Service">
+  </div>
+  
+  <div class="form-group">
+    <input id="serviceName" type="text" formControlName="serviceName" class="form-control" placeholder="Nom du Service">
+  </div>
+  
+  <div class="form-row">
+    <div class="form-group half">
+      <select id="unite" formControlName="unite" class="form-control"  required>
+        <option value="" disabled selected>Unité</option>
+        <!-- Options ici -->
+      </select>
+    </div>
+    
+    <div class="form-group half">
+      <select id="duree" formControlName="duree" class="form-control" required>
+        <option value="" disabled selected>Durée</option>
+        <!-- Options ici -->
+      </select>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <select id="categorie" formControlName="categorie" class="form-control" required>
+      <option value="" disabled selected>Catégorie</option>
+      <!-- Options ici -->
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <select id="departement" formControlName="departement" class="form-control" required>
+      <option value="" disabled selected>Département</option>
+      <!-- Options ici -->
+    </select>
+  </div>
+  
+  <div class="form-row">
+    <div class="form-group half">
+      <select id="prix" formControlName="prix" class="form-control" required>
+        <option value="" disabled selected>Prix Unitaire</option>
+        <!-- Options ici -->
+      </select>
+    </div>
+    
+    <div class="form-group half">
+      <select id="tva" formControlName="tva" class="form-control" required>
+        <option value="" disabled selected>TVA (%)</option>
+        <!-- Options ici -->
+      </select>
+    </div>
+  </div>
+  
+  <div class="form-group">
+    <select id="statut" formControlName="statut" class="form-control" required>
+      <option value="" disabled selected>Statut</option>
+      <!-- Options ici -->
+    </select>
+  </div>
+  
+  <div class="form-group">
+    <textarea id="description" formControlName="description" class="form-control" rows="3" placeholder="Description"></textarea>
+  </div>
+  
+  <button type="submit" class="btn-submit">Sign in</button>
+</form>
